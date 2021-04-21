@@ -1,0 +1,8 @@
+{
+  "name": "text-to-hire-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "d60f1ce1"
+}

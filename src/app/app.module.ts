@@ -6,12 +6,38 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import {AngularFireStorageModule} from "@angular/fire/storage";
+import {AngularFirestoreModule} from "@angular/fire/firestore";
+import {AngularFireDatabaseModule} from "@angular/fire/database";
+import {AngularFireAuthModule} from "@angular/fire/auth";
+import {environment} from "../environments/environment";
+import {AngularFireModule} from "@angular/fire";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppMaterialModule } from './app-material/app-material.module';
+
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule.enablePersistence(),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    BrowserAnimationsModule,
+    AppMaterialModule
+  ],
+  providers: [
+    AngularFirestoreModule,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy,  }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

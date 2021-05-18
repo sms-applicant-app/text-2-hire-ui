@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Register for an account with an email or login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <span *ngIf="!isRegistering">
+<form>
+  <ion-item lines="full">
+    <ion-label position="stacked" required>Email</ion-label>
+    <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
+  </ion-item>
+
+  <ion-item lines="full" class="uk-margin-bottom">
+    <ion-label position="stacked" required>Password</ion-label>
+    <ion-input clearInput type="password" #password required placeholder="Enter password..."></ion-input>
+  </ion-item>
+
+
+
+  <ion-button type="submit" (click)="Login(email, password)" expand="block" color="success">Register
+  </ion-button>
+  <p>
+    <ion-button expand="block" size="small" fill="clear" (click)="register()">I dont have an account and want to Register.
+    </ion-button>
+  </p>
+</form>
+    </span>
+  <span *ngIf="isRegistering === true">
+
+  <form [formGroup]="registrationForm">
+  <ion-item lines="full">
+    <ion-label position="stacked" required>Email</ion-label>
+    <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
+  </ion-item>
+
+  <ion-item lines="full" class="uk-margin-bottom">
+    <ion-label position="stacked" required>Password</ion-label>
+    <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
+  </ion-item>
+    <ion-item lines="full" class="uk-margin-bottom">
+      <ion-label position="stacked" required>Phone Number</ion-label>
+      <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
+    </ion-item>
+  <ion-item>
+    <ion-label position="stacked" required="true">Assign User a Role</ion-label>
+    <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
+      <ion-select-option value="admin">Admin</ion-select-option>
+      <ion-select-option value="franchisee">Franchise</ion-select-option>
+      <ion-select-option value="storeContact">Store Contact</ion-select-option>
+      <ion-select-option value="hiringManager">Hiring Manager</ion-select-option>
+      <ion-select-option value="applicant">Applicant</ion-select-option>
+      <ion-select-option value="newHire">New Hire</ion-select-option>
+    </ion-select>
+  </ion-item>
+    <ion-button (click)="registerUser()" size="small" color="success">Register</ion-button>
+  </form>
+
+  </span>
+</ion-content>

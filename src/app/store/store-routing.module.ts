@@ -7,6 +7,22 @@ const routes: Routes = [
   {
     path: '',
     component: StorePage
+  },
+  {
+    path: 'create-store',
+    loadChildren: () => import('./create-store/create-store.module').then( m => m.CreateStorePageModule)
+  },
+  {
+    path: 'store-details',
+    loadChildren: () => import('./store-details/store-details.module').then( m => m.StoreDetailsPageModule)
+  },
+  {
+    path: 'list-stores',
+    loadChildren: () => import('./list-stores/list-stores.module').then( m => m.ListStoresPageModule)
+  },
+  {
+    path: 'edit-store',
+    loadChildren: () => import('./edit-store/edit-store.module').then( m => m.EditStorePageModule)
   }
 ];
 

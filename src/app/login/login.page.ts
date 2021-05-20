@@ -3,6 +3,7 @@ import {AuthService} from "../shared/services/auth.service";
 import firebase from "firebase";
 import {User} from "../shared/models/user";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -34,7 +35,8 @@ export class LoginPage implements OnInit {
   };
   constructor(
     public authService: AuthService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -52,6 +54,7 @@ export class LoginPage implements OnInit {
   }
   Login(email, password){
         this.authService.SignIn(email.value, password.value).then(user =>{
+
     });
   }
   register(){

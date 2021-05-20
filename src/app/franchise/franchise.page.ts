@@ -12,7 +12,7 @@ export class FranchisePage implements OnInit {
 
   ngOnInit() {
   }
-  initiadressForm(){
+  initAddressForm(){
     this.addressForm = this.fb.group({
 
     })

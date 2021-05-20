@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Register for an account with an email or login</ion-title>
+    <ion-title>Register for an account for a franchise owner</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,7 +19,7 @@
 
 
 
-  <ion-button type="submit" (click)="Login(email, password)" expand="block" color="success">Register
+  <ion-button type="submit" (click)="Login(email, password)" expand="block" color="success">Login
   </ion-button>
   <p>
     <ion-button expand="block" size="small" fill="clear" (click)="register()">I dont have an account and want to Register.
@@ -46,7 +46,6 @@
   <ion-item>
     <ion-label position="stacked" required="true">Assign User a Role</ion-label>
     <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
-      <ion-select-option value="admin">Admin</ion-select-option>
       <ion-select-option value="franchisee">Franchise</ion-select-option>
       <ion-select-option value="storeContact">Store Contact</ion-select-option>
       <ion-select-option value="hiringManager">Hiring Manager</ion-select-option>

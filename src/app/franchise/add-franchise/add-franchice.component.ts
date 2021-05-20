@@ -33,7 +33,7 @@ export class AddFranchiceComponent implements OnInit {
       { type: 'maxlength', message: 'Phone Number cannot be more than 15 characters long.' }
     ],
   };
-  
+
 
 
   constructor(public fb: FormBuilder,
@@ -54,7 +54,7 @@ export class AddFranchiceComponent implements OnInit {
     this.addFranchiseForm = this.fb.group({
       businessLegalName:  ['', [ Validators.required]
       ],
-      
+
       phoneNumber: ['',
        [ Validators.required,
         Validators.minLength(7),
@@ -71,8 +71,10 @@ export class AddFranchiceComponent implements OnInit {
         password: ['']
       })
   }
-  registerFranchise(){
-    this.authService.RegisterUser(email.value, password.value)
+  registerFranchise(email, password){
+    this.authService.RegisterUser(email.value, password.value).then(res => {
+      console.log('response from registration', res)
+    })
   }
 
   goToFranchiseDetails(){

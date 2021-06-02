@@ -1,14 +1,16 @@
-import {Address} from "./address";
 import {User} from "./user";
 import {Store} from "./store";
 
-export class Franchisee {
-  legalName: string;
-  contactEmail: string;
-  phoneNumber: string;
-  address: Address;
-  pointOfContact?: User;
+export class Franchisee extends User {
+  franchiseId: string;
+  franchiseOwnerId: string;
+  businessLegalName: string;
+  corporateEmail: string;
+  CorporatePhoneNumber: string;
+  addressId: string;
   dateCreated: string;
   jobTitle: string;
-  store: Store[] = []
+  franchiseOwner: User;
+  dba: string;
+  store: Store[] = [];
 }

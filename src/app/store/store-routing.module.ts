@@ -23,6 +23,10 @@ const routes: Routes = [
   {
     path: 'edit-store',
     loadChildren: () => import('./edit-store/edit-store.module').then( m => m.EditStorePageModule)
+  },
+  {
+    path: 'store-dashboard',
+    loadChildren: () => import('./store-dashboard/store-dashboard.module').then( m => m.StoreDashboardPageModule)
   }
 ];
 

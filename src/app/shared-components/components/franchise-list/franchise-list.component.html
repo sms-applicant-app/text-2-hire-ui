@@ -1,0 +1,8 @@
+<mat-table [dataSource]="dataSource">
+  <ng-container  matColumnDef="businessLegalName">
+    <mat-header-cell *matHeaderCellDef>Franchise Legal Name</mat-header-cell>
+    <mat-cell *matCellDef="let franchise"></mat-cell>
+    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+  </ng-container>
+</mat-table>

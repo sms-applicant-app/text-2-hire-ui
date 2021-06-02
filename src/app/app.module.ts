@@ -15,6 +15,12 @@ import {AngularFireModule} from "@angular/fire";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AngularMaterialModule} from './app-material/angular-material.module';
+import {FranchiseListComponent} from "./shared-components/components/franchise-list/franchise-list.component";
+import {ApplicantListComponent} from "./shared-components/components/applicant-list/applicant-list.component";
+import {StoreListComponent} from "./shared-components/components/store-list/store-list.component";
+import {JobsListComponent} from "./shared-components/components/jobs-list/jobs-list.component";
+import {AddressFormComponent} from "./shared-components/components/address-form/address-form.component";
+
 
 
 @NgModule({
@@ -37,8 +43,10 @@ import {AngularMaterialModule} from './app-material/angular-material.module';
   ],
   providers: [
     AngularFirestoreModule,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy,  }],
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
   bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  exports: [
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

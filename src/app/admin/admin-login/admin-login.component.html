@@ -1,3 +1,26 @@
-<p>
-  admin-login works!
-</p>
+<ion-header>
+  <h1 class="ion-padding">Restricted Area Administration Use Only</h1>
+</ion-header>
+<ion-content>
+  <div class="container">
+  <form>
+    <div class="form-row">
+      <div class="form-group col-lg-7 col-sm-12">
+        <ion-item lines="full">
+          <ion-label position="stacked" required>Email</ion-label>
+          <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
+        </ion-item>
+      </div>
+      <div class="form-group col-lg-7 col-sm-12">
+        <ion-item lines="full" class="uk-margin-bottom">
+          <ion-label position="stacked" required>Password</ion-label>
+          <ion-input clearInput type="password" #password required placeholder="Enter password..."></ion-input>
+        </ion-item>
+        <ion-button type="submit" (click)="adminLogin(email, password)" color="success">Login</ion-button>
+      </div>
+    </div>
+  </form>
+
+    <a routerLink="/login" expand="block" size="small" fill="clear" >I am not administrator go back to login</a>
+  </div>
+</ion-content>

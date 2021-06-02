@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: ApplicantPage
+  },
+  {
+    path: 'applicant-dashboard',
+    loadChildren: () => import('./applicant-dashboard/applicant-dashboard.module').then( m => m.ApplicantDashboardPageModule)
   }
 ];
 

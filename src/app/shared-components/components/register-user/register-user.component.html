@@ -1,0 +1,39 @@
+<form [formGroup]="registrationForm">
+  <div class="form-row">
+    <div class="form-group col-lg-7 col-sm-12">
+      <ion-item lines="full">
+        <ion-label position="stacked" required>First Name</ion-label>
+        <ion-input clearInput type="text" formControlName="firstName" required></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="stacked" required>Last Name</ion-label>
+        <ion-input clearInput type="text" formControlName="lastName"></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="stacked" required>Email</ion-label>
+        <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
+      </ion-item>
+
+      <ion-item lines="full" class="uk-margin-bottom">
+        <ion-label position="stacked" required>Password</ion-label>
+        <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
+      </ion-item>
+      <ion-item lines="full" class="uk-margin-bottom">
+        <ion-label position="stacked" required>Phone Number</ion-label>
+        <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked" required="true">Assign User a Role</ion-label>
+        <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
+          <ion-select-option value="franchisee">Franchise</ion-select-option>
+          <ion-select-option value="hiringManager">Hiring Manager</ion-select-option>
+          <ion-select-option value="storeContact">Store Contact</ion-select-option>
+          <ion-select-option value="applicant">Applicant</ion-select-option>
+          <ion-select-option value="newHire">New Hire</ion-select-option>
+          <ion-select-option value="admin">Admin</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-button (click)="registerUser()" size="small" color="success">Register</ion-button>
+    </div>
+  </div>
+</form>

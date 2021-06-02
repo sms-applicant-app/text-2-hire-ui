@@ -10,6 +10,7 @@ export class AppComponent {
     { title: 'Stores', url: '/folder/Outbox', icon: 'storefront' },
     { title: 'Add A Franchise', url: '/folder/Favorites', icon: 'heart' },
     { title: 'Metrics', url: '/folder/Archived', icon: 'archive' },
+    { title: 'Log out', url: '/logout', icon: 'logout' },
 
   ];
 

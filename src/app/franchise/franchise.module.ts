@@ -7,15 +7,20 @@ import { IonicModule } from '@ionic/angular';
 import { FranchisePageRoutingModule } from './franchise-routing.module';
 
 import { FranchisePage } from './franchise.page';
-import {AddFranchiceComponent} from "./add-franchise/add-franchice.component";
+import {FranchiseListComponent} from "../shared-components/components/franchise-list/franchise-list.component";
+import {AngularMaterialModule} from "../app-material/angular-material.module";
+import {ListFranchisesComponent} from "./list-franchises/list-franchises.component";
+import {SharedComponentsModule} from "../shared-components/shared-components.module";
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FranchisePageRoutingModule
+    SharedComponentsModule,
+    AngularMaterialModule
   ],
-  declarations: [FranchisePage, AddFranchiceComponent]
+  declarations: [FranchisePage, ListFranchisesComponent,]
 })
 export class FranchisePageModule {}

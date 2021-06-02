@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: FranchisePage
+  },
+  {
+    path: 'franchise-dashboard',
+    loadChildren: () => import('./franchise-dashboard/franchise-dashboard.module').then( m => m.FranchiseDashboardPageModule)
   }
 ];
 

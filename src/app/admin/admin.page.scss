@@ -1,6 +1,7 @@
+
 .user-options{
   display:block;
-  width:150px;
+  width:auto;
   height:150px;
   text-align: center;
   vertical-align: middle;
@@ -20,4 +21,7 @@
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   float: left;
+}
+.margin-for-buttons{
+  padding: 25px;
 }

@@ -1,11 +1,26 @@
-<ion-header>
+<span *ngIf="isRegisteringFranchise">
+  <ion-header>
+    <ion-toolbar>
+    <ion-title>Register User For a Franchise</ion-title>
+  </ion-toolbar>
+  </ion-header>
+</span>
+<span *ngIf="isRegisteringStore">
+  <ion-header>
+    <ion-toolbar>
+    <ion-title>Register User For a Store</ion-title>
+  </ion-toolbar>
+  </ion-header>
+</span>
+<ion-header *ngIf="!isRegisteringFranchise || !isRegisteringStore">
   <ion-toolbar>
-    <ion-title>Register for an account for a franchise owner</ion-title>
+    <ion-title>Register to Access the System</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <span *ngIf="!isRegistering">
+  <div class="container">
+  <span *ngIf="!isRegistering || !isRegisteringFranchise">
 <form>
   <ion-item lines="full">
     <ion-label position="stacked" required>Email</ion-label>
@@ -19,42 +34,57 @@
 
 
 
-  <ion-button type="submit" (click)="Login(email, password)" expand="block" color="success">Login
+  <ion-button type="submit" (click)="login(email, password)" color="success">Login
   </ion-button>
   <p>
-    <ion-button expand="block" size="small" fill="clear" (click)="register()">I dont have an account and want to Register.
+    <ion-button  fill="clear" (click)="goToRegister()">I dont have an account and want to Register.
     </ion-button>
   </p>
 </form>
     </span>
-  <span *ngIf="isRegistering === true">
+  <span *ngIf="isRegistering === true || isRegisteringFranchise === true">
 
-  <form [formGroup]="registrationForm">
-  <ion-item lines="full">
-    <ion-label position="stacked" required>Email</ion-label>
-    <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
-  </ion-item>
+      <form [formGroup]="registrationForm">
+          <div class="form-row">
+          <div class="form-group col-lg-7 col-sm-12">
+              <ion-item lines="full">
+        <ion-label position="stacked" required>First Name</ion-label>
+        <ion-input clearInput type="text" formControlName="firstName" required></ion-input>
+      </ion-item>
+              <ion-item lines="full">
+        <ion-label position="stacked" required>Last Name</ion-label>
+        <ion-input clearInput type="text" formControlName="lastName"></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="stacked" required>Email</ion-label>
+        <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
+      </ion-item>
 
-  <ion-item lines="full" class="uk-margin-bottom">
-    <ion-label position="stacked" required>Password</ion-label>
-    <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
-  </ion-item>
-    <ion-item lines="full" class="uk-margin-bottom">
-      <ion-label position="stacked" required>Phone Number</ion-label>
-      <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
-    </ion-item>
-  <ion-item>
-    <ion-label position="stacked" required="true">Assign User a Role</ion-label>
-    <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
-      <ion-select-option value="franchisee">Franchise</ion-select-option>
-      <ion-select-option value="storeContact">Store Contact</ion-select-option>
-      <ion-select-option value="hiringManager">Hiring Manager</ion-select-option>
-      <ion-select-option value="applicant">Applicant</ion-select-option>
-      <ion-select-option value="newHire">New Hire</ion-select-option>
-    </ion-select>
-  </ion-item>
-    <ion-button (click)="registerUser()" size="small" color="success">Register</ion-button>
+      <ion-item lines="full" class="uk-margin-bottom">
+        <ion-label position="stacked" required>Password</ion-label>
+        <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
+      </ion-item>
+        <ion-item lines="full" class="uk-margin-bottom">
+          <ion-label position="stacked" required>Phone Number</ion-label>
+          <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
+        </ion-item>
+      <ion-item>
+        <ion-label position="stacked" required="true">Assign User a Role</ion-label>
+        <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
+          <ion-select-option value="franchisee">Franchise</ion-select-option>
+          <ion-select-option value="hiringManager">Hiring Manager</ion-select-option>
+          <ion-select-option value="storeContact">Store Contact</ion-select-option>
+          <ion-select-option value="applicant">Applicant</ion-select-option>
+          <ion-select-option value="newHire">New Hire</ion-select-option>
+          <ion-select-option value="admin">Admin</ion-select-option>
+        </ion-select>
+      </ion-item>
+           <ion-button (click)="registerUser()" size="small" color="success">Register</ion-button>
+      </div>
+      </div>
   </form>
 
   </span>
+  <a routerLinkActive="active" routerLink="/admin/admin-login">Admin Login</a>
+  </div>
 </ion-content>

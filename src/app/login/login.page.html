@@ -1,4 +1,4 @@
-<span *ngIf="isRegisteringFranchise">
+<span *ngIf="isRegisteringFranchiseUser">
   <ion-header>
     <ion-toolbar>
     <ion-title>Register User For a Franchise</ion-title>
@@ -12,7 +12,7 @@
   </ion-toolbar>
   </ion-header>
 </span>
-<ion-header *ngIf="!isRegisteringFranchise || !isRegisteringStore">
+<ion-header *ngIf="!isRegisteringFranchiseUser || !isRegisteringStore">
   <ion-toolbar>
     <ion-title>Register to Access the System</ion-title>
   </ion-toolbar>
@@ -20,7 +20,7 @@
 
 <ion-content>
   <div class="container">
-  <span *ngIf="!isRegistering || !isRegisteringFranchise">
+  <span *ngIf="!isRegistering || !isRegisteringFranchiseUser">
 <form>
   <ion-item lines="full">
     <ion-label position="stacked" required>Email</ion-label>
@@ -42,7 +42,7 @@
   </p>
 </form>
     </span>
-  <span *ngIf="isRegistering === true || isRegisteringFranchise === true">
+  <span *ngIf="isRegistering === true || isRegisteringFranchiseUser === true">
 
       <form [formGroup]="registrationForm">
           <div class="form-row">

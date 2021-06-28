@@ -21,6 +21,10 @@ const routes: Routes = [
   {
     path: 'admin-metrics',
     loadChildren: () => import('./admin-metrics/admin-metrics.module').then( m => m.AdminMetricsPageModule)
+  },
+  {
+    path: 'admin-franchise-list',
+    loadChildren: () => import('./admin-franchise-list/admin-franchise-list.module').then( m => m.AdminFranchiseListPageModule)
   }
 ];
 

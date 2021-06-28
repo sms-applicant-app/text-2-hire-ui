@@ -1,17 +1,14 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AdminAddFranchisePageRoutingModule } from './admin-add-franchise-routing.module';
+import { AdminFranchiseListPageRoutingModule } from './admin-franchise-list-routing.module';
 
-import { AdminAddFranchisePage } from './admin-add-franchise.page';
+import { AdminFranchiseListPage } from './admin-franchise-list.page';
 import {SharedComponentsModule} from "../../shared-components/shared-components.module";
 import {ModalModule} from "../../shared-components/pop-over-window/model/modal/modal.module";
-
-
-
 
 
 @NgModule({
@@ -19,12 +16,14 @@ import {ModalModule} from "../../shared-components/pop-over-window/model/modal/m
     CommonModule,
     FormsModule,
     IonicModule,
-    AdminAddFranchisePageRoutingModule,
-    ReactiveFormsModule,
+    AdminFranchiseListPageRoutingModule,
     SharedComponentsModule,
     ModalModule
   ],
-  declarations: [AdminAddFranchisePage],
+  exports: [
+
+  ],
+  declarations: [AdminFranchiseListPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminAddFranchisePageModule {}
+export class AdminFranchiseListPageModule {}

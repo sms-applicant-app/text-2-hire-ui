@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FranchiseService} from "../../../shared/services/franchise.service";
 import {Franchisee} from "../../../shared/models/franchisee";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-franchise-details',
@@ -9,17 +10,22 @@ import {Franchisee} from "../../../shared/models/franchisee";
 })
 export class FranchiseDetailsComponent implements OnInit, OnChanges {
   @Input() franchisee: Franchisee
+  @Input() franchiseId: string;
   currentFranchise: Franchisee = null
-  franchiseId: string
+
 
   constructor(public franchiseService: FranchiseService) { }
 
   ngOnInit() {
-    console.log('franchise ID =', this.franchisee);
-    this.franchiseId = JSON.parse(localStorage.getItem('franchisee'))
-    this.franchiseService.getFranchiseById(this.franchiseId).subscribe(data =>{
-      console.log('franchise details', data);
-    });
+    console.log('franchise ID =', this.franchiseId);
+
+      this.franchiseService.getFranchiseById(this.franchiseId).subscribe(data =>{
+        console.log('franchise details', data);
+      });
+
+
+
+
   }
   ngOnChanges(): void {
     this.currentFranchise = { ...this.franchisee };

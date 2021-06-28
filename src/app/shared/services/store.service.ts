@@ -19,11 +19,12 @@ export class StoreService {
   getStores(){
     return this.firestore.collection('franchisee').snapshotChanges();
   }
-  updateStore(franchise: Franchisee){
-    delete franchise.franchiseId;
-    this.firestore.doc(`franchisee/${franchise.franchiseId}`).update(franchise).then(resp =>{
-      console.log('updated franchise', resp);
-    });
+  updateStore(franchiseId, data): Promise<any>{
+    return this.firestore.collection('franchisee').doc(`${franchiseId}`).set({data}, {merge: true})
+  }
+  findStores(storeId: string, filter = '', sortOrder ='asc',
+                       pageNumber = 0, pageSize = 3): Observable<Franchisee[]>{
+    return
   }
   deleteStore(franchiseId){
     this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp =>{

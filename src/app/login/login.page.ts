@@ -23,7 +23,7 @@ export class LoginPage implements OnInit {
   userId: string;
   date: Date;
   latestDate: string;
-  isRegisteringFranchise = false;
+  isRegisteringFranchiseUser = false;
   isRegisteringStore = false;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   validation_messages = {
@@ -54,13 +54,13 @@ export class LoginPage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation.extras.state;
     if(state){
-      this.isRegisteringFranchise = state.isRegisteringFranchise? true : null;
+      this.isRegisteringFranchiseUser = state.isRegisteringFranchise? true : null;
     }
 
   }
 
   ngOnInit() {
-    console.log('registering franchise', this.isRegisteringFranchise);
+    console.log('registering franchise', this.isRegisteringFranchiseUser);
     console.log('registering store', this.isRegisteringStore);
     this.acceptTerms = false;
     this.isRegistering = false;

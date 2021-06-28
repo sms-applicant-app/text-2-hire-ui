@@ -34,6 +34,7 @@ export class AdminAddFranchisePage implements OnInit {
   date;
   latestDate: string
   addedFranchiseOwner: boolean
+  showFranchiseDetails: boolean
 
   constructor(
     public dbHelper: FirestoreHelperService,
@@ -49,7 +50,8 @@ export class AdminAddFranchisePage implements OnInit {
     this.initAddFranchiseForm();
     this.addAddress = false;
     this.addressAdded = false;
-    this.addedFranchiseOwner = false
+    this.addedFranchiseOwner = false;
+    this.showFranchiseDetails = false;
   }
   createDate() {
     this.date = new Date();
@@ -60,10 +62,7 @@ export class AdminAddFranchisePage implements OnInit {
   initAddFranchiseForm(){
     this.addFranchiseForm = this.fb.group({
       legalBusinessName: ['', Validators.required],
-      fistName: ['', [Validators.required]],
-      lastName: [''],
       corporateEmail: [''],
-      jobTitle: [''],
       dba: [''],
       corporatePhone: ['']
     });
@@ -72,14 +71,14 @@ export class AdminAddFranchisePage implements OnInit {
     this.addedFranchiseOwner = $event;
     console.log('user added', this.addedFranchiseOwner);
     if(this.addedFranchiseOwner){
-      this.createUserForFranchise();
+      this.showFranchiseDetails = true
     }
   }
   receiveAddressMessage($event){
     this.addressAdded = $event;
     console.log('address added', this.addressAdded);
     if(this.addressAdded){
-      this.createUserForFranchise();
+      this.goToFranchiseList()
     }
   }
 
@@ -87,19 +86,27 @@ export class AdminAddFranchisePage implements OnInit {
     this.createDate()
     this.newFranchise.businessLegalName = this.addFranchiseForm.controls.legalBusinessName.value;
     this.newFranchise.corporateEmail = this.addFranchiseForm.controls.corporateEmail.value;
-    this.newFranchise.jobTitle = this.addFranchiseForm.controls.jobTitle.value;
+   // this.newFranchise.jobTitle = this.addFranchiseForm.controls.jobTitle.value;
     this.newFranchise.dba = this.addFranchiseForm.controls.dba.value;
+    this.newFranchise.phoneNumber = this.addFranchiseForm.controls.corporatePhone.value
     this.newFranchise.addressId = this.addressId;
     this.newFranchise.dateCreated = this.latestDate
     const newFranchise = await this.franchiseService.createFranchise(this.newFranchise)
       this.franchiseAdded = true;
-    console.log('new franchise id=', this.newFranchise.id = newFranchise.id)
+   this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));
+    console.log('new franchise id=', this.newFranchise.id)
+   return this.newFranchise.id
 }
   addFranchiseAddress(){
     this.addressId = uuidv4();
     this.addAddress = true;
     this.addressType = 'franchise';
-    this.addFranchise();
+    this.addFranchise().then(franchiseId =>{
+      console.log('franchise added in address method ', franchiseId)
+    });
+  }
+  goToFranchiseList(){
+    this.router.navigate(['admin/admin-franchise-list'])
   }
   createUserForFranchise(){
     const navigationExtras: NavigationExtras={

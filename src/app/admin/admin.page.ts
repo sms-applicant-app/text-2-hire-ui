@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FirestoreHelperService} from '../shared/firestore-helper.service';
 import {NavigationExtras, Router} from "@angular/router";
+import {Franchisee} from "../shared/models/franchisee";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-admin',
@@ -9,11 +11,21 @@ import {NavigationExtras, Router} from "@angular/router";
 })
 export class AdminPage implements OnInit {
   name: string;
+  franchisees: Franchisee[]
   isRegisteringFranchise: boolean;
+  franchiseData: any = []
   constructor(public dbHelper: FirestoreHelperService, public router: Router) { }
 
   ngOnInit() {
     this.isRegisteringFranchise = true;
+    this.franchisees = []
+    this.dbHelper.collectionWithIds$('franchisee').subscribe((data:[]) => {
+      this.franchisees = data
+    })
+    console.log('franchises', this.franchisees)
+  }
+  getFranchiseById(){
+    console.log(this.franchisees)
   }
     addUserForFranchise(){
     const navigationExtras: NavigationExtras = {

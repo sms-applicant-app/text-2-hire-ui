@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {User} from "../../../shared/models/user";
 import {DatePipe} from "@angular/common";
 import {FormBuilder, FormGroup} from "@angular/forms";
@@ -15,21 +15,26 @@ import {StoreManager} from "../../../shared/models/store-manager";
 export class RegisterUserComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<boolean>();
   @Output() addedUserEvent = new EventEmitter<any>()
+  @Input() franchiseId: string;
   newStoreManager: StoreManager = new StoreManager()
+  newUser: User = new User()
+  userForm: FormGroup
   date;
   userId: string;
   latestDate: string
   registrationForm: FormGroup;
-  franchiseId: string;
+
   userAdded: boolean;
   constructor(public datePipe: DatePipe, public fb: FormBuilder, public authService: AuthService, public dbHelper: FirestoreHelperService) { }
 
   ngOnInit() {
+    this.userForm = this.fb.group({
+      email: [''],
+      password: ['']
+    })
     this.registrationForm = this.fb.group({
       firstName: [''],
       lastName: [''],
-      email: [''],
-      password: [''],
       role: [''],
       phoneNumber: ['']
     });
@@ -40,17 +45,35 @@ export class RegisterUserComponent implements OnInit {
 
     return this.latestDate;
   }
-    registerStoreManagerUser(){
+  registerStoreManagerUser(){
     this.createDate();
-    this.newStoreManager.user.email = this.registrationForm.controls.email.value;
-    this.newStoreManager.user.password = this.registrationForm.controls.password.value;
-    this.newStoreManager.user.role = this.registrationForm.controls.role.value;
-    this.authService.RegisterUser(this.newStoreManager.user.email, this.newStoreManager.user.password).then(u=>{
+    this.newUser.email = this.userForm.controls.email.value;
+    this.newUser.password = this.userForm.controls.password.value;
+    this.authService.RegisterUser(this.newUser.email, this.newUser.password).then(u=>{
       console.log('registered user', u);
       const user ={
         firstName: this.registrationForm.controls.firstName.value,
         lastName: this.registrationForm.controls.lastName.value,
-        email: this.registrationForm.controls.email.value,
+        email: this.userForm.controls.email.value,
+        role: this.registrationForm.controls.role.value,
+        phoneNumber: this.registrationForm.controls.phoneNumber.value,
+        dateCreated: this.latestDate
+      };
+      this.dbHelper.set(`users/${this.userId}`, user);
+      this.authService.SendVerificationMail();
+      this.userAdded = true
+    });
+  }
+  registerFranchiseOwner(){
+    this.createDate();
+    this.newUser.email = this.userForm.controls.email.value;
+    this.newUser.password = this.userForm.controls.password.value;
+    this.authService.RegisterUser(this.newUser.email, this.newUser.password).then(u=>{
+      console.log('registered user', u);
+      const user ={
+        firstName: this.registrationForm.controls.firstName.value,
+        lastName: this.registrationForm.controls.lastName.value,
+        email: this.userForm.controls.email.value,
         role: this.registrationForm.controls.role.value,
         phoneNumber: this.registrationForm.controls.phoneNumber.value,
         dateCreated: this.latestDate

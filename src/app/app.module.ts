@@ -20,6 +20,8 @@ import {ApplicantListComponent} from "./shared-components/components/applicant-l
 import {StoreListComponent} from "./shared-components/components/store-list/store-list.component";
 import {JobsListComponent} from "./shared-components/components/jobs-list/jobs-list.component";
 import {AddressFormComponent} from "./shared-components/components/address-form/address-form.component";
+import {ModalModule} from "./shared-components/pop-over-window/model/modal/modal.module";
+import {SharedComponentsModule} from "./shared-components/shared-components.module";
 
 
 
@@ -39,13 +41,16 @@ import {AddressFormComponent} from "./shared-components/components/address-form/
     AngularFirestoreModule,
     AngularFireStorageModule,
     BrowserAnimationsModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    ModalModule,
+    SharedComponentsModule
   ],
   providers: [
     AngularFirestoreModule,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
   bootstrap: [AppComponent],
   exports: [
+    SharedComponentsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

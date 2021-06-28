@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {Franchisee} from "../models/franchisee";
+import {FirestoreHelperService} from "../firestore-helper.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import {Franchisee} from "../models/franchisee";
 export class FranchiseService {
 
   constructor(
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore, public dbHelper: FirestoreHelperService
   ) { }
   getFranchiseOwner(id): Observable<any>{
     return this.firestore.doc(`users/${id}`).valueChanges();
@@ -22,12 +23,20 @@ export class FranchiseService {
     console.log('adding franchise',franchise);
     return this.firestore.collection('franchisee').add(franchiseObj).then(docRef =>{
         const franchiseId = docRef.id
-      localStorage.setItem('franchisee', JSON.stringify(franchiseId));
+      localStorage.setItem('added-franchisee', JSON.stringify(franchiseId));
         console.log('add franchise id =', franchiseId)
     })
   }
   getFranchises(){
     return this.firestore.collection('franchisee').snapshotChanges();
+  }
+  findFranchisesStores(franchiseId: string, filter = '', sortOrder ='asc',
+                 pageNumber = 0, pageSize = 3): Observable<Franchisee[]>{
+    return
+  }
+
+  getAllFranchisesWithDbHelper():Observable<any>{
+  return this.dbHelper.collectionWithIds$('franchisee')
   }
   updateFranchise(franchiseId, data): Promise<any>{
     return this.firestore.collection('franchisee').doc(`${franchiseId}`).set({data}, {merge: true})

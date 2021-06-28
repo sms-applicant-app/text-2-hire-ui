@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,6 +10,7 @@ import { AdminPage } from './admin.page';
 import {AdminLoginComponent} from './admin-login/admin-login.component';
 
 import {AppModule} from "../app.module";
+import {SharedComponentsModule} from "../shared-components/shared-components.module";
 
 
 @NgModule({
@@ -17,8 +18,10 @@ import {AppModule} from "../app.module";
     CommonModule,
     FormsModule,
     IonicModule,
+    SharedComponentsModule,
     AdminPageRoutingModule
   ],
-  declarations: [AdminPage, AdminLoginComponent]
+  declarations: [AdminPage, AdminLoginComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminPageModule {}

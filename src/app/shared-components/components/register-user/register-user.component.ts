@@ -14,14 +14,14 @@ import {StoreManager} from "../../../shared/models/store-manager";
 })
 export class RegisterUserComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<boolean>();
-  @Output() addedUserEvent = new EventEmitter<any>()
+  @Output() addedUserEvent = new EventEmitter<any>();
   @Input() franchiseId: string;
-  newStoreManager: StoreManager = new StoreManager()
-  newUser: User = new User()
-  userForm: FormGroup
+  newStoreManager: StoreManager = new StoreManager();
+  newUser: User = new User();
+  userForm: FormGroup;
   date;
   userId: string;
-  latestDate: string
+  latestDate: string;
   registrationForm: FormGroup;
 
   userAdded: boolean;
@@ -31,7 +31,7 @@ export class RegisterUserComponent implements OnInit {
     this.userForm = this.fb.group({
       email: [''],
       password: ['']
-    })
+    });
     this.registrationForm = this.fb.group({
       firstName: [''],
       lastName: [''],
@@ -61,7 +61,7 @@ export class RegisterUserComponent implements OnInit {
       };
       this.dbHelper.set(`users/${this.userId}`, user);
       this.authService.SendVerificationMail();
-      this.userAdded = true
+      this.userAdded = true;
     });
   }
   registerFranchiseOwner(){
@@ -87,6 +87,6 @@ export class RegisterUserComponent implements OnInit {
     this.messageEvent.emit(this.userAdded);
   }
   sendUserMessage(){
-    this.addedUserEvent.emit(this.newStoreManager)
+    this.addedUserEvent.emit(this.newStoreManager);
   }
 }

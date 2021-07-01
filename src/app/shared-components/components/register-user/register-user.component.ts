@@ -5,6 +5,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {AuthService} from "../../../shared/services/auth.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {StoreManager} from "../../../shared/models/store-manager";
+import { v4 as uuidv4 } from 'uuid';
+import {uuid4} from "@capacitor/core/dist/esm/util";
 
 @Component({
   selector: 'app-register-user',
@@ -13,8 +15,8 @@ import {StoreManager} from "../../../shared/models/store-manager";
   providers: [ DatePipe ]
 })
 export class RegisterUserComponent implements OnInit {
-  @Output() messageEvent = new EventEmitter<boolean>();
-  @Output() addedUserEvent = new EventEmitter<any>();
+  @Output() messageEvent = new EventEmitter<StoreManager>();
+  @Output() addedUserEvent = new EventEmitter<StoreManager>();
   @Input() franchiseId: string;
   newStoreManager: StoreManager = new StoreManager();
   newUser: User = new User();
@@ -23,11 +25,11 @@ export class RegisterUserComponent implements OnInit {
   userId: string;
   latestDate: string;
   registrationForm: FormGroup;
-
   userAdded: boolean;
   constructor(public datePipe: DatePipe, public fb: FormBuilder, public authService: AuthService, public dbHelper: FirestoreHelperService) { }
 
   ngOnInit() {
+    this.userAdded = false;
     this.userForm = this.fb.group({
       email: [''],
       password: ['']
@@ -47,6 +49,7 @@ export class RegisterUserComponent implements OnInit {
   }
   registerStoreManagerUser(){
     this.createDate();
+    this.userId = uuid4();
     this.newUser.email = this.userForm.controls.email.value;
     this.newUser.password = this.userForm.controls.password.value;
     this.authService.RegisterUser(this.newUser.email, this.newUser.password).then(u=>{
@@ -59,9 +62,12 @@ export class RegisterUserComponent implements OnInit {
         phoneNumber: this.registrationForm.controls.phoneNumber.value,
         dateCreated: this.latestDate
       };
+      this.newStoreManager.dateCreated = this.latestDate;
+      this.newStoreManager.franchiseId = this.franchiseId;
       this.dbHelper.set(`users/${this.userId}`, user);
       this.authService.SendVerificationMail();
       this.userAdded = true;
+      this.sendUserMessage();
     });
   }
   registerFranchiseOwner(){
@@ -80,13 +86,11 @@ export class RegisterUserComponent implements OnInit {
       };
       this.dbHelper.set(`users/${this.userId}`, user);
       this.authService.SendVerificationMail();
-      this.userAdded = true
+      this.userAdded = true;
     });
   }
-  sendMessage() {
-    this.messageEvent.emit(this.userAdded);
-  }
   sendUserMessage(){
+    console.log('message being sent', this.newStoreManager);
     this.addedUserEvent.emit(this.newStoreManager);
   }
 }

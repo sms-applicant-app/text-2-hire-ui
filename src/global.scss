@@ -24,6 +24,24 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+@import "~src/sms-text-app.scss";
+/*@import "~src/assets/metronic-them.scss";*/
 .side-menu{
   --side-max-width: 200px;
 }
+.mat-stepper-horizontal, .mat-stepper-vertical{
+  background-color: white;
+  color: black;
+}
+.mat-vertical-stepper-header{
+  height: 10px;
+}
+.mat-dialog-content{
+  height: 700px;
+}
+
+.sc-ion-modal-md-h{
+  height: 700px !important;
+}
+
+

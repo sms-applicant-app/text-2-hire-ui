@@ -7,13 +7,15 @@ import {FranchiseService} from "../../shared/services/franchise.service";
 import {Franchisee} from "../../shared/models/franchisee";
 import {Address} from "../../shared/models/address";
 import { v4 as uuidv4 } from 'uuid';
+import {MatStepper} from "@angular/material/stepper";
+import {MatDialog} from "@angular/material/dialog";
 
 
 @Component({
   selector: 'app-admin-add-franchise',
   templateUrl: './admin-add-franchise.page.html',
   styleUrls: ['./admin-add-franchise.page.scss'],
-  providers: [ DatePipe ]
+  providers: [ DatePipe , MatStepper]
 })
 export class AdminAddFranchisePage implements OnInit {
   addFranchiseForm: FormGroup;
@@ -28,20 +30,21 @@ export class AdminAddFranchisePage implements OnInit {
   franchiseId: any;
   newFranchise: Franchisee = new Franchisee();
   addAddress: boolean;
-  addUser:boolean;
+  addUser: boolean;
   addressAdded: boolean;
   franchiseAdded = false;
   date;
-  latestDate: string
-  addedFranchiseOwner: boolean
-  showFranchiseDetails: boolean
+  latestDate: string;
+  addedFranchiseOwner: boolean;
+  showFranchiseDetails: boolean;
 
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
     public fb: FormBuilder,
     public router: Router,
-    public franchiseService: FranchiseService
+    public franchiseService: FranchiseService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -71,43 +74,45 @@ export class AdminAddFranchisePage implements OnInit {
     this.addedFranchiseOwner = $event;
     console.log('user added', this.addedFranchiseOwner);
     if(this.addedFranchiseOwner){
-      this.showFranchiseDetails = true
+      this.showFranchiseDetails = true;
     }
   }
   receiveAddressMessage($event){
     this.addressAdded = $event;
     console.log('address added', this.addressAdded);
     if(this.addressAdded){
-      this.goToFranchiseList()
+      this.goToFranchiseList();
     }
   }
 
  async addFranchise(){
-    this.createDate()
+    this.createDate();
     this.newFranchise.businessLegalName = this.addFranchiseForm.controls.legalBusinessName.value;
     this.newFranchise.corporateEmail = this.addFranchiseForm.controls.corporateEmail.value;
    // this.newFranchise.jobTitle = this.addFranchiseForm.controls.jobTitle.value;
     this.newFranchise.dba = this.addFranchiseForm.controls.dba.value;
-    this.newFranchise.phoneNumber = this.addFranchiseForm.controls.corporatePhone.value
+    this.newFranchise.phoneNumber = this.addFranchiseForm.controls.corporatePhone.value;
     this.newFranchise.addressId = this.addressId;
-    this.newFranchise.dateCreated = this.latestDate
-    const newFranchise = await this.franchiseService.createFranchise(this.newFranchise)
-      this.franchiseAdded = true;
-   this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));
-    console.log('new franchise id=', this.newFranchise.id)
-   return this.newFranchise.id
+    this.newFranchise.dateCreated = this.latestDate;
+    const newFranchise = await this.franchiseService.createFranchise(this.newFranchise);
+    this.franchiseAdded = true;
+    this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));
+    console.log('new franchise id=', this.newFranchise.id);
+   return this.newFranchise.id;
 }
   addFranchiseAddress(){
     this.addressId = uuidv4();
     this.addAddress = true;
     this.addressType = 'franchise';
     this.addFranchise().then(franchiseId =>{
-      console.log('franchise added in address method ', franchiseId)
+      console.log('franchise added in address method ', franchiseId);
     });
   }
   goToFranchiseList(){
-    this.router.navigate(['admin/admin-franchise-list'])
+    this.router.navigate(['admin/admin-franchise-list']);
   }
+
+
   createUserForFranchise(){
     const navigationExtras: NavigationExtras={
       state:{

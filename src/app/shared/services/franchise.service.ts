@@ -22,10 +22,10 @@ export class FranchiseService {
     const franchiseObj = {...franchise};
     console.log('adding franchise',franchise);
     return this.firestore.collection('franchisee').add(franchiseObj).then(docRef =>{
-        const franchiseId = docRef.id
+        const franchiseId = docRef.id;
       localStorage.setItem('added-franchisee', JSON.stringify(franchiseId));
-        console.log('add franchise id =', franchiseId)
-    })
+        console.log('add franchise id =', franchiseId);
+    });
   }
   getFranchises(){
     return this.firestore.collection('franchisee').snapshotChanges();
@@ -35,11 +35,11 @@ export class FranchiseService {
     return
   }
 
-  getAllFranchisesWithDbHelper():Observable<any>{
-  return this.dbHelper.collectionWithIds$('franchisee')
+  getAllFranchisesWithDbHelper(): Observable<any>{
+  return this.dbHelper.collectionWithIds$('franchisee');
   }
   updateFranchise(franchiseId, data): Promise<any>{
-    return this.firestore.collection('franchisee').doc(`${franchiseId}`).set({data}, {merge: true})
+    return this.firestore.collection('franchisee').doc(`${franchiseId}`).set({data}, {merge: true});
   }
   deleteFranchise(franchiseId){
     this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp =>{

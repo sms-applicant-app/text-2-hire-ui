@@ -11,6 +11,7 @@ import {uniqid} from 'uniqid';
 import {ModalController, NavParams} from '@ionic/angular';
 import {User} from '../../../shared/models/user';
 import {RegisterUserComponent} from '../register-user/register-user.component';
+import {AddStoreComponent} from '../add-store/add-store.component';
 
 @Component({
   selector: 'app-franchise-list',
@@ -79,7 +80,15 @@ export class FranchiseListComponent implements OnInit {
 
     }
 
-    addStoreToFranchise(id){
-
+   async addStoreToFranchise(franchiseId){
+    console.log('display add store');
+      const addStoreModel = await this.modalController.create({
+        component: AddStoreComponent,
+        swipeToClose: true,
+        componentProps: {
+          franchiseId
+        }
+      });
+      return await addStoreModel.present();
     }
 }

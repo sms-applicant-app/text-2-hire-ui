@@ -1,23 +1,58 @@
-<ion-header>
-  <h1 class="ion-padding">Add Store to {{businessLegalName}}</h1>
-</ion-header>
+<!--begin::Stepper-->
+<mat-dialog-content>
+  <mat-horizontal-stepper #stepper (selectionChange)="selectionChange($event)">
+<mat-stepper linear>
+  <mat-step [stepControl]="addStoreForm">
+    <form [formGroup]="addStoreForm">
+        <div class="form-row">
+          <div class="form-group col-lg-7 col-sm-12">
+            <ion-item lines="full">
+              <ion-label position="stacked" required>Name of Store</ion-label>
+              <ion-input clearInput type="text" formControlName="storeName" required></ion-input>
+            </ion-item>
+            <ion-item lines="full">
+              <ion-label position="stacked" required>Unique Store Number (ID)</ion-label>
+              <ion-input clearInput type="text" formControlName="storeNumber"></ion-input>
+            </ion-item>
+            <ion-item lines="full">
+              <ion-label position="stacked" required>Store Phone Number</ion-label>
+              <ion-input clearInput type="text" formControlName="storePhoneNumber"></ion-input>
+            </ion-item>
+            <div>
+              <button mat-button matStepperPrevious type="button">Back</button>
+              <button mat-button matStepperNext type="button">Next</button>
+            </div>
+          </div>
+        </div>
+      </form>
+  </mat-step>
+  <mat-step label="Register User For Store">
+    <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId"></app-register-user>
+    <div>
+      <button mat-button matStepperPrevious type="button">Back</button>
+      <button mat-button matStepperNext type="button">Skip</button>
+    </div>
+  </mat-step>
+  <mat-step label="Store Address" style="margin-bottom: 20px;">
+    <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
+    <button mat-button matStepperPrevious type="button">Back</button>
+    <button (click)="addStore()" mat-button matStepperNext type="button">Next</button>
+  </mat-step>
 
-<ion-content>
-  <div class="container ion-padding-top">
-    <form [formGroup]="addStoreForm" >
-      <div class="form-row">
-        <div class="form-group col-lg-7 col-sm-12">
-          <label>Unique Store Number (can use phone number)</label>
-          <ion-input type="text" formControlName="storeNumber" class="form-control" ></ion-input>
-        </div>
-        <div class="form-group col-lg-7 col-sm-12">
-          <label>First Name</label>
-          <ion-input type="text" formControlName="storePhoneNumber" class="form-control" ></ion-input>
-        </div>
-      </div>
-    </form>
-    <app-address-form class="headless" [addressId]="addressId"></app-address-form>
-    <ion-button (click)="addStore()" color="success">Add Franchise</ion-button>
-    <a routerLink="/admin" class="btn btn-link">Cancel</a>
+
+  <mat-step label="Add Another store" style="padding-bottom: 10px;">
+    <ion-button (click)="goBack(stepper)">Add Another Store</ion-button>
+    <ion-button (click)="addUserToStore()">Add User to Store</ion-button>
+  </mat-step>
+  </mat-stepper>
+  </mat-horizontal-stepper>
+</mat-dialog-content>
+<!--end::Stepper-->
+<!--
+<mat-step label="Add Store Manager">
+  <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId"></app-register-user>
+  <div>
+    <button mat-button matStepperPrevious type="button">Back</button>
+    <button mat-button matStepperNext type="button">Skip</button>
   </div>
-</ion-content>
+</mat-step>-->

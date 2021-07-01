@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Observable} from "rxjs";
-import {Franchisee} from "../models/franchisee";
+import {AngularFirestore} from '@angular/fire/firestore';
+import {Observable} from 'rxjs';
+import {Store} from '../models/store';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,24 +12,29 @@ export class StoreService {
     public firestore: AngularFirestore
   ) { }
   getStoresByFranchise(id): Observable<any>{
-    return this.firestore.doc(`users/${id}`).valueChanges();
+    return this.firestore.doc(`store/${id}`).valueChanges();
   }
-  createStore(franchise: Franchisee){
-    return this.firestore.collection('franchisee').add(`${franchise}`);
+  async createStore(store: Store): Promise<any>{
+    const storeObj = {...store};
+    console.log('adding store', store);
+    return this.firestore.collection('store').add(storeObj).then(docRef =>{
+      const storeId = docRef.id;
+      console.log('add store id =', storeId);
+    });
   }
   getStores(){
-    return this.firestore.collection('franchisee').snapshotChanges();
+    return this.firestore.collection('store').snapshotChanges();
   }
-  updateStore(franchiseId, data): Promise<any>{
-    return this.firestore.collection('franchisee').doc(`${franchiseId}`).set({data}, {merge: true})
+  updateStore(storeId, data): Promise<any>{
+    return this.firestore.collection('store').doc(`${storeId}`).set({data}, {merge: true});
   }
   findStores(storeId: string, filter = '', sortOrder ='asc',
-                       pageNumber = 0, pageSize = 3): Observable<Franchisee[]>{
+                       pageNumber = 0, pageSize = 3): Observable<Store[]>{
     return
   }
   deleteStore(franchiseId){
-    this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp =>{
-      console.log('deleting franchise', resp);
+    this.firestore.doc(`store/${franchiseId}`).delete().then(resp =>{
+      console.log('deleting store', resp);
     });
   }
 }

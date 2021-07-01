@@ -10,9 +10,8 @@ import {Address} from "../../../shared/models/address";
 export class AddressFormComponent implements OnInit {
   @Input() addressId: any;
   @Input() addressType: any;
+  @Output() messageEvent = new EventEmitter<Address>();
   addressAdded: boolean;
-  @Output() messageEvent = new EventEmitter<boolean>();
-
   //addressId: string;
   addressForm: FormGroup;
   newAddress: Address = new Address();
@@ -21,10 +20,11 @@ export class AddressFormComponent implements OnInit {
 
   ngOnInit() {
     console.log('address id =', this.addressId);
-    console.log('address type = ', this.addressType)
+    console.log('address type = ', this.addressType);
     this.initAddressForm();
     this.addressAdded = false;
     //TODO get user id on init from or after registration
+
   }
   initAddressForm(){
     this.addressForm = this.fb.group({
@@ -57,7 +57,7 @@ export class AddressFormComponent implements OnInit {
     this.sendMessage();
   }
   sendMessage() {
-    this.messageEvent.emit(this.addressAdded);
+    this.messageEvent.emit(this.newAddress);
   }
 
 }

@@ -9,6 +9,8 @@ import { AdminFranchiseListPageRoutingModule } from './admin-franchise-list-rout
 import { AdminFranchiseListPage } from './admin-franchise-list.page';
 import {SharedComponentsModule} from "../../shared-components/shared-components.module";
 import {ModalModule} from "../../shared-components/pop-over-window/model/modal/modal.module";
+import {MatStepperModule} from "@angular/material/stepper";
+import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 
 
 @NgModule({
@@ -18,12 +20,19 @@ import {ModalModule} from "../../shared-components/pop-over-window/model/modal/m
     IonicModule,
     AdminFranchiseListPageRoutingModule,
     SharedComponentsModule,
-    ModalModule
+    ModalModule,
+    MatStepperModule
   ],
   exports: [
 
   ],
   declarations: [AdminFranchiseListPage],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { displayDefaultIndicatorType: false }
+    }
+  ]
 })
 export class AdminFranchiseListPageModule {}

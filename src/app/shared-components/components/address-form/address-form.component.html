@@ -1,5 +1,6 @@
 <ion-list class="headless">
-  <h2 style="font-weight: bold">Provide Address</h2>
+  <h3>{{addressType}} Address</h3>
+  <span *ngIf="!addressAdded">
   <form [formGroup]="addressForm">
     <ion-item>
       <ion-label position="stacked" required="true">Street address</ion-label>
@@ -78,6 +79,16 @@
     </ion-item>
 
   </form>
-  <ion-button (click)="submitAddress()" color="success">Add Address</ion-button>
+    </span>
+  <span *ngIf="!addressAdded">
+    <ion-button (click)="submitAddress()" color="success">Add Address</ion-button>
+  </span>
+  <span *ngIf="addressAdded">
+    <p>{{newAddress.streetAdd1}}<br>
+        {{newAddress.streetAdd2}}<br>
+        {{newAddress.state}},
+        {{newAddress.city}},
+        {{newAddress.zipCode}}</p>
+  </span>
 </ion-list>
 

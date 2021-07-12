@@ -31,5 +31,12 @@ export class FranchisePage implements OnInit {
       console.log(user);
     });
   }
+  // todo Add Store call and add store wizard component
+
+  // todo Add Job rec component modal
+
+  // todo list stores component modal by franchise
+
+  // todo add user calls registration component
 
 }

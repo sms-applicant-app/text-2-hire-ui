@@ -79,7 +79,12 @@ export class FranchiseListComponent implements OnInit {
       return await userModal.present();
 
     }
+    export(){
 
+    }
+  getFranchiseDetails(id){
+    //show stores card with list of jobs
+  }
    async addStoreToFranchise(franchiseId){
     console.log('display add store');
       const addStoreModel = await this.modalController.create({

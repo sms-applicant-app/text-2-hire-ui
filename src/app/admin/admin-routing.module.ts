@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminPage } from './admin.page';
-import {AdminLoginComponent} from "./admin-login/admin-login.component";
+import {AdminLoginComponent} from './admin-login/admin-login.component';
 
 const routes: Routes = [
   {

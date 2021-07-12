@@ -1,8 +1,10 @@
-<!--
+<p *ngIf="storeData.length <= 0">No Stores For this Franchise added Yet</p>
 <mat-table [dataSource]="dataSource">
-  <ng-container  matColumnDef="storeNumber">
-    <mat-header-cell *matHeaderCellDef>Store Number</mat-header-cell>
-    <mat-cell *matCellDef="let franchise"></mat-cell>
+  <ng-container  matColumnDef="storeId">
+    <mat-header-cell *matHeaderCellDef>Store Id</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.storeId}}</mat-cell>
   </ng-container>
+  <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
 </mat-table>
--->
+

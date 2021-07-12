@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { StorePageRoutingModule } from './store-routing.module';
 
 import { StorePage } from './store.page';
-import {AddStoreComponent} from "./add-store/add-store.component";
-import {AppModule} from "../app.module";
+import {AddStoreComponent} from './add-store/add-store.component';
+
 
 
 @NgModule({
@@ -17,12 +17,9 @@ import {AppModule} from "../app.module";
     FormsModule,
     IonicModule,
     StorePageRoutingModule,
-    ReactiveFormsModule,
-    AppModule
+    ReactiveFormsModule
   ],
-    exports: [
-       AddStoreComponent
-    ],
-    declarations: [StorePage, AddStoreComponent]
+    declarations: [StorePage, AddStoreComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class StorePageModule {}

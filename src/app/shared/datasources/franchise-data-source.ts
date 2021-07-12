@@ -5,6 +5,7 @@ import {FirestoreHelperService} from "../firestore-helper.service";
 import {FranchiseService} from "../services/franchise.service";
 import {catchError, finalize} from "rxjs/operators";
 import {Store} from "../models/store";
+import {StoreService} from "../services/store.service";
 
 export class FranchiseDataSource extends DataSource<any> {
 
@@ -14,8 +15,8 @@ export class FranchiseDataSource extends DataSource<any> {
 
   public loading$ = this.loadingSubject.asObservable();
 
-  constructor(private franchiseService: FranchiseService) {
-    super()
+  constructor(private franchiseService: FranchiseService, private storeService: StoreService ) {
+    super();
   }
 
   loadFranchises(franchiseId: string,
@@ -23,15 +24,18 @@ export class FranchiseDataSource extends DataSource<any> {
                  sortDirection: string,
                  pageIndex: number,
                  pageSize: number){
-    this.loadingSubject.next(true)
+    this.loadingSubject.next(true);
     this.franchiseService.findFranchisesStores(franchiseId, filter, sortDirection,
       pageIndex, pageSize).pipe(
         catchError(()=> of([])),
       finalize(() => this.loadingSubject.next(false))
-    ).subscribe(data => this.franchiseSubject.next(data))
+    ).subscribe(data => this.franchiseSubject.next(data));
   }
   connect(): Observable<any[]>{
-    return this.franchiseService.getFranchises()
+    return this.franchiseService.getFranchises();
+  }
+  connectStore(): Observable<any[]>{
+    return this.storeService.getStores();
   }
   disconnect(collectionViewer: CollectionViewer): void {
     this.storeSubject.complete();

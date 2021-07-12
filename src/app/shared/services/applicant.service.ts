@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {Franchisee} from "../models/franchisee";
+import {Applicant} from "../models/applicant";
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +14,20 @@ export class ApplicantService {
   getApplicantsByFranchise(id): Observable<any>{
     return this.firestore.doc(`users/${id}`).valueChanges();
   }
-  getApplicantsByStore(){
-    return this.firestore.collection('franchisee').snapshotChanges();
+  getApplicantsByStore(storeId){
+    return this.firestore.collection('applicants').snapshotChanges();
   }
-  createApplicantOnboardPacket(franchise: Franchisee){
-    return this.firestore.collection('franchisee').add(`${franchise}`);
+  createApplicantOnboardPacket(applicant: Applicant){
+    return this.firestore.collection('applicant').add(`${applicant}`);
   }
-  updateApplicant(franchise: Franchisee){
+  /*updateApplicant(applicant: Applicant){
     delete franchise.franchiseId;
-    this.firestore.doc(`franchisee/${franchise.franchiseId}`).update(franchise).then(resp =>{
+    this.firestore.doc(`applicant/${id}`).update(applicant).then(resp =>{
       console.log('updated franchise', resp);
     });
-  }
-  deleteApplicant(franchiseId){
-    this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp =>{
+  }*/
+  deleteApplicant(applicantId){
+    this.firestore.doc(`franchisee/${applicantId}`).delete().then(resp =>{
       console.log('deleting franchise', resp);
     });
   }

@@ -1,35 +1,61 @@
-<p *ngIf="franchiseData.length <= 0">Now Franchises added Yet</p>
-
-<div class =mat-elevation-z8 *ngIf="franchiseData.length > 0">
-<mat-table [dataSource]="dataSource">
-  <ng-container  matColumnDef="businessLegalName">
-    <mat-header-cell *matHeaderCellDef>Franchise Legal Name</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{element.businessLegalName}}</mat-cell>
-  </ng-container>
-  <ng-container  matColumnDef="dateCreated">
-    <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{element.dateCreated}}</mat-cell>
-  </ng-container>
-  <ng-container  matColumnDef="phoneNumber">
-    <mat-header-cell *matHeaderCellDef>Corporate Phone Number</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
-  </ng-container>
-  <ng-container  matColumnDef="corporateEmail">
-    <mat-header-cell *matHeaderCellDef>Corporate Email</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{element.corporateEmail}}</mat-cell>
-  </ng-container>
-  <ng-container  matColumnDef="dba">
-    <mat-header-cell *matHeaderCellDef>DBA</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{element.dba}}</mat-cell>
-  </ng-container>
-  <ng-container  matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-    <mat-cell *matCellDef="let element"><ion-button class="ion-margin" (click)="addUserToFranchise(element.id)">Add User</ion-button>
-      <ion-button (click)="addStoreToFranchise(element.id)">Add Store</ion-button></mat-cell>
-
-  </ng-container>
-  <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
-</mat-table>
+<div class="card card-custom">
+<p *ngIf="franchiseData.length <= 0">No Franchises added Yet</p>
+<div class="card-header flex-wrap border-0 pt-6 pb-0">
+    <div class="card-title">
+      <h3 class="card-label">Franchise Card</h3>
+    </div>
+ <!-- <div class="card-toolbar">
+    <button class="btn btn-light-primary" (click)="export()">Export</button>
+  </div>-->
 </div>
-
+  <div class =mat-elevation-z8 *ngIf="franchiseData.length > 0">
+    <mat-table [dataSource]="dataSource">
+      <ng-container  matColumnDef="businessLegalName">
+        <mat-header-cell *matHeaderCellDef>Franchise Legal Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.businessLegalName}}</mat-cell>
+      </ng-container>
+      <ng-container  matColumnDef="dateCreated">
+        <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.dateCreated}}</mat-cell>
+      </ng-container>
+      <ng-container  matColumnDef="phoneNumber">
+        <mat-header-cell *matHeaderCellDef>Corporate Phone Number</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
+      </ng-container>
+      <ng-container  matColumnDef="corporateEmail">
+        <mat-header-cell *matHeaderCellDef>Corporate Email</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.corporateEmail}}</mat-cell>
+      </ng-container>
+      <ng-container  matColumnDef="dba">
+        <mat-header-cell *matHeaderCellDef>DBA</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.dba}}</mat-cell>
+      </ng-container>
+      <ng-container  matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <ion-item>
+            <a class="btn btn-sm btn-clean btn-icon" (click)="addUserToFranchise(element.id)">
+            <ion-icon name="add-circle">
+            </ion-icon>
+              User </a>
+          </ion-item>
+          <ion-item>
+            <a class="btn btn-sm btn-clean btn-icon" (click)="addStoreToFranchise(element.id)">
+              <ion-icon name="add-circle-outline">
+              </ion-icon>
+              Store</a>
+          </ion-item>
+          <ion-item>
+            <a class="btn btn-sm btn-clean btn-icon" (click)="getFranchiseDetails(element.id)">
+              <ion-icon name="open-outline">
+              </ion-icon>
+             Details </a>
+          </ion-item>
+          <!--<ion-button (click)="addStoreToFranchise(element.id)">Add Store</ion-button></mat-cell>-->
+        </mat-cell>>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
+    </mat-table>
+  </div>
+</div>

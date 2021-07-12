@@ -19,6 +19,7 @@ export class StoreService {
     console.log('adding store', store);
     return this.firestore.collection('store').add(storeObj).then(docRef =>{
       const storeId = docRef.id;
+      localStorage.setItem('added-storeId', JSON.stringify(storeId));
       console.log('add store id =', storeId);
     });
   }

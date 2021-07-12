@@ -26,23 +26,30 @@
         </div>
       </form>
   </mat-step>
-  <mat-step label="Register User For Store">
-    <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId"></app-register-user>
-    <div>
-      <button mat-button matStepperPrevious type="button">Back</button>
-      <button mat-button matStepperNext type="button">Skip</button>
-    </div>
-  </mat-step>
+
   <mat-step label="Store Address" style="margin-bottom: 20px;">
     <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
     <button mat-button matStepperPrevious type="button">Back</button>
     <button (click)="addStore()" mat-button matStepperNext type="button">Next</button>
   </mat-step>
+  <mat-step label="Register User For Store">
+    <span *ngIf="!addingNewUser">
+    <ion-button (click)="addNewUserToStore()">Create New User</ion-button>
+      </span>
+    <span *ngIf="addingNewUser">
+      <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId" [storeId]="storeId"></app-register-user>
+    </span>
 
+    <div>
+      <button mat-button matStepperPrevious type="button">Back</button>
+      <button mat-button matStepperNext type="button">Add Existing User</button>
+    </div>
+  </mat-step>
 
   <mat-step label="Add Another store" style="padding-bottom: 10px;">
     <ion-button (click)="goBack(stepper)">Add Another Store</ion-button>
-    <ion-button (click)="addUserToStore()">Add User to Store</ion-button>
+    <ion-button (click)="addNewUserToStore()">Add User to Store</ion-button>
+    <!-- todo add table showing users by franchise to add them as hiring manager - show recap of user -->
   </mat-step>
   </mat-stepper>
   </mat-horizontal-stepper>

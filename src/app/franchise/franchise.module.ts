@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -18,9 +18,9 @@ import {SharedComponentsModule} from "../shared-components/shared-components.mod
     CommonModule,
     FormsModule,
     IonicModule,
-    SharedComponentsModule,
-    AngularMaterialModule
+    FranchisePageRoutingModule
   ],
-  declarations: [FranchisePage, ListFranchisesComponent,]
+  declarations: [FranchisePage, ListFranchisesComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class FranchisePageModule {}

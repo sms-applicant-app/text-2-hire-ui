@@ -84,9 +84,9 @@ export class LoginPage implements OnInit {
   }
   login(email, password){
         this.authService.SignIn(email.value, password.value).then(user =>{
-        this.routeUserBasedOnRole(this.authService.userData.email);
-        this.userId = JSON.parse(localStorage.getItem('user')).uid;
+        this.userId = JSON.parse(localStorage.getItem('user')).email;
           console.log(this.userId);
+          this.routeUserBasedOnRole(this.userId);
     });
   }
   goToRegister(){
@@ -109,11 +109,11 @@ export class LoginPage implements OnInit {
           phoneNumber: this.registrationForm.controls.phoneNumber.value,
           dateCreated: this.latestDate
         };
-      this.authService.SendVerificationMail()
+      this.authService.SendVerificationMail();
       this.dbHelper.set(`users/${this.userId}`, user);
-        this.authService.SignIn(this.newUser.email, this.newUser.password).then( user =>{
+        this.authService.SignIn(this.newUser.email, this.newUser.password).then( resp =>{
           this.routeUserBasedOnRole(this.userId);
-        })
+        });
     });
   }
   routeUserBasedOnRole(userId){
@@ -129,6 +129,14 @@ export class LoginPage implements OnInit {
         this.router.navigate(['franchise'], navigationExtras);
         console.log('Route Franchisee');
       }
+      if(user.role === 'hiringManager'){
+        const navigationExtras: NavigationExtras = {
+          state: {
+            userId: this.userId
+          }
+        };
+          this.router.navigate(['store'], navigationExtras);
+        }
     });
   }
 }

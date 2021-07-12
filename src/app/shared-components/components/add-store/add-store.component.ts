@@ -35,6 +35,8 @@ export class AddStoreComponent implements OnInit {
   date;
   latestDate: string;
   currentStepIndex: number = 0;
+  storeId: string;
+  addingNewUser: boolean;
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -47,6 +49,7 @@ export class AddStoreComponent implements OnInit {
   ngOnInit() {
     this.userData = JSON.parse(localStorage.getItem('user'));
     this.addAddress = false;
+    this.addingNewUser = false;
     this.createStoreForm();
     console.log('incoming franchise Id', this.franchiseId);
     this.addStoreAddress();
@@ -70,8 +73,11 @@ export class AddStoreComponent implements OnInit {
     this.addAddress = true;
     this.addressType = 'Store';
   }
-  addUserToStore(){
-
+  addNewUserToStore(){
+    this.addingNewUser = true;
+  }
+  addExistingUser(){
+    // get franchise id then get all users by Franchise Id
   }
   receiveAddressMessage($event){
     console.log('address added', $event);
@@ -106,7 +112,8 @@ export class AddStoreComponent implements OnInit {
     this.newStore.createdDate = this.latestDate;
     //this.newStore.address.streetAdd1 = this.addressAdded.streetAdd1;
     this.storeService.createStore(this.newStore).then((resp: any) =>{
-      console.log('store added', JSON.stringify(resp));
+      console.log('store added', resp, JSON.stringify(resp));
+      this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
     });
   }
 

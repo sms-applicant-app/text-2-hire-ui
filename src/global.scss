@@ -43,5 +43,21 @@
 .sc-ion-modal-md-h{
   height: 700px !important;
 }
+.mat-table{
+  background-color: transparent;
+  color: #121212;
+}
+.mat-cell{
+  color: #121212;
+  font-size: 14px;
+}
+.mat-header-cell{
+  color: #121212;
+  font-size: 16px;
+}
+.mat-row, mat-header-row, mat-footer-row, th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
+  border-bottom-color: #EBEDF3;
+}
+
 
 

@@ -22,7 +22,19 @@ import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 
 
 @NgModule({
-  declarations: [FranchiseListComponent, ApplicantListComponent, StoreListComponent, JobsListComponent, AddressFormComponent, FranchiseDetailsComponent, AddStoreComponent, RegisterUserComponent, UserDetailsComponent, CarListComponentComponent, AddUserComponent],
+  declarations:
+    [FranchiseListComponent,
+    ApplicantListComponent,
+      StoreListComponent,
+      JobsListComponent,
+      AddressFormComponent,
+      FranchiseDetailsComponent,
+      AddStoreComponent,
+      RegisterUserComponent,
+      UserDetailsComponent,
+      CarListComponentComponent,
+      AddUserComponent
+    ],
   imports: [
     CommonModule,
     IonicModule,

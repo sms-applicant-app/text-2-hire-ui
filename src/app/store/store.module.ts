@@ -8,6 +8,8 @@ import { StorePageRoutingModule } from './store-routing.module';
 
 import { StorePage } from './store.page';
 import {AddStoreComponent} from './add-store/add-store.component';
+import {SharedComponentsModule} from '../shared-components/shared-components.module';
+
 
 
 
@@ -17,7 +19,8 @@ import {AddStoreComponent} from './add-store/add-store.component';
     FormsModule,
     IonicModule,
     StorePageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedComponentsModule
   ],
     declarations: [StorePage, AddStoreComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -7,11 +7,7 @@ import {Store} from '../../../shared/models/store';
 import { v4 as uuidv4 } from 'uuid';
 import {NavController} from '@ionic/angular';
 import {MatStepper} from '@angular/material/stepper';
-import {StoreService} from "../../../shared/services/store.service";
-import { Address } from 'src/app/shared/models/address';
-import {StoreManager} from "../../../shared/models/store-manager";
-
-
+import {StoreService} from '../../../shared/services/store.service';
 
 @Component({
   selector: 'app-add-store',

@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { StoreDashboardPageRoutingModule } from './store-dashboard-routing.module';
+import { StoreCalendarPageRoutingModule } from './store-calendar-routing.module';
 
-import { StoreDashboardPage } from './store-dashboard.page';
+import { StoreCalendarPage } from './store-calendar.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    StoreDashboardPageRoutingModule
+    StoreCalendarPageRoutingModule
   ],
-  declarations: [StoreDashboardPage]
+  declarations: [StoreCalendarPage]
 })
-export class StoreDashboardPageModule {}
+export class StoreCalendarPageModule {}

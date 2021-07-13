@@ -17,6 +17,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AngularMaterialModule} from './app-material/angular-material.module';
 import {ModalModule} from "./shared-components/pop-over-window/model/modal/modal.module";
 import {SharedComponentsModule} from "./shared-components/shared-components.module";
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 
@@ -39,7 +41,8 @@ import {SharedComponentsModule} from "./shared-components/shared-components.modu
     BrowserAnimationsModule,
     AngularMaterialModule,
     ModalModule,
-    SharedComponentsModule
+    SharedComponentsModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   providers: [
     AngularFirestoreModule,

@@ -1,4 +1,4 @@
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FranchiseListComponent} from './components/franchise-list/franchise-list.component';
 import {ApplicantListComponent} from './components/applicant-list/applicant-list.component';

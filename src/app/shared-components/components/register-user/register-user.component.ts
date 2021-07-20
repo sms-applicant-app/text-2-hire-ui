@@ -16,9 +16,10 @@ import {Role} from "../../../shared/models/role";
   providers: [ DatePipe ]
 })
 export class RegisterUserComponent implements OnInit {
-  @Output() addedUserEvent = new EventEmitter<User>();
   @Input() franchiseId: string;
   @Input() storeId;
+  @Output() addedUserEvent = new EventEmitter<User>();
+
   newUser: User = new User();
   userForm: FormGroup;
   date;
@@ -31,6 +32,7 @@ export class RegisterUserComponent implements OnInit {
   constructor(public datePipe: DatePipe, public fb: FormBuilder, public authService: AuthService, public dbHelper: FirestoreHelperService) { }
 
   ngOnInit() {
+    console.log('incoming franchise Id and or storeId', this.franchiseId, this.storeId);
     this.userAdded = false;
     this.isRegisteringStoreManager = false;
     this.userForm = this.fb.group({

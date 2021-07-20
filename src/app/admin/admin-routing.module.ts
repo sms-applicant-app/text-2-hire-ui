@@ -25,7 +25,12 @@ const routes: Routes = [
   {
     path: 'admin-franchise-list',
     loadChildren: () => import('./admin-franchise-list/admin-franchise-list.module').then( m => m.AdminFranchiseListPageModule)
+  },
+  {
+    path: 'admin-franchise-details/:id',
+    loadChildren: () => import('./admin-franchise-details/admin-franchise-details.module').then( m => m.AdminFranchiseDetailsPageModule)
   }
+
 ];
 
 @NgModule({

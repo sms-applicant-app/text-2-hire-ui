@@ -1,10 +1,13 @@
-import {Address} from "./address";
-import {User} from "./user";
 
-export class Applicant extends User {
-    applicantId: string;
-    address: Address;
-    jobId: string;
-    dob: string;
-    gender?: string;
+export class Applicant {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  applicantId: string;
+  storeId: string;
+  franchiseId: string;
+  addressId?: string;
+  jobId?: string;
+  dob?: string;
+  gender?: string;
 }

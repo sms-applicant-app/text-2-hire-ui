@@ -1,0 +1,56 @@
+<div class="card card-custom">
+  <div class="card-title">
+    <h3 class="card-label">Stores Listed By Franchise</h3>
+  </div>
+
+<div class="card-body">
+<div class="ion-padding">
+  <h3 *ngIf="store.length <= 0">No Stores For this Franchise added Yet</h3>
+</div>
+<div class =mat-elevation-z8 *ngIf="store.length > 0">
+<mat-table [dataSource]="dataSource">
+  <ng-container  matColumnDef="storeId">
+    <mat-header-cell *matHeaderCellDef>Store Id</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.storeId}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="storeName">
+    <mat-header-cell *matHeaderCellDef>Store Name</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.storeName}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="storePhoneNumber">
+    <mat-header-cell *matHeaderCellDef>Store Number</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.storePhoneNumber}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="hiringManager">
+    <mat-header-cell *matHeaderCellDef>Hiring Manager</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.storeId}}</mat-cell>
+  </ng-container>
+  <ng-container  matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+     <!--<ion-item>
+        <a class="btn btn-sm btn-clean btn-icon" (click)="addHiringManager(element.id)">
+          <ion-icon name="add-circle">
+          </ion-icon>
+          User </a>
+      </ion-item>-->
+      <ion-item>
+        <a class="btn btn-sm btn-clean btn-icon" (click)="addJodOpening(element.id)">
+          <ion-icon name="add-circle-outline">
+          </ion-icon>
+          <br>Add Position</a>
+      </ion-item>
+      <ion-item>
+      <a class="btn btn-sm btn-clean btn-icon" (click)="getStoreDetails(element.id)">
+        <ion-icon name="add-circle-outline">
+        </ion-icon>
+        <br>Get Details</a>
+      </ion-item>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
+</mat-table>
+</div>
+</div>
+</div>

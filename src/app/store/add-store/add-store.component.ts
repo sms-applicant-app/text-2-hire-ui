@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {FirestoreHelperService} from "../../shared/firestore-helper.service";
 import {DatePipe} from "@angular/common";
 import {Router} from "@angular/router";
+import {ModalController} from "@ionic/angular";
 
 @Component({
   selector: 'app-add-store',
@@ -20,7 +21,8 @@ export class AddStoreComponent implements OnInit {
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
     public fb: FormBuilder,
-    public router: Router
+    public router: Router,
+    public modelController: ModalController
   ) { }
 
   ngOnInit() {
@@ -33,8 +35,17 @@ export class AddStoreComponent implements OnInit {
 
     });
   }
-  addStore(){
-
+  async addStore(){
+    let franchiseId;
+    console.log('display add store');
+    const addStoreModel = await this.modelController.create({
+      component: AddStoreComponent,
+      swipeToClose: true,
+      componentProps: {
+        franchiseId
+      }
+    });
+    return await addStoreModel.present();
   }
 
 }

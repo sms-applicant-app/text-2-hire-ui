@@ -5,5 +5,18 @@
 </ion-header>
 
 <ion-content>
-  <iframe id="typeform-full" width="100%" height="100%" frameborder="0" allow="camera; microphone; autoplay; encrypted-media;" src="https://form.typeform.com/to/JEHf3wpl?typeform-medium=embed-snippet"></iframe>
+  <!--<div class="container container-table ion-padding-top">
+    <div class="row vertical-center-row">
+      <div class="text-center col-md-4 col-md-offset-4">
+        <h3>Select Applicant From list or Register</h3>
+        <button class="btn btn-outline-danger ion-margin-vertical" (click)="applicantIsNotRegistered()">Register</button>
+   <button class="btn btn-light" (click)="applicantAlreadyRegistered()">Yes</button>
+
+      </div>
+    </div>
+  </div>-->
+  <span *ngIf="!isApplicantRegistered">
+    <iframe id="typeform-full" width="100%" height="100%" frameborder="0" allow="camera; microphone; autoplay; encrypted-media;" src="https://form.typeform.com/to/NeuFa0YQ?typeform-medium=embed-snippet"></iframe>
+  </span>
+
 </ion-content>

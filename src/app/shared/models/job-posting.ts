@@ -1,12 +1,13 @@
-import {Address} from "./address";
+
 
 export class JobPosting {
-  positionId: string;
+  recNumber: string;
   storeId: string;
   jobTitle: string;
+  shortJobDescription: string;
   jobDescription: string;
-  recNumber: string;
-  address: Address;
+  numberOfOpenSlots: string;
+  addressId: string;
   jobType: string; // full time part time
   companyWebsite: string;
   salary: string;

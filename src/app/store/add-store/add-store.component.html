@@ -4,20 +4,6 @@
 
 <ion-content>
   <div class="container ion-padding-top">
-    <form [formGroup]="addStoreForm" >
-      <div class="form-row">
-        <div class="form-group col-lg-7 col-sm-12">
-          <label>Unique Store Number (can use phone number)</label>
-          <ion-input type="text" formControlName="storeNumber" class="form-control" ></ion-input>
-        </div>
-        <div class="form-group col-lg-7 col-sm-12">
-          <label>First Name</label>
-          <ion-input type="text" formControlName="storePhoneNumber" class="form-control" ></ion-input>
-        </div>
-      </div>
-    </form>
-    <app-address-form class="headless" [addressId]="addressId"></app-address-form>
-    <ion-button (click)="addStore()" color="success">Add Franchise</ion-button>
-    <a routerLink="/admin" class="btn btn-link">Cancel</a>
+    <app-add-store></app-add-store>
   </div>
 </ion-content>

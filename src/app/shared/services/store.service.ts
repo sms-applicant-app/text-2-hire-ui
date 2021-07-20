@@ -2,23 +2,38 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
 import {Store} from '../models/store';
+import {FranchisePageRoutingModule} from "../../franchise/franchise-routing.module";
+import {FranchiseService} from "./franchise.service";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoreService {
+  message: string;
+  storeData: any;
   constructor(
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore, public franchiseService: FranchiseService
   ) { }
-  getStoresByFranchise(id): Observable<any>{
-    return this.firestore.doc(`store/${id}`).valueChanges();
+  getStoresByFranchise(franchiseId){
+    return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          this.message = 'Document not found! Try again!';
+        } else {
+          ss.docs.forEach(doc => {
+            this.message = '';
+            this.storeData = doc.data();
+          });
+        }
+      });
   }
   async createStore(store: Store): Promise<any>{
     const storeObj = {...store};
     console.log('adding store', store);
     return this.firestore.collection('store').add(storeObj).then(docRef =>{
       const storeId = docRef.id;
+
       localStorage.setItem('added-storeId', JSON.stringify(storeId));
       console.log('add store id =', storeId);
     });

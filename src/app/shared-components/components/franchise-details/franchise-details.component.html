@@ -1,10 +1,21 @@
-<h1 class="ion-padding">
-  {{franchisee.businessLegalName}}
-</h1>
-<h2 class="ion-padding">
-  {{franchisee.corporateEmail}}
-</h2>
-<h2 class="ion-padding">
-  {{franchisee.phoneNumber}}
-</h2>
+<div class="card">
+  <div class="card-title">
+    <h3><span style="font-weight: bold">Legal Name: </span> {{franchiseData.businessLegalName}} <span style="font-weight: bold">Contact Email:</span> {{franchiseData.corporateEmail}}, <span style="font-weight: bold">Contact Phone Number</span>: {{franchiseData.phoneNumber}}</h3>
+  </div>
+  <div class="row">
+    <div class="col-md=6">
+      <div class="card-body">
+        <app-store-list-by-franchise [franchiseId]="franchiseId"></app-store-list-by-franchise>
+      </div>
+    </div>
+    <div class="col-md=6">
+      <div class="card-body">
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
 <!--<app-add-store [franchiseId]="franchiseId"></app-add-store>-->

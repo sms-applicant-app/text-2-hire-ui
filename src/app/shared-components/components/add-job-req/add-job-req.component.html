@@ -1,0 +1,82 @@
+
+<mat-dialog-content>
+  <mat-horizontal-stepper #stepper (selectionChange)="selectionChange($event)">
+    <mat-stepper linear>
+      <mat-step [stepControl]="addJoblistingFrom">
+        <form [formGroup]="addJoblistingFrom">
+          <div class="form-row">
+            <div class="form-group col-lg-7 col-sm-12">
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Requirement Number</ion-label>
+                <ion-input clearInput type="text" formControlName="recNumber" required></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Job Title</ion-label>
+                <ion-input clearInput type="text" formControlName="jobTitle" required></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Location (will be drop down with store addresses)</ion-label>
+                <ion-input clearInput type="text" formControlName="location"></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Job Type</ion-label>
+                <ion-select class="form-control" id="state" formControlName="jobType"  type="select">
+                  <ion-select-option value="AL">Full-Time</ion-select-option>
+                  <ion-select-option value="AK">Part-Time</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Number of Hires for this role</ion-label>
+                <ion-input clearInput type="text" formControlName="numberOfOpenSlots"></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Expiration Date</ion-label>
+                <ion-input clearInput type="text" formControlName="positionExpiration"></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label position="stacked" required>Company WebSite</ion-label>
+                <ion-input clearInput type="text" formControlName="companyWebSite"></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                  <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
+              </ion-item>
+              <div>
+                <button mat-button matStepperPrevious type="button">Back</button>
+                <button mat-button matStepperNext type="button">Next</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step label="Job Description" style="margin-bottom: 20px;">
+        <form [formGroup]="jobDetailsFrom">
+          <ion-item lines="full">
+            <ion-textarea auto-grow formControlName="fullDescription" placeholder="Enter Full Job Description..."></ion-textarea>
+          </ion-item>
+        </form>
+        <div>
+          <button mat-button matStepperPrevious type="button">Back</button>
+          <button mat-button matStepperNext type="button">skip</button>
+        </div>
+      </mat-step>
+      <mat-step label="Register User For Store">
+      <h3>Federal Forms are Automatic, I9, W4 and State W4. Is there anything else you would like to add to the On Boarding packet for this position?</h3>
+        <div class="row">
+          <app-upload-form></app-upload-form>
+        </div>
+
+        <button mat-button matStepperPrevious type="button">Back</button>
+        <button (click)="addJobListing()" mat-button matStepperNext type="button">Add Job Listing</button>
+
+      </mat-step>
+
+      <mat-step label="Add Another store" style="padding-bottom: 10px;">
+      <ion-button color="success" >Add Another Listing</ion-button>
+        <ion-button (click)="showJobList()">Done</ion-button>
+        <!-- todo add table showing users by franchise to add them as hiring manager - show recap of user -->
+      </mat-step>
+    </mat-stepper>
+  </mat-horizontal-stepper>
+</mat-dialog-content>
+

@@ -9,10 +9,6 @@ const routes: Routes = [
     component: StorePage
   },
   {
-    path: 'create-store',
-    loadChildren: () => import('./create-store/create-store.module').then( m => m.CreateStorePageModule)
-  },
-  {
     path: 'store-details',
     loadChildren: () => import('./store-details/store-details.module').then( m => m.StoreDetailsPageModule)
   },
@@ -27,6 +23,10 @@ const routes: Routes = [
   {
     path: 'store-interview',
     loadChildren: () => import('./store-interview/store-interview.module').then( m => m.StoreInterviewPageModule)
+  },
+  {
+    path: 'create-job-req',
+    loadChildren: () => import('./create-job-req/create-job-req.module').then( m => m.CreateJobReqPageModule)
   }
 ];
 

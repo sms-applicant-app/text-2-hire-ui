@@ -7,19 +7,26 @@
 <ion-content>
   <div class="container ion-padding-top">
     <div class="row">
-      <div class="col-md-3">
-        <a href=""><div  class="user-options">Add Store</div></a>
+      <div class="col-md-4">
+        <a (click)="addStore()"><div class="user-options">Add Store</div></a>
       </div>
-      <div class="col-md-3">
-        <a href=""><div  class="user-options">Add Job Rec</div></a>
+      <div class="col-md-4">
+        <a (click)="addJobRec()"><div class="user-options">Add Job Rec</div></a>
       </div>
-      <div class="col-md-3">
-        <a href=""><div  class="user-options">List Stores</div></a>
-      </div>
-      <div class="col-md-3">
-        <a href=""><div  class="user-options">Add User</div></a>
+      <!--<div class="col-md-3">
+       <a routerLinkActive="active" routerLink="/franchise/store-calendar"><div class="user-options">List Stores</div></a>
+      </div>-->
+      <div class="col-md-4">
+        <a (click)="addUser()"><div class="user-options">Add User</div></a>
       </div>
     </div>
-
+    <span *ngIf="!isLoading">
+    <app-store-list-by-franchise [franchiseId]="franchiseId"></app-store-list-by-franchise>
+    <div class="row">
+      <div class="col-md-12">
+        <app-jobs-list (messageEvent)="receiveFranchiseIdMessage($event)"></app-jobs-list>
+      </div>
+    </div>
+    </span>
   </div>
 </ion-content>

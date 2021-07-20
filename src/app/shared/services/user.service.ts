@@ -38,9 +38,8 @@ export class UserService {
     return this.firestore.collection('franchisee').snapshotChanges();
   }
 
-  updateUser(franchise: Franchisee) {
-    delete franchise.franchiseId;
-    this.firestore.doc(`franchisee/${franchise.franchiseId}`).update(franchise).then(resp => {
+  updateUser(userId, data) {
+    this.firestore.doc(`user/${userId}`).update(data).then(resp => {
       console.log('updated franchise', resp);
     });
   }

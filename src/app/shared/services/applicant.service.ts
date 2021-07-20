@@ -8,15 +8,37 @@ import {Applicant} from "../models/applicant";
   providedIn: 'root'
 })
 export class ApplicantService {
+  message: string;
+  applicantData: any;
   constructor(
     public firestore: AngularFirestore
   ) { }
   getApplicantsByFranchise(id): Observable<any>{
     return this.firestore.doc(`users/${id}`).valueChanges();
   }
-  getApplicantsByStore(storeId){
-    return this.firestore.collection('applicants').snapshotChanges();
+  async createApplicant(applicant: Applicant): Promise<any>{
+    const applicantObj = {...applicant};
+    console.log('adding applicant',applicant);
+    return this.firestore.collection('applicant').add(applicantObj).then(docRef =>{
+      const applicantId = docRef.id;
+      localStorage.setItem('added-franchisee', JSON.stringify(applicantId));
+      console.log('add franchise id =', applicantId);
+    });
   }
+  getApplicantsByStore(storeId){
+    return this.firestore.collection('applicants', ref => ref.where(`${storeId}`, '==', storeId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          this.message = 'Document not found! Try again!';
+        } else {
+          ss.docs.forEach(doc => {
+            this.message = '';
+            this.applicantData = doc.data();
+          });
+        }
+      });
+  }
+
   createApplicantOnboardPacket(applicant: Applicant){
     return this.firestore.collection('applicant').add(`${applicant}`);
   }

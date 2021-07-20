@@ -12,6 +12,8 @@ import {ModalController, NavParams} from '@ionic/angular';
 import {User} from '../../../shared/models/user';
 import {RegisterUserComponent} from '../register-user/register-user.component';
 import {AddStoreComponent} from '../add-store/add-store.component';
+import {UserService} from "../../../shared/services/user.service";
+import {StoreService} from "../../../shared/services/store.service";
 
 @Component({
   selector: 'app-franchise-list',
@@ -29,21 +31,27 @@ export class FranchiseListComponent implements OnInit {
   dataSource: MatTableDataSource<Franchisee>;
   franchisees: Franchisee[];
   franchiseData: any = [];
+  storeData: any = [];
   selectedFranchise: Franchisee = new Franchisee();
   displayRegistrationForm: boolean;
   displayColumns= ['businessLegalName', 'dateCreated', 'phoneNumber', 'corporateEmail', 'dba', 'actions'];
-
   isAddingFranchiseOwner: boolean;
   bodyText: string;
+  userId: string;
+  userData: any;
 
 
   constructor(public modalController: ModalController,
               private franchiseService:  FranchiseService,
               public dbHelper: FirestoreHelperService,
               public router: Router,
-              public authService: AuthService) {
+              public authService: AuthService,
+              public userService: UserService,
+              public storeService: StoreService
+  ) {
     this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
       this.franchiseData = data;
+      console.log(this.franchiseData);
       this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
       setTimeout(() =>{
         this.dataSource.paginator = this.paginator;
@@ -55,6 +63,7 @@ export class FranchiseListComponent implements OnInit {
    {
     this.getFranchisee();
      this.displayRegistrationForm = false;
+
    }
 
 
@@ -82,18 +91,23 @@ export class FranchiseListComponent implements OnInit {
     export(){
 
     }
-  getFranchiseDetails(id){
-    //show stores card with list of jobs
+  getFranchiseDetails(franchiseId){
+    //show stores card with list of jobs 2 cards one with users, stores
+    this.router.navigate([`/admin/admin-franchise-details/${franchiseId}`]);
+
   }
    async addStoreToFranchise(franchiseId){
-    console.log('display add store');
+    console.log('display add store', franchiseId);
+    const storeIsAddedByAdmin = true;
       const addStoreModel = await this.modalController.create({
         component: AddStoreComponent,
         swipeToClose: true,
         componentProps: {
-          franchiseId
+          franchiseId,
+          storeIsAddedByAdmin
         }
       });
       return await addStoreModel.present();
     }
+    recieve
 }

@@ -27,6 +27,10 @@ const routes: Routes = [
   {
     path: 'create-job-req',
     loadChildren: () => import('./create-job-req/create-job-req.module').then( m => m.CreateJobReqPageModule)
+  },
+  {
+    path: 'hiring-manager-sign-up',
+    loadChildren: () => import('./hiring-manager-sign-up/hiring-manager-sign-up.module').then( m => m.HiringManagerSignUpPageModule)
   }
 ];
 

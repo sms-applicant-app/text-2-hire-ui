@@ -7,9 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { AdminAddFranchisePageRoutingModule } from './admin-add-franchise-routing.module';
 
 import { AdminAddFranchisePage } from './admin-add-franchise.page';
-import {SharedComponentsModule} from "../../shared-components/shared-components.module";
-import {ModalModule} from "../../shared-components/pop-over-window/model/modal/modal.module";
-import {AngularMaterialModule} from "../../app-material/angular-material.module";
+import {SharedComponentsModule} from '../../shared-components/shared-components.module';
+import {ModalModule} from '../../shared-components/pop-over-window/model/modal/modal.module';
+import {AngularMaterialModule} from '../../app-material/angular-material.module';
 
 
 

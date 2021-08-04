@@ -11,6 +11,7 @@ import {stringify} from 'querystring';
 import {AlertController} from '@ionic/angular';
 import {first} from 'rxjs/operators';
 import {of} from 'rxjs';
+import firebase from "firebase";
 
 @Injectable({
   providedIn: 'root'
@@ -100,6 +101,11 @@ export class AuthService {
  /* GoogleAuth() {
     return this.AuthLogin(new auth.GoogleAuthProvider());
   }*/
+  getProvider(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    console.log('provider from user to sign up with ', provider);
+    return provider;
+  }
 
   // Auth providers
   AuthLogin(provider) {

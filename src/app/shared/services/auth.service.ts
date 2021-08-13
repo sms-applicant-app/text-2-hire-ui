@@ -11,7 +11,8 @@ import {stringify} from 'querystring';
 import {AlertController} from '@ionic/angular';
 import {first} from 'rxjs/operators';
 import {of} from 'rxjs';
-import firebase from "firebase";
+import firebase from 'firebase';
+import {UserService} from "./user.service";
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,8 @@ export class AuthService {
       public ngFireAuth: AngularFireAuth,
       public router: Router,
       public ngZone: NgZone,
-      public alertController: AlertController
+      public alertController: AlertController,
+      public userService: UserService
   ) {
     this.ngFireAuth.authState.subscribe(user => {
       if (user) {
@@ -56,9 +58,10 @@ export class AuthService {
         // If the user exists and nothing is in LocalStorage yet, store it there.
         if (data.user) {
           localStorage.setItem('user', JSON.stringify(data.user));
-
+          this.userService.getUserById(email).subscribe(resp =>{
+            localStorage.setItem('appUserData', JSON.stringify(resp));
+          });
         }
-
       }
     });
   }

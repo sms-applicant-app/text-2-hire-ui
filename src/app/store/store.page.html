@@ -1,8 +1,12 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Hiring Manager (connect native mailbox)</ion-title>
-  </ion-toolbar>
-</ion-header>
+ <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button autoHide="false"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Dashboard</ion-title>
+    </ion-toolbar>
+ </ion-header>
+
 
 <ion-content>
   <div class="container ion-padding-top">
@@ -15,9 +19,9 @@
         <a routerLinkActive="active" routerLink="/store/store-calendar"><div  class="user-options">Calendar</div></a>
       </div>
       <div class="col-md-4">
-        <a routerLinkActive="active" routerLink="/store/store-interview"><div  class="user-options">Interview Someone</div></a>
+        <a routerLinkActive="active" routerLink="/store/store-interview"><div  class="user-options">Interview Applicant</div></a>
       </div>
     </div>
   </div>
-
+  <app-store-list-by-franchise></app-store-list-by-franchise>
 </ion-content>

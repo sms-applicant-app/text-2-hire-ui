@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FranchiseService} from '../shared/services/franchise.service';
 import {AddStoreComponent} from "../shared-components/components/add-store/add-store.component";
-import {ModalController} from "@ionic/angular";
-import {AddJobReqComponent} from "../shared-components/components/add-job-req/add-job-req.component";
+import {ModalController} from '@ionic/angular';
+import {AddJobReqComponent} from '../shared-components/components/add-job-req/add-job-req.component';
 
 @Component({
   selector: 'app-store',
@@ -33,13 +33,10 @@ export class StorePage implements OnInit {
       return await addJobRec.present();
     }
 
-  // todo Create Job modal comes up with basic job listing attributes and works through a wizard
 
   // todo Open Job Recs = list all job reqs under that hiring manager
 
   // todo List All Applicants by store
-
-  // todo interview someone set up a page to embed Typeform interviewer questions
 
   // todo hire manager side nav should have stores listed
 }

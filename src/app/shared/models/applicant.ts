@@ -1,3 +1,4 @@
+import {ApplicantStatus} from './applicant-status';
 
 export class Applicant {
   name: string;
@@ -6,6 +7,7 @@ export class Applicant {
   applicantId: string;
   storeId: string;
   franchiseId: string;
+  applicantStatus: ApplicantStatus;
   addressId?: string;
   jobId?: string;
   dob?: string;

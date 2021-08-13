@@ -13,9 +13,7 @@ export class ApplicantService {
   constructor(
     public firestore: AngularFirestore
   ) { }
-  getApplicantsByFranchise(id): Observable<any>{
-    return this.firestore.doc(`users/${id}`).valueChanges();
-  }
+
   async createApplicant(applicant: Applicant): Promise<any>{
     const applicantObj = {...applicant};
     console.log('adding applicant',applicant);
@@ -27,6 +25,19 @@ export class ApplicantService {
   }
   getApplicantsByStore(storeId){
     return this.firestore.collection('applicants', ref => ref.where(`${storeId}`, '==', storeId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          this.message = 'Document not found! Try again!';
+        } else {
+          ss.docs.forEach(doc => {
+            this.message = '';
+            this.applicantData = doc.data();
+          });
+        }
+      });
+  }
+  getApplicantsByFranchise(franchiseId){
+    return this.firestore.collection('applicants', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           this.message = 'Document not found! Try again!';

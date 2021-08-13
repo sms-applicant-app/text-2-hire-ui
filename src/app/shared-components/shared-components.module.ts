@@ -23,6 +23,7 @@ import {CreateNewHirePackageComponent} from './components/create-new-hire-packag
 import {RegisterApplicantComponent} from "./components/register-applicant/register-applicant.component";
 import {AddJobComponent} from "../jobs/add-job/add-job.component";
 import {AddJobReqComponent} from "./components/add-job-req/add-job-req.component";
+import {UsersForFranchiseListComponent} from "./components/users-for-franchise-list/users-for-franchise-list.component";
 
 
 
@@ -46,7 +47,8 @@ import {AddJobReqComponent} from "./components/add-job-req/add-job-req.component
       UploadListComponent,
       CreateNewHirePackageComponent,
       RegisterApplicantComponent,
-      AddJobReqComponent
+      AddJobReqComponent,
+      UsersForFranchiseListComponent
     ],
   imports: [
     CommonModule,

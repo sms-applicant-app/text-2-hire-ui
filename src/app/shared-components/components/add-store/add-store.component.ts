@@ -9,6 +9,13 @@ import {NavController} from '@ionic/angular';
 import {MatStepper} from '@angular/material/stepper';
 import {StoreService} from '../../../shared/services/store.service';
 import {AngularFirestore} from '@angular/fire/firestore';
+import * as firebase from 'firebase';
+import {UserService} from '../../../shared/services/user.service';
+import {GeneratedStoreId} from '../../../shared/models/generatedStoreId';
+import {MatTableDataSource} from "@angular/material/table";
+import {User} from "../../../shared/models/user";
+
+
 
 @Component({
   selector: 'app-add-store',
@@ -31,13 +38,18 @@ export class AddStoreComponent implements OnInit {
   storeAdded: boolean;
   addressId: string;
   newStore: Store = new Store();
+  newGeneratedStoreId: GeneratedStoreId = new GeneratedStoreId();
   date;
   latestDate: string;
   currentStepIndex: number = 0;
   storeId: string;
   addingNewUser: boolean;
   userId: string;
-  storeUniqueId: string;
+  storeUniqueId: any;
+  initialStoreId: string;
+  lastUsedStoreId: any;
+  dataSource: MatTableDataSource<User>;
+  hiringManagers: any = [];
 
   constructor(
     public dbHelper: FirestoreHelperService,
@@ -46,7 +58,10 @@ export class AddStoreComponent implements OnInit {
     public router: Router,
     public navCtrl: NavController,
     public storeService: StoreService,
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore,
+    public userService: UserService,
+
+
   ) { }
 
   ngOnInit() {
@@ -54,6 +69,7 @@ export class AddStoreComponent implements OnInit {
     this.addAddress = false;
     this.addingNewUser = false;
     console.log('franchiseId in query', this.franchiseId, this.storeIsAddedByAdmin);
+    this.userService.getUsersByFranchise(this.franchiseId);
    /* this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
       this.userData = doc.data();
 
@@ -62,6 +78,7 @@ export class AddStoreComponent implements OnInit {
     this.createStoreForm();
     console.log('incoming franchise Id', this.franchiseId);
     this.addStoreAddress();
+    this.initialStoreId = '001';
   }
   createDate() {
     this.date = new Date();
@@ -91,15 +108,11 @@ export class AddStoreComponent implements OnInit {
     console.log('address added', $event);
     this.addressAdded = $event;
     if($event){
+      this.createStoreUniqueId();
     console.log('go to next step', this.addressAdded);
     }
   }
-  createStoreUniqueId(phoneNumber){
-    //const lastFour = this.addStoreForm.controls.storePhoneNumber.value;
-    const four = (phoneNumber.slice(phoneNumber - 5));
-    this.storeUniqueId = this.addressAdded.state + four;
-    console.log(four, 'unique storeId',this.storeUniqueId);
-  }
+
   selectionChange(e) {
     console.log('store step', e);
   }
@@ -116,19 +129,56 @@ export class AddStoreComponent implements OnInit {
     console.log('stepper index', stepper);
     stepper.next();
   }
+  createStoreUniqueId(){
+  this.lastUsedStoreId = this.storeService.getLastGeneratedStoreId();
+    console.log('last used generated store Id from DB', this.lastUsedStoreId);
+  if(this.lastUsedStoreId){
+    this.lastUsedStoreId.toString();
+    const removedState = this.lastUsedStoreId.replace(this.addressAdded.state, '');
+    const toNum = Number(removedState);
+    const incrementOne = toNum + 1;
+    const statePlusGenID = this.addressAdded.state + incrementOne;
+    this.newStore.storeId = statePlusGenID;
+    console.log(removedState, 'generated store ID', statePlusGenID, this.storeUniqueId, toNum);
+  } else {
+    this.storeUniqueId = this.addressAdded.state + this.initialStoreId;
+    this.newStore.storeId = this.storeUniqueId;
+    console.log('else statement storeId', this.newStore.storeId);
+  }
+  }
+  getHiringManagersPerFranchise(){
+    this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager').where('franchiseId', '==', this.franchiseId)).get()
+      .subscribe(users =>{
+        this.hiringManagers = [];
+        if(users.docs.length === 0){
+          console.log('no hiring managers for this store');
+        } else {
+          users.forEach(data =>{
+            const u = data.data();
+            this.hiringManagers.push(u);
+            this.dataSource = new MatTableDataSource<User>(this.hiringManagers);
+            console.log(this.hiringManagers.length, ' hiring managers', this.hiringManagers);
+          });
+        }
+      });
+  }
+  addHiringManagerToStore(){
+
+  }
   addStore(){
     this.createDate();
     this.newStore.franchiseId = this.franchiseId;
     this.newStore.storeName = this.addStoreForm.controls.storeName.value;
     this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
     this.newStore.addressId = this.addressAdded.addressId;
-    this.newStore.createdDate = this.latestDate;
-    this.createStoreUniqueId(this.newStore.storePhoneNumber);
-    this.newStore.storeId = this.storeUniqueId;
+    this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
     this.storeService.createStore(this.newStore).then((resp: any) =>{
-      console.log('store added', resp, JSON.stringify(resp));
       this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
+      this.newGeneratedStoreId.generatedStoreId = this.storeUniqueId;
+      this.newGeneratedStoreId.storeId = this.storeId;
+      this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
+      this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
     });
-  }
 
+  }
 }

@@ -3,16 +3,19 @@
     <h3><span style="font-weight: bold">Legal Name: </span> {{franchiseData.businessLegalName}} <span style="font-weight: bold">Contact Email:</span> {{franchiseData.corporateEmail}}, <span style="font-weight: bold">Contact Phone Number</span>: {{franchiseData.phoneNumber}}</h3>
   </div>
   <div class="row">
-    <div class="col-md=6">
+    <div class="col-md-12">
       <div class="card-body">
         <app-store-list-by-franchise [franchiseId]="franchiseId"></app-store-list-by-franchise>
       </div>
     </div>
-    <div class="col-md=6">
-      <div class="card-body">
-    <app-users-for-franchise></app-users-for-franchise>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-body">
+          <app-users-for-franchise></app-users-for-franchise>
+        </div>
       </div>
     </div>
+
 
 
   </div>

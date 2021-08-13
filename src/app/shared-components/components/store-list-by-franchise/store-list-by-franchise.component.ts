@@ -28,7 +28,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   store: any = [];
   franchiseData: any;
   dataSource: MatTableDataSource<Store>;
-  displayColumns = ['storeId', 'storeName', 'storePhoneNumber', 'hiringManager', 'actions'];
+  displayColumns = ['storeId', 'storeName', 'storePhoneNumber', 'hiringManager','franchiseId', 'actions'];
   userId: string;
   userData: any;
   userRole: string;
@@ -44,7 +44,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('need t o add when slecting franchise to bring up stores for that franchise on admin', this.franchiseId);
+    console.log('need to add when selecting franchise to bring up stores for that franchise on admin', this.franchiseId);
     this.store= [];
     this.getListOfStoresBasedOnUser();
   }

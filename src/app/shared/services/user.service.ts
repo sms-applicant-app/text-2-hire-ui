@@ -3,14 +3,15 @@ import {FirestoreHelperService} from "../firestore-helper.service";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {User} from "../models/user";
 import {Observable} from "rxjs";
-import {Franchisee} from "../models/franchisee";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   user: User;
-
+  message: string;
+  userData: any;
   constructor(
     public dbHelper: FirestoreHelperService,
     public firestore: AngularFirestore
@@ -21,13 +22,34 @@ export class UserService {
     console.log(id);
     return this.firestore.doc(`users/${id}`).valueChanges();
   }
-
-  getUserByFranchise(id): Observable<any> {
-    return this.firestore.doc(`users/${id}`).valueChanges();
+  getUsersByFranchise(franchiseId){
+    return this.firestore.collection('user', ref => ref.where(`${franchiseId}`, '==', franchiseId )).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          this.message = 'Document not found! Try again!';
+        } else {
+          ss.docs.forEach(doc => {
+            this.message = '';
+            this.userData = doc.data();
+            console.log('users from store', this.userData);
+          });
+        }
+      });
   }
 
-  getUserByStore(id): Observable<any> {
-    return this.firestore.doc(`users/${id}`).valueChanges();
+  getUserByStore(storeId){
+    return this.firestore.collection('user', ref => ref.where(`${storeId}`, '==', storeId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          this.message = 'Document not found! Try again!';
+        } else {
+          ss.docs.forEach(doc => {
+            this.message = '';
+            this.userData = doc.data();
+            console.log('store data from service', this.userData);
+          });
+        }
+      });
   }
 
   // currently user is created in the component
@@ -35,18 +57,18 @@ export class UserService {
       return this.firestore.collection('franchisee').add(`${franchise}`);
     }*/
   getUsers() {
-    return this.firestore.collection('franchisee').snapshotChanges();
+    return this.firestore.collection('users').snapshotChanges();
   }
 
   updateUser(userId, data) {
-    this.firestore.doc(`user/${userId}`).update(data).then(resp => {
+    this.firestore.doc(`users/${userId}`).update(data).then(resp => {
       console.log('updated franchise', resp);
     });
   }
 
   deleteUser(franchiseId) {
-    this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp => {
-      console.log('deleting franchise', resp);
+    this.firestore.doc(`users/${franchiseId}`).delete().then(resp => {
+      console.log('deleting user', resp);
     });
   }
 

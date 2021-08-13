@@ -1,6 +1,7 @@
 import {User} from './user';
 import {Address} from './address';
 import {StoreManager} from './store-manager';
+import firebase from 'firebase';
 
 export class Store {
   storeId: string;
@@ -10,7 +11,7 @@ export class Store {
   addressId: string;
   franchiseId: string;
   address: Address;
-  createdDate: string;
+  createdDate: firebase.firestore.FieldValue;
   updatedDate: string;
 
 }

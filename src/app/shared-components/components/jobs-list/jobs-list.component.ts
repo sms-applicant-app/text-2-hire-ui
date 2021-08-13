@@ -50,7 +50,7 @@ export class JobsListComponent implements OnInit {
           jobs.forEach(data =>{
             const j = data.data();
             this.jobs.push(j);
-            this.dataSource = new MatTableDataSource<JobListing>(this.jobs)
+            this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }
       });
@@ -70,6 +70,7 @@ export class JobsListComponent implements OnInit {
         }
       });
   }
+  // probably dont need this function here
   async addJobRecToStore(storeId){
 
     const franchiseId = this.franchiseId;

@@ -109,5 +109,4 @@ export class FranchiseListComponent implements OnInit {
       });
       return await addStoreModel.present();
     }
-    recieve
 }

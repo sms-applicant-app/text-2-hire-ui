@@ -1,85 +1,106 @@
-<span *ngIf="isRegisteringFranchiseUser">
-  <ion-header>
-    <ion-toolbar>
-    <ion-title>Register User For a Franchise</ion-title>
-  </ion-toolbar>
-  </ion-header>
-</span>
-<span *ngIf="isRegisteringStore">
-  <ion-header>
-    <ion-toolbar>
-    <ion-title>Register User For a Store</ion-title>
-  </ion-toolbar>
-  </ion-header>
-</span>
-<ion-header *ngIf="!isRegisteringFranchiseUser || !isRegisteringStore">
-  <ion-toolbar>
-    <ion-title>Register to Access the System</ion-title>
+
+
+<ion-header style="background-color: #0b2e13" >
+  <ion-toolbar >
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Register to Start Listing</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="container">
-  <span *ngIf="!isRegistering || !isRegisteringFranchiseUser">
-<form>
-  <ion-item lines="full">
-    <ion-label position="stacked" required>Email</ion-label>
-    <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
-  </ion-item>
+  <div class="container ion-margin-top">
+  <span *ngIf="alreadyRegistered === true">
+    <ion-card>
+      <ion-card-title class="text-center">
+        Log in Happy Hiring
+      </ion-card-title>
+      <ion-grid>
+      <ion-row>
+        <ion-col text-center>
+          <form>
 
-  <ion-item lines="full" class="uk-margin-bottom">
-    <ion-label position="stacked" required>Password</ion-label>
-    <ion-input clearInput type="password" #password required placeholder="Enter password..."></ion-input>
-  </ion-item>
+              <div class="col-md-3">
+              </div>
+                <ion-item lines="full">
+                  <ion-label position="stacked" required>Email</ion-label>
+                  <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
+                </ion-item>
 
+                <ion-item lines="full" class="uk-margin-bottom">
+                  <ion-label position="stacked" required>Password</ion-label>
+                  <ion-input clearInput type="password" #password required placeholder="Enter password...">
+                  </ion-input>
+                </ion-item>
 
+                <ion-button (click)="login(email, password)" type="block" color="primary" fill="solid">Login
+                </ion-button>
+            <div class="col-md-3">
+            </div>
 
-  <ion-button type="submit" (click)="login(email, password)" color="success">Login
-  </ion-button>
-  <p>
-    <ion-button  fill="clear" (click)="goToRegister()">I dont have an account and want to Register.
-    </ion-button>
-  </p>
-</form>
+        </form>
+        </ion-col>
+      </ion-row>
+      </ion-grid>
+    </ion-card>
+
     </span>
-  <span *ngIf="isRegistering === true || isRegisteringFranchiseUser === true">
+  <span *ngIf="!alreadyRegistered">
+<ion-card>
+  <div class="container">
+  <ion-card-header >
+    <ion-card-title class="ion-text-center">
+    Create a free employer account
+    </ion-card-title>
+  </ion-card-header>
 
-      <form [formGroup]="registrationForm">
-          <div class="form-row">
-          <div class="form-group col-lg-7 col-sm-12">
-              <ion-item lines="full">
-        <ion-label position="stacked" required>Full Name</ion-label>
-        <ion-input clearInput type="text" formControlName="firstName" required></ion-input>
-      </ion-item>
-      <ion-item lines="full">
-        <ion-label position="stacked" required>Email</ion-label>
-        <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
-      </ion-item>
+  <p class="ion-text-center">Post new jobs and manage your posting statistics inside.</p><br>
+  <p class="ion-text-center">If searching for positions please click here to job search</p>
+    <ion-grid>
+      <ion-row>
+        <ion-col text-center>
+          <form [formGroup]="registrationForm" class="ion-text-center">
+            <div class="form-row">
+              <div class="col-md-3">
 
-      <ion-item lines="full" class="uk-margin-bottom">
-        <ion-label position="stacked" required>Password</ion-label>
-        <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
-      </ion-item>
-        <ion-item lines="full" class="uk-margin-bottom">
-          <ion-label position="stacked" required>Phone Number</ion-label>
-          <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
-        </ion-item>
-      <ion-item>
-        <ion-label position="stacked" required="true">Assign User a Role</ion-label>
-        <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
-          <ion-select-option value="franchisee">Franchise</ion-select-option>
-          <ion-select-option value="hiringManager">Hiring Manager</ion-select-option>
-          <ion-select-option value="storeContact">Store Contact</ion-select-option>
-          <ion-select-option value="applicant">Applicant</ion-select-option>
-          <ion-select-option value="newHire">New Hire</ion-select-option>
-          <ion-select-option value="admin">Admin</ion-select-option>
-        </ion-select>
-      </ion-item>
-           <ion-button (click)="registerUser()" size="small" color="success">Register</ion-button>
-      </div>
-      </div>
-  </form>
+              </div>
+              <div class="form-group col-lg-6 col-sm-12">
+                  <ion-item lines="full">
+                    <ion-label position="stacked" required>Full Name</ion-label>
+                    <ion-input clearInput type="text" formControlName="firstName" required></ion-input>
+                  </ion-item>
+                <ion-item lines="full">
+                    <ion-label position="stacked" required>Email</ion-label>
+                    <ion-input clearInput type="text" formControlName="email"></ion-input>
+              </ion-item>
+                  <ion-item lines="full" class="uk-margin-bottom">
+                    <ion-label position="stacked" required>Password</ion-label>
+                    <ion-input clearInput type="password" #password formControlName="password"  ></ion-input>
+                  </ion-item>
+                  <ion-item lines="full" class="uk-margin-bottom">
+                      <ion-label position="stacked" required>Confirm Password</ion-label>
+                      <ion-input clearInput type="password" ></ion-input>
+                  </ion-item>
+                  <ion-item lines="full" class="uk-margin-bottom">
+                      <ion-label position="stacked" required>Phone Number</ion-label>
+                      <ion-input clearInput type="phoneNumber" formControlName="phoneNumber"></ion-input>
+                  </ion-item>
+                <ion-button class="ion-margin-top" (click)="registerUser(password)" type="block" color="primary" fill="solid">Register</ion-button>
+                <p>
+                  <ion-button  fill="clear" (click)="goToLogin()">Log in</ion-button>
+                </p>
+              </div>
+              <div class="col-md-3">
+              </div>
+            </div>
+        </form>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
+</div>
+</ion-card>
   </span>
   <a routerLinkActive="active" routerLink="/admin/admin-login">Admin Login</a>
   </div>

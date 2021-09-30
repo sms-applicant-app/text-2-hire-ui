@@ -1,0 +1,24 @@
+<div class="card card-custom">
+  <p *ngIf="stores.length <= 0">No Stores for this hiring manager</p>
+  <div class="card-header flex-wrap border-0 pt-6 pb-0">
+    <div class="card-title">
+     <!-- <h3 class="card-label">Franchise Card</h3>-->
+    </div>
+    <!-- <div class="card-toolbar">
+       <button class="btn btn-light-primary" (click)="export()">Export</button>
+     </div>-->
+  </div>
+  <div class ="mat-elevation-z8 menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" *ngIf="stores.length > 0">
+    <mat-table [dataSource]="dataSource">
+      <ng-container  matColumnDef="storeName">
+        <mat-header-cell *matHeaderCellDef>Locations</mat-header-cell>
+        <i class="fas fa-map-marker-alt"></i>
+          <a class="text-hover-primary menu-title menu-accordion" *matCellDef="let element" (click)="getOpenPositionsByStore(element.storeId)"><mat-cell >{{element.storeName}}</mat-cell></a>
+        <i class="fas fa-angle-right"></i>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
+    </mat-table>
+  </div>
+</div>

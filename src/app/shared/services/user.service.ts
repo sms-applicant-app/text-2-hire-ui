@@ -62,7 +62,7 @@ export class UserService {
 
   updateUser(userId, data) {
     this.firestore.doc(`users/${userId}`).update(data).then(resp => {
-      console.log('updated franchise', resp);
+      console.log('updated user', resp);
     });
   }
 

@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 
 
 export class JobPosting {
@@ -9,8 +10,14 @@ export class JobPosting {
   numberOfOpenSlots: string;
   addressId: string;
   jobType: string; // full time part time
-  companyWebsite: string;
-  salary: string;
-  dateCreated: string;
-  positionExpiration: string;
+  positionOpen: boolean;
+  hiringManagerId: string;
+  companyWebsite?: string;
+  salary?: string;
+  positionExpiration?: string;
+  franchiseId: string;
+  qualifications?: string;
+  specialNotes?: string;
+  benefits?: string;
+  createdAt: firebase.firestore.FieldValue;
 }

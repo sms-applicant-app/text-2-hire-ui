@@ -18,13 +18,15 @@ import {UserService} from "../shared/services/user.service";
 export class LoginPage implements OnInit {
   acceptTerms: boolean;
   newUser: User = new User();
-  isRegistering: boolean;
+  alreadyRegistered: boolean;
   registrationForm: FormGroup;
   userId: string;
   date: Date;
   latestDate: string;
   isRegisteringFranchiseUser = false;
   isRegisteringStore = false;
+  firstTimeLogin: boolean;
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   validation_messages = {
     email: [
@@ -63,16 +65,17 @@ export class LoginPage implements OnInit {
     console.log('registering franchise', this.isRegisteringFranchiseUser);
     console.log('registering store', this.isRegisteringStore);
     this.acceptTerms = false;
-    this.isRegistering = false;
+    this.alreadyRegistered = false;
     this.registrationForm = this.fb.group({
       firstName: [''],
       lastName: [''],
       email: [''],
       password: [''],
-      role: [''],
       phoneNumber: ['']
     });
+    this.firstTimeLogin = false;
   }
+
   createDate() {
     this.date = new Date();
     this.latestDate = this.datePipe.transform(this.date, 'MM-dd-yyyy');
@@ -89,38 +92,39 @@ export class LoginPage implements OnInit {
           this.routeUserBasedOnRole(this.userId);
     });
   }
-  goToRegister(){
-    this.isRegistering = true;
+  goToLogin(){
+    this.alreadyRegistered = true;
   }
-  registerUser(){
+  registerUser(password){
+    console.log('password', password.value);
     this.createDate();
     this.newUser.email = this.registrationForm.controls.email.value;
-    this.newUser.password = this.registrationForm.controls.password.value;
-    this.newUser.role = this.registrationForm.controls.role.value;
-
-    this.authService.RegisterUser(this.newUser.email, this.newUser.password).then(u=>{
+    this.authService.RegisterUser(this.newUser.email, password.value).then(u=>{
       console.log('registered user', u);
       this.userId = this.registrationForm.controls.email.value;
         const user ={
           firstName: this.registrationForm.controls.firstName.value,
           lastName: this.registrationForm.controls.lastName.value,
           email: this.registrationForm.controls.email.value,
-          role: this.registrationForm.controls.role.value,
+          role: 'franchisee',
           phoneNumber: this.registrationForm.controls.phoneNumber.value,
           dateCreated: this.latestDate
         };
+        this.firstTimeLogin = true;
       this.authService.SendVerificationMail();
       this.dbHelper.set(`users/${this.userId}`, user);
-        this.authService.SignIn(this.newUser.email, this.newUser.password).then( resp =>{
+        this.authService.SignIn(this.newUser.email, password.value).then( resp =>{
           this.routeUserBasedOnRole(this.userId);
         });
     });
   }
   routeUserBasedOnRole(userId){
-    this.userService.getUserById(userId).subscribe(user => {
-      console.log('retrieved user', user.role);
-      this.userId = JSON.parse(localStorage.getItem('user')).email;
-      if (user.role === 'franchisee'){
+
+      const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+      if (userRole === 'franchisee' && this.firstTimeLogin === true){
+        this.router.navigate(['admin/admin-add-franchise']);
+      }
+      if (userRole === 'franchisee' && this.firstTimeLogin !== true){
         const navigationExtras: NavigationExtras ={
           state: {
             userId: this.userId
@@ -129,7 +133,7 @@ export class LoginPage implements OnInit {
         this.router.navigate(['franchise'], navigationExtras);
         console.log('Route Franchisee');
       }
-      if(user.role === 'hiringManager'){
+      if(userRole === 'hiringManager'){
         const navigationExtras: NavigationExtras = {
           state: {
             userId: this.userId
@@ -137,6 +141,8 @@ export class LoginPage implements OnInit {
         };
           this.router.navigate(['store'], navigationExtras);
         }
-    });
+      if(userRole === 'admin'){
+        this.router.navigate(['store']);
+      }
   }
 }

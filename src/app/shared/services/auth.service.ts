@@ -39,11 +39,8 @@ export class AuthService {
         localStorage.setItem('user', JSON.stringify(this.userData));
       //  console.warn('SET USER', user);
         JSON.parse(localStorage.getItem('user'));
-        const displayName = this.userData.displayName;
-
       } else {
         localStorage.setItem('user', null);
-        localStorage.setItem('displayName', null);
       //  console.warn('USER IS NULL');
         JSON.parse(localStorage.getItem('user'));
       }
@@ -89,7 +86,7 @@ export class AuthService {
         });
   }
 
-  // Returns true when user is looged in
+  // Returns true when user is logged in
    isLoggedIn() {
     return this.ngFireAuth.authState.pipe(first());
   }

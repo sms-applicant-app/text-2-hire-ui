@@ -109,6 +109,10 @@ export class AdminAddFranchisePage implements OnInit {
     });
   }
   goToFranchiseList(){
+    const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+    if(userRole === 'franchisee'){
+      this.router.navigate(['franchise/list-stores']);
+    }
     this.router.navigate(['admin/admin-franchise-list']);
   }
 

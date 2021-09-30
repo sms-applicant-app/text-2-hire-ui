@@ -6,17 +6,19 @@ import { FranchisePageRoutingModule } from './franchise-routing.module';
 import { FranchisePage } from './franchise.page';
 import {ListStoresComponent} from './list-stores/list-stores.component';
 import {SharedComponentsModule} from '../shared-components/shared-components.module';
+import {AngularMaterialModule} from "../app-material/angular-material.module";
 
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    SharedComponentsModule,
-    FranchisePageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        SharedComponentsModule,
+        FranchisePageRoutingModule,
+        AngularMaterialModule
+    ],
   declarations: [FranchisePage, ListStoresComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

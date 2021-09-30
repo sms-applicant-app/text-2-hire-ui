@@ -28,7 +28,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   store: any = [];
   franchiseData: any;
   dataSource: MatTableDataSource<Store>;
-  displayColumns = ['storeId', 'storeName', 'storePhoneNumber', 'hiringManager','franchiseId', 'actions'];
+  displayColumns = ['storeName'];
   userId: string;
   userData: any;
   userRole: string;
@@ -69,7 +69,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   getListOfStoresBasedOnUser(){
     this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
-      console.log('franchiseId in query', this.userData.franchiseId);
+     // console.log('franchiseId in query', this.userData.franchiseId);
       this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
         .subscribe(stores =>{
           this.store = [];
@@ -93,9 +93,6 @@ export class StoreListByFranchiseComponent implements OnInit {
       console.log(data);
       this.franchiseData = data;
     });
-
-  }
-  addHiringManager(id){
 
   }
   getStoreDetails(id){

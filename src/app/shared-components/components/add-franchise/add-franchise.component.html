@@ -1,0 +1,63 @@
+<ion-header>
+  <h1 class="ion-padding">Add Franchise</h1>
+</ion-header>
+
+<ion-content>
+  <div class="container ion-padding-top">
+    <!-- <span *ngIf="!addedFranchiseOwner">
+         <app-register-user (messageEvent)="receiveUserMessage($event)" (addedUserEvent)="receiveUserMessage($event)"></app-register-user>
+     </span>-->
+    <span *ngIf="!franchiseAdded ">
+    <h2 style="font-weight: bold">Business Information</h2>
+      <form [formGroup]="addFranchiseForm" >
+
+        <div class="col-lg-7 col-sm-12">
+            <ion-item>
+              <ion-label position="stacked" >Legal Business Name</ion-label>
+              <ion-input clearInput formControlName="legalBusinessName"></ion-input>
+            </ion-item>
+        </div>
+          <div class="col-lg-7 col-sm-12">
+            <ion-item>
+              <ion-label position="stacked" >Corporate Email</ion-label>
+              <ion-input clearInput formControlName="corporateEmail"></ion-input>
+            </ion-item>
+          </div>
+        <!-- TODO remove title or position move to register user -->
+        <!--<div class="col-lg-7 col-sm-12">
+
+          <ion-item>
+            <ion-label position="stacked">Job Title / Position</ion-label>
+            <ion-input clearInput formControlName="jobTitle"></ion-input>
+          </ion-item>
+        </div>-->
+          <div class=" col-lg-7 col-sm-12">
+            <ion-item>
+            <ion-label position="stacked">DBA (optional)</ion-label>
+            <ion-input clearInput formControlName="dba"></ion-input>
+            </ion-item>
+          </div>
+
+          <div class="col-lg-7 col-sm-12">
+            <ion-item>
+              <ion-label position="stacked">Corporate Phone</ion-label>
+              <ion-input clearInput formControlName="corporatePhone" ></ion-input>
+            </ion-item>
+          </div>
+
+      </form>
+      </span>
+    <span *ngIf="!addAddress">
+      <ion-button (click)="addFranchiseAddress()" color="success">Add Corporate Address</ion-button>
+    </span>
+    <span *ngIf="franchiseAdded">
+      <app-franchise-details [franchisee]="newFranchise"></app-franchise-details>
+    </span>
+
+    <span *ngIf="addAddress">
+        <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
+    </span>
+
+    <a routerLink="/admin" class="btn btn-link">Cancel</a>
+  </div>
+</ion-content>

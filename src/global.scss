@@ -26,6 +26,8 @@
 @import "~@ionic/angular/css/flex-utils.css";
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import "~src/sms-text-app.scss";
+@import "metronic.css";
+@import "metronic-style.css";
 /*@import "~src/assets/metronic-them.scss";*/
 /*.side-menu{
   --side-max-width: 200px;
@@ -62,6 +64,22 @@
 .label-stacked.sc-ion-label-md-h{
   transform: scale(0.95) ;
 }
-
-
+.ion-label{
+  margin-top:10px;
+}
+.ion-item{
+  margin-top:10px;
+}
+.text-input {
+  height: auto;
+  div.input-wrapper {
+    background-color: #fff;
+    border-radius: 20px;
+    textarea.text-input {
+      margin-left: 8px;
+      //overflow-y: auto;
+      //max-height: 100px;
+    }
+  }
+}
 

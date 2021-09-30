@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {FirestoreHelperService} from "../firestore-helper.service";
 import {AngularFirestore} from "@angular/fire/firestore";
+import {JobPosting} from "../models/job-posting";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +10,43 @@ import {AngularFirestore} from "@angular/fire/firestore";
 export class JobService {
   message: string;
   storeData: any;
-  constructor(public firestore: AngularFirestore) { }
-  getJobsByStore(franchiseId){
-    return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
+  jobsData: any;
+  stores: any = {};
+  dataSub = new BehaviorSubject<any>(this.stores);
+  currentData = this.dataSub.asObservable();
+  constructor(public firestore: AngularFirestore) {
+    this.currentData.subscribe(data => localStorage.setItem('selectedStore', data));
+  }
+  storeSelection(newStore: any){
+    const store = this.dataSub.next(newStore);
+    console.log('store selection in service', newStore);
+    return this.getJobsByStore(newStore);
+  }
+  getPositionsForSelectedStore(): Observable<any>{
+    let storeId = localStorage.getItem('selectedStore');
+    storeId = (storeId);
+    this.dataSub.next(storeId);
+    this.jobsData = this.getJobsByStore(storeId);
+    return this.jobsData;
+  }
+  getJobsByStore(storeId){
+    return this.firestore.collection('jobs', ref => ref.where(`${storeId}`, '==', storeId)).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           this.message = 'Document not found! Try again!';
         } else {
           ss.docs.forEach(doc => {
             this.message = '';
-            this.storeData = doc.data();
+            this.jobsData = doc.data();
           });
         }
       });
+  }
+  async addJobRec(job: JobPosting): Promise<any>{
+    const jobObj = {...job};
+    return this.firestore.collection('jobs').add(jobObj).then(docRef =>{
+      const jobId = docRef.id;
+      console.log('job added', jobId);
+    });
   }
 }

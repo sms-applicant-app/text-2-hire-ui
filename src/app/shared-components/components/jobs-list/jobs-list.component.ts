@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FileUploadService} from "../../../shared/services/file-upload.service";
-import {map} from "rxjs/operators";
+import {map, take} from "rxjs/operators";
 import {JobService} from "../../../shared/services/job.service";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {MatTableDataSource} from "@angular/material/table";
@@ -8,6 +8,9 @@ import {Store} from "../../../shared/models/store";
 import {JobListing} from "../../../shared/models/job-listing";
 import {AddJobReqComponent} from "../add-job-req/add-job-req.component";
 import {ModalController} from "@ionic/angular";
+import {BehaviorSubject, Observable, pipe} from "rxjs";
+import {ApplicantService} from "../../../shared/services/applicant.service";
+import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 
 @Component({
   selector: 'app-jobs-list',
@@ -18,17 +21,30 @@ export class JobsListComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
   @Output() messageEvent = new EventEmitter<any>();
+  //storeId: string;
   fileUploads?: any[];
   jobs: any = [];
+  userData: any;
+  userRole: string;
+  subscription: any;
+  positionId: string;
+  applicants: any = [];
+  viewApplicants: boolean;
   dataSource: MatTableDataSource<JobListing>;
-  displayColumns = ['jobId', 'storeOrigin', 'title', 'hiringManager', 'location', 'actions'];
+  displayColumns = ['jobId', 'title','status', 'location', 'actions'];
   //todo action see applicant status update position, schedule interview
   constructor(private uploadService: FileUploadService, public jobService: JobService,
               public firestore: AngularFirestore,
-              public modalController: ModalController) {
+              public modalController: ModalController,
+              public applicantService: ApplicantService,
+              public dbHelper: FirestoreHelperService) {
   }
 
   ngOnInit() {
+    this.viewApplicants = false;
+    this.userData = JSON.parse(localStorage.getItem('appUserData'));
+    //this.storeId = JSON.parse(localStorage.getItem('selectedStore'));
+    console.log(' store Id from local storage', this.storeId);
     this.uploadService.getFiles(6).snapshotChanges().pipe(
       map(changes =>
         // store the key
@@ -37,9 +53,16 @@ export class JobsListComponent implements OnInit {
     ).subscribe(fileUploads => {
       this.fileUploads = fileUploads;
     });
-   this.getJobsByFranchiseId();
+   // if user role is hiring manager get jobs by storeId
+   this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+    if (this.userRole === 'hiringManager'){
+      this.getJobsByStoreId();
+    } else {
+      this.getJobsByFranchiseId();
+    }
    this.sendJobsFranchiseIdMessage();
   }
+
   getJobsByFranchiseId(){
     this.firestore.collection('jobs', ref => ref.where('franchiseId', '==', this.franchiseId)).get()
       .subscribe(jobs =>{
@@ -48,6 +71,7 @@ export class JobsListComponent implements OnInit {
           console.log('no docs with that franchise', this.franchiseId);
         } else {
           jobs.forEach(data =>{
+            this.positionId = data.id;
             const j = data.data();
             this.jobs.push(j);
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
@@ -56,42 +80,67 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsByStoreId(){
-    this.firestore.collection('jobs', ref => ref.where('storeId', '==', this.storeId)).get()
-      .subscribe(jobs =>{
-        this.jobs= [];
-        if(jobs.docs.length === 0){
-          console.log('no docs with that store', this.franchiseId);
-        } else {
-          jobs.forEach(data =>{
-            const j = data.data();
-            this.jobs.push(j);
-            this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
-          });
-        }
-      });
-  }
-  // probably dont need this function here
-  async addJobRecToStore(storeId){
-
-    const franchiseId = this.franchiseId;
-    console.log('display add job model');
-    const addJobModel = await this.modalController.create({
-      component: AddJobReqComponent,
-      swipeToClose: true,
-      componentProps: {
-        // may need franchise id
-        franchiseId,
-        storeId
-      }
+    this.jobService.currentData.subscribe(data =>{
+      console.log('data changed from local storage', data);
+      const storeId = data;
+      this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+        .subscribe(jobs =>{
+          this.jobs = [];
+          if(jobs.docs.length === 0){
+            console.log('no jobs with that store', this.storeId);
+          } else {
+            jobs.forEach(job =>{
+              const j = job.data();
+              const positionId = job.id;
+              this.jobs.push({id: positionId, position:j});
+              console.log(this.jobs, 'id', positionId);
+              this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
+            });
+          }
+        });
     });
-    return await addJobModel.present();
+  }
+
+  receiveNavigationMessage($event){
+    console.log('goBack', $event);
+    this.viewApplicants = $event;
   }
   sendJobsFranchiseIdMessage(){
     this.messageEvent.emit(this.franchiseId);
   }
-  seeApplicantStatuses(id){
-    console.log('get applicants for the position and see what the pipeline looks like');
+  async addJobRec(){
+    const franchiseId = this.franchiseId;
+    const storeId = localStorage.getItem('selectedStore');
+    console.log('display add Job Model',storeId, franchiseId);
+    const addJobRec = await this.modalController.create({
+      component: AddJobReqComponent,
+      swipeToClose: true,
+      componentProps: {
+        franchiseId,
+        storeId
+      }
+    });
+    return await addJobRec.present();
   }
+  getApplicants(positionId){
+    this.viewApplicants = true;
+    this.positionId = positionId;
+  /*  this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
+      .subscribe(ss =>{
+        this.applicants = [];
+        if (ss.docs.length === 0){
+          console.log('no applicants for position');
+        } else {
+         ss.forEach( applicant =>{
+           const a = applicant.data();
+           const id = applicant.id;
+           this.applicants.push({ id, applicant: a});
+           console.log('applicants applied', this.applicants);
+         });
+        }
+      });*/
+  }
+
   updatePosition(id){
     console.log('Update a position rather that is change pay rate rec number available, move applicant manually');
   }

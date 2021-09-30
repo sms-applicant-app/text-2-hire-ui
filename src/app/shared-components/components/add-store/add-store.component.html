@@ -27,16 +27,50 @@
         </div>
       </form>
   </mat-step>
-
   <mat-step label="Store Address" style="margin-bottom: 20px;">
     <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
     <button mat-button matStepperPrevious type="button">Back</button>
     <button mat-button matStepperNext type="button">Next</button>
-
   </mat-step>
   <mat-step label="Register User For Store">
     <span *ngIf="!addingNewUser">
-    <ion-button (click)="addNewUserToStore()">Add a Hiring Manager</ion-button>
+    <ion-button (click)="addNewUserToStore()">Add New Hiring Manager</ion-button>
+      <div class="card card-custom">
+      <p *ngIf="hiringManagers.length <= 0">No Users for this store</p>
+      <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+          <h3 class="card-label">Hiring Managers for this Store</h3>
+        </div>
+        <!-- <div class="card-toolbar">
+           <button class="btn btn-light-primary" (click)="export()">Export</button>
+         </div>-->
+      </div>
+      <div class =mat-elevation-z8 *ngIf="hiringManagers.length > 0">
+        <mat-table [dataSource]="dataSource">
+          <ng-container  matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Hiring Manger's Name</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.fullName}}</mat-cell>
+          </ng-container>
+          <ng-container  matColumnDef="phoneNumber">
+            <mat-header-cell *matHeaderCellDef>Phone Number</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
+          </ng-container>
+               <ng-container  matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <ion-item>
+            <a class="btn btn-sm btn-clean btn-icon" (click)="addHiringManagerToStore(element.email)">
+            <ion-icon name="add-circle">
+            </ion-icon>
+              Add as Hiring manager </a>
+          </ion-item>
+        </mat-cell>
+      </ng-container>
+          <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
+        </mat-table>
+      </div>
+    </div>
       </span>
     <span *ngIf="addingNewUser">
       <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId" [storeId]="storeId"></app-register-user>
@@ -49,72 +83,9 @@
   </mat-step>
 
   <mat-step label="Add Another store" style="padding-bottom: 10px;">
-    <h4>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h4>
-    <ion-button (click)="goBack(stepper)">Add Another Store</ion-button>
-    <ion-button (click)="addNewUserToStore()">Add User to Store</ion-button>
-    <!-- todo add table showing users by franchise to add them as hiring manager - show recap of user -->
-    <div class="card card-custom">
-      <p *ngIf="franchiseData.length <= 0">No Franchises added Yet</p>
-      <div class="card-header flex-wrap border-0 pt-6 pb-0">
-        <div class="card-title">
-          <h3 class="card-label">Franchise Card</h3>
-        </div>
-        <!-- <div class="card-toolbar">
-           <button class="btn btn-light-primary" (click)="export()">Export</button>
-         </div>-->
-      </div>
-      <div class =mat-elevation-z8 *ngIf="franchiseData.length > 0">
-        <mat-table [dataSource]="dataSource">
-          <ng-container  matColumnDef="businessLegalName">
-            <mat-header-cell *matHeaderCellDef>Franchise Legal Name</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.businessLegalName}}</mat-cell>
-          </ng-container>
-          <ng-container  matColumnDef="dateCreated">
-            <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.dateCreated}}</mat-cell>
-          </ng-container>
-          <ng-container  matColumnDef="phoneNumber">
-            <mat-header-cell *matHeaderCellDef>Corporate Phone Number</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
-          </ng-container>
-          <ng-container  matColumnDef="corporateEmail">
-            <mat-header-cell *matHeaderCellDef>Corporate Email</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.corporateEmail}}</mat-cell>
-          </ng-container>
-          <ng-container  matColumnDef="dba">
-            <mat-header-cell *matHeaderCellDef>DBA</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{element.dba}}</mat-cell>
-          </ng-container>
-          <ng-container  matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <ion-item>
-                <a class="btn btn-sm btn-clean btn-icon" (click)="addUserToFranchise(element.id)">
-                  <ion-icon name="add-circle">
-                  </ion-icon>
-                  User </a>
-              </ion-item>
-              <ion-item>
-                <a class="btn btn-sm btn-clean btn-icon" (click)="addStoreToFranchise(element.id)">
-                  <ion-icon name="add-circle-outline">
-                  </ion-icon>
-                  Store</a>
-              </ion-item>
-              <ion-item>
-                <a class="btn btn-sm btn-clean btn-icon" (click)="getFranchiseDetails(element.id)">
-                  <ion-icon name="open-outline">
-                  </ion-icon>
-                  Details </a>
-              </ion-item>
-              <!--<ion-button (click)="addStoreToFranchise(element.id)">Add Store</ion-button></mat-cell>-->
-            </mat-cell>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
-        </mat-table>
-      </div>
-    </div>
-
+    <h4>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h4><br>
+    <h4>Swipe or click off this window if finished</h4>
+    <!--<ion-button (click)="goBack(stepper)">Add Another Store</ion-button>-->
   </mat-step>
 </mat-stepper>
   </mat-horizontal-stepper>

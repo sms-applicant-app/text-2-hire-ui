@@ -7,9 +7,10 @@ export class Applicant {
   applicantId: string;
   storeId: string;
   franchiseId: string;
-  applicantStatus: ApplicantStatus;
+  status: ApplicantStatus;
   addressId?: string;
   jobId?: string;
+  jobTitle?: string;
   dob?: string;
   gender?: string;
 }

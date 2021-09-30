@@ -19,6 +19,8 @@ import {ModalModule} from "./shared-components/pop-over-window/model/modal/modal
 import {SharedComponentsModule} from "./shared-components/shared-components.module";
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {HttpClientModule} from "@angular/common/http";
 
 
 
@@ -41,7 +43,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     BrowserAnimationsModule,
     AngularMaterialModule,
     ModalModule,
+    HttpClientModule,
     SharedComponentsModule,
+    FontAwesomeModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   providers: [

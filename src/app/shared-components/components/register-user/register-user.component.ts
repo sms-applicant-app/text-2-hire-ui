@@ -1,13 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {User} from "../../../shared/models/user";
-import {DatePipe} from "@angular/common";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {AuthService} from "../../../shared/services/auth.service";
-import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
-import {StoreManager} from "../../../shared/models/store-manager";
-import { v4 as uuidv4 } from 'uuid';
-import {uuid4} from "@capacitor/core/dist/esm/util";
-import {Role} from "../../../shared/models/role";
+import {User} from '../../../shared/models/user';
+import {DatePipe} from '@angular/common';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {AuthService} from '../../../shared/services/auth.service';
+import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
+
+import {Role} from '../../../shared/models/role';
 
 @Component({
   selector: 'app-register-user',
@@ -58,9 +56,9 @@ export class RegisterUserComponent implements OnInit {
   registerStoreManagerUser(){
     this.createDate();
     this.newUser.email = this.userForm.controls.email.value;
-    this.newUser.password = this.userForm.controls.password.value;
+    const password = this.userForm.controls.password.value;
     this.userId = this.newUser.email;
-    this.authService.RegisterUser(this.newUser.email, this.newUser.password).then(u=>{
+    this.authService.RegisterUser(this.newUser.email, password).then(u=>{
       console.log('registered user', u, this.registrationForm.value);
       this.newUser.fullName = this.registrationForm.controls.fullName.value;
       this.newUser.email = this.userForm.controls.email.value;
@@ -79,8 +77,8 @@ export class RegisterUserComponent implements OnInit {
   registerFranchiseOwner(){
     this.createDate();
     this.newUser.email = this.userForm.controls.email.value;
-    this.newUser.password = this.userForm.controls.password.value;
-    this.authService.RegisterUser(this.newUser.email, this.newUser.password).then(u=>{
+    const password = this.userForm.controls.password.value;
+    this.authService.RegisterUser(this.newUser.email, password).then(u=>{
       console.log('registered user', u);
       const user ={
         firstName: this.registrationForm.controls.firstName.value,

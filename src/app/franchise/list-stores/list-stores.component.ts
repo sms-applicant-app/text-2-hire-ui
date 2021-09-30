@@ -8,8 +8,9 @@ import {StoreService} from "../../shared/services/store.service";
 })
 export class ListStoresComponent implements OnInit {
   @Input()franchiseIdFromList: string;
- franchisedId: string;
- storesData: any;
+  franchisedId: string;
+  storesData: any;
+  userData: any;
 
   constructor(public storeService: StoreService) { }
 
@@ -22,5 +23,10 @@ export class ListStoresComponent implements OnInit {
   getAllStoresByFranchiseId(){
     this.storesData = this.storeService.getStoresByFranchise(this.franchisedId);
     console.log(this.storesData);
+  }
+  getStoresByHiringManager(){
+    const userId = JSON.parse(localStorage.getItem('user')).uid;
+    this.storesData = this.storeService.getStoresByHiringManger(userId);
+    console.log('store data returned for hiring manager', this.storesData);
   }
 }

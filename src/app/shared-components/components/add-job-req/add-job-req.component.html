@@ -5,9 +5,9 @@
       <mat-step [stepControl]="addJoblistingFrom">
         <form [formGroup]="addJoblistingFrom">
           <div class="form-row">
-            <div class="form-group col-lg-7 col-sm-12">
+            <div class="form-group col-lg-6">
               <ion-item lines="full">
-                <ion-label position="stacked" required>Requirement Number</ion-label>
+                <ion-label position="stacked">Requirement Number</ion-label>
                 <ion-input clearInput type="text" formControlName="recNumber" required></ion-input>
               </ion-item>
               <ion-item lines="full">
@@ -21,60 +21,64 @@
               <ion-item lines="full">
                 <ion-label position="stacked" required>Job Type</ion-label>
                 <ion-select class="form-control" id="state" formControlName="jobType"  type="select">
-                  <ion-select-option value="AL">Full-Time</ion-select-option>
-                  <ion-select-option value="AK">Part-Time</ion-select-option>
+                  <ion-select-option value="fullTime">Full-Time</ion-select-option>
+                  <ion-select-option value="partTime">Part-Time</ion-select-option>
                 </ion-select>
               </ion-item>
+            </div>
+              <div class="col-lg-6">
+                <ion-item lines="full">
+                  <ion-label position="stacked" required>Number of Hires for this role</ion-label>
+                  <ion-input clearInput type="text" formControlName="numberOfOpenSlots"></ion-input>
+                </ion-item>
+                <ion-item lines="full">
+                  <ion-label position="stacked" required>Expiration Date</ion-label>
+                  <ion-input clearInput type="text" formControlName="positionExpiration"></ion-input>
+                </ion-item>
+                <ion-item lines="full">
+                  <ion-label position="stacked" required>Salary</ion-label>
+                  <ion-input clearInput type="text" formControlName="salary"></ion-input>
+                </ion-item>
+                <ion-item lines="full">
+                  <ion-label position="stacked" required>Company WebSite</ion-label>
+                  <ion-input clearInput type="text" formControlName="companyWebsite"></ion-input>
+                </ion-item>
+              </div>
+            <div class="col-lg-12">
               <ion-item lines="full">
-                <ion-label position="stacked" required>Number of Hires for this role</ion-label>
-                <ion-input clearInput type="text" formControlName="numberOfOpenSlots"></ion-input>
+                <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
               </ion-item>
-              <ion-item lines="full">
-                <ion-label position="stacked" required>Expiration Date</ion-label>
-                <ion-input clearInput type="text" formControlName="positionExpiration"></ion-input>
-              </ion-item>
-              <ion-item lines="full">
-                <ion-label position="stacked" required>Company WebSite</ion-label>
-                <ion-input clearInput type="text" formControlName="companyWebSite"></ion-input>
-              </ion-item>
-              <ion-item lines="full">
-                  <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
-              </ion-item>
+            </div>
               <div>
                 <button mat-button matStepperPrevious type="button">Back</button>
                 <button mat-button matStepperNext type="button">Next</button>
               </div>
             </div>
-          </div>
         </form>
       </mat-step>
 
       <mat-step label="Job Description" style="margin-bottom: 20px;">
         <form [formGroup]="jobDetailsFrom">
-          <ion-item lines="full">
-            <ion-textarea auto-grow formControlName="fullDescription" placeholder="Enter Full Job Description..."></ion-textarea>
-          </ion-item>
+          <label>Full Description</label>
+            <textarea class="form-control form-control-flush mb-3" auto-grow formControlName="fullDescription" placeholder="Enter Full Job Description..."></textarea>
+          <label>Benefits</label>
+          <textarea class="form-control form-control-flush mb-3" auto-grow formControlName="benefits" placeholder="If Available"></textarea>
+          <label>Qualifications</label>
+          <textarea class="form-control form-control-flush mb-3" auto-grow formControlName="qualifications" placeholder="Any Extra Qualifications?"></textarea>
+          <label>Notes</label>
+          <textarea class="form-control form-control-flush mb-3" auto-grow formControlName="specialNotes" placeholder="Extra Notes ie: Remote, Drug Screen"></textarea>
+
         </form>
         <div>
           <button mat-button matStepperPrevious type="button">Back</button>
-          <button mat-button matStepperNext type="button">skip</button>
+          <button (click)="addJobListing()" mat-button matStepperNext type="button">Add Job Listing</button>
         </div>
       </mat-step>
-      <mat-step label="Register User For Store">
-      <h3>Federal Forms are Automatic, I9, W4 and State W4. Is there anything else you would like to add to the On Boarding packet for this position?</h3>
-        <div class="row">
-          <app-upload-form></app-upload-form>
-        </div>
 
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button (click)="addJobListing()" mat-button matStepperNext type="button">Add Job Listing</button>
-
-      </mat-step>
 
       <mat-step label="Add Another store" style="padding-bottom: 10px;">
       <ion-button color="success" >Add Another Listing</ion-button>
-        <ion-button (click)="showJobList()">Done</ion-button>
-        <!-- todo add table showing users by franchise to add them as hiring manager - show recap of user -->
+        <ion-button (click)="refreshPage()">Done</ion-button>
       </mat-step>
     </mat-stepper>
   </mat-horizontal-stepper>

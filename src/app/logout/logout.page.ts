@@ -12,8 +12,8 @@ export class LogoutPage implements OnInit {
 
   ngOnInit() {
     this.authService.SignOut().then(data =>{
-      console.log("logged out", data)
-    })
+      console.log("logged out", data);
+    });
   }
 
 }

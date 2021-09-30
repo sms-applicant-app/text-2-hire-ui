@@ -14,6 +14,7 @@ import {UserService} from '../../../shared/services/user.service';
 import {GeneratedStoreId} from '../../../shared/models/generatedStoreId';
 import {MatTableDataSource} from "@angular/material/table";
 import {User} from "../../../shared/models/user";
+import {JobService} from "../../../shared/services/job.service";
 
 
 
@@ -48,8 +49,11 @@ export class AddStoreComponent implements OnInit {
   storeUniqueId: any;
   initialStoreId: string;
   lastUsedStoreId: any;
+  newUserHiringManagerData: any;
+  existingHiringManagerId: string;
   dataSource: MatTableDataSource<User>;
   hiringManagers: any = [];
+  displayColumns= ['name', 'phoneNumber', 'actions'];
 
   constructor(
     public dbHelper: FirestoreHelperService,
@@ -60,6 +64,7 @@ export class AddStoreComponent implements OnInit {
     public storeService: StoreService,
     public firestore: AngularFirestore,
     public userService: UserService,
+    public jobService: JobService
 
 
   ) { }
@@ -75,10 +80,12 @@ export class AddStoreComponent implements OnInit {
 
       this.franchiseId = this.storeIsAddedByAdmin? this.userData.franchiseId : this.franchiseIdFromList;
     });*/
+    this.storeService.getLastGeneratedStoreId();
     this.createStoreForm();
     console.log('incoming franchise Id', this.franchiseId);
     this.addStoreAddress();
     this.initialStoreId = '001';
+    this.getHiringManagersPerFranchise();
   }
   createDate() {
     this.date = new Date();
@@ -118,6 +125,7 @@ export class AddStoreComponent implements OnInit {
   }
 
   receiveUserMessage($event){
+    this.newUserHiringManagerData = $event;
     console.log('user added', $event);
   }
   goBack(stepper: MatStepper){
@@ -130,21 +138,23 @@ export class AddStoreComponent implements OnInit {
     stepper.next();
   }
   createStoreUniqueId(){
-  this.lastUsedStoreId = this.storeService.getLastGeneratedStoreId();
+    // change state to HN for hirenow later we can make better unique ID
+    this.storeService.getLastGeneratedStoreId();
     console.log('last used generated store Id from DB', this.lastUsedStoreId);
-  if(this.lastUsedStoreId){
+    this.newStore.storeId = 'HN002';
+/*  if(this.lastUsedStoreId){
     this.lastUsedStoreId.toString();
     const removedState = this.lastUsedStoreId.replace(this.addressAdded.state, '');
     const toNum = Number(removedState);
     const incrementOne = toNum + 1;
     const statePlusGenID = this.addressAdded.state + incrementOne;
     this.newStore.storeId = statePlusGenID;
-    console.log(removedState, 'generated store ID', statePlusGenID, this.storeUniqueId, toNum);
+    console.log( 'generated store ID', statePlusGenID, this.storeUniqueId, toNum);
   } else {
-    this.storeUniqueId = this.addressAdded.state + this.initialStoreId;
+    this.storeUniqueId = 'HN' + this.initialStoreId;
     this.newStore.storeId = this.storeUniqueId;
     console.log('else statement storeId', this.newStore.storeId);
-  }
+  }*/
   }
   getHiringManagersPerFranchise(){
     this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager').where('franchiseId', '==', this.franchiseId)).get()
@@ -162,7 +172,12 @@ export class AddStoreComponent implements OnInit {
         }
       });
   }
-  addHiringManagerToStore(){
+  addHiringManagerToStore(userId){
+    // update hiring manager by assigning the store to id to their user object
+    // if new user create User if existing just update user
+    this.existingHiringManagerId = userId;
+    const storeId = this.newStore.storeId;
+    this.userService.updateUser(userId, { storeIds: storeId });
 
   }
   addStore(){
@@ -172,6 +187,7 @@ export class AddStoreComponent implements OnInit {
     this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
     this.newStore.addressId = this.addressAdded.addressId;
     this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
+    this.newStore.storeHiringManager = this.addingNewUser? this.newUserHiringManagerData.userId : this.existingHiringManagerId;
     this.storeService.createStore(this.newStore).then((resp: any) =>{
       this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
       this.newGeneratedStoreId.generatedStoreId = this.storeUniqueId;

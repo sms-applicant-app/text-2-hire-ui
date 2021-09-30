@@ -24,6 +24,8 @@ import {RegisterApplicantComponent} from "./components/register-applicant/regist
 import {AddJobComponent} from "../jobs/add-job/add-job.component";
 import {AddJobReqComponent} from "./components/add-job-req/add-job-req.component";
 import {UsersForFranchiseListComponent} from "./components/users-for-franchise-list/users-for-franchise-list.component";
+import {StoresByHiringManagerComponent} from "./components/stores-by-hiring-manager/stores-by-hiring-manager.component";
+import {AddFranchiseComponent} from "./components/add-franchise/add-franchise.component";
 
 
 
@@ -48,7 +50,9 @@ import {UsersForFranchiseListComponent} from "./components/users-for-franchise-l
       CreateNewHirePackageComponent,
       RegisterApplicantComponent,
       AddJobReqComponent,
-      UsersForFranchiseListComponent
+      UsersForFranchiseListComponent,
+      StoresByHiringManagerComponent,
+      AddFranchiseComponent
     ],
   imports: [
     CommonModule,
@@ -56,6 +60,7 @@ import {UsersForFranchiseListComponent} from "./components/users-for-franchise-l
     ReactiveFormsModule,
     AngularMaterialModule,
     FormsModule,
+
   ],
     exports: [FranchiseListComponent,
         ApplicantListComponent,
@@ -71,7 +76,10 @@ import {UsersForFranchiseListComponent} from "./components/users-for-franchise-l
         UploadListComponent,
         CreateNewHirePackageComponent,
         RegisterApplicantComponent,
-        AddJobReqComponent, AddStoreComponent
+        AddJobReqComponent,
+        AddStoreComponent,
+        StoresByHiringManagerComponent,
+        AddFranchiseComponent
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

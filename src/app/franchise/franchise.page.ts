@@ -32,6 +32,9 @@ export class FranchisePage implements OnInit {
               const state = navigation.extras.state;
 
   }
+  getStoresByFranchiseId(){
+
+  }
 
   ngOnInit() {
     this.isLoading = true;

@@ -26,6 +26,7 @@ import {AddJobReqComponent} from "./components/add-job-req/add-job-req.component
 import {UsersForFranchiseListComponent} from "./components/users-for-franchise-list/users-for-franchise-list.component";
 import {StoresByHiringManagerComponent} from "./components/stores-by-hiring-manager/stores-by-hiring-manager.component";
 import {AddFranchiseComponent} from "./components/add-franchise/add-franchise.component";
+import {ApplicantDetailsComponent} from "./components/applicant-details/applicant-details.component";
 
 
 
@@ -35,6 +36,7 @@ import {AddFranchiseComponent} from "./components/add-franchise/add-franchise.co
   declarations:
     [FranchiseListComponent,
     ApplicantListComponent,
+      ApplicantDetailsComponent,
       StoreListByFranchiseComponent,
       JobsListComponent,
       AddressFormComponent,

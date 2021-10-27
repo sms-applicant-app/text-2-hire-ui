@@ -122,6 +122,9 @@ export class JobsListComponent implements OnInit {
     });
     return await addJobRec.present();
   }
+  createOnboardingPacket(){
+
+  }
   getApplicants(positionId){
     this.viewApplicants = true;
     this.positionId = positionId;

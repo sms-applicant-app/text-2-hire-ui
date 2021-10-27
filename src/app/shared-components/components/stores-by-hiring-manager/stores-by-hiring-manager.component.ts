@@ -3,6 +3,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {Store} from '../../../shared/models/store';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {JobService} from '../../../shared/services/job.service';
+import {JobPosting} from "../../../shared/models/job-posting";
 
 @Component({
   selector: 'app-stores-by-hiring-manager',
@@ -13,7 +14,7 @@ export class StoresByHiringManagerComponent implements OnInit {
   stores: any = [];
   positions: any = [];
   dataSource: MatTableDataSource<Store>;
-  positionsDataSource: MatTableDataSource<Position>;
+  positionsDataSource: MatTableDataSource<JobPosting>;
   storeManagerId: string;
   displayColumns = ['storeName'];
   constructor(public firestore: AngularFirestore, public jobService: JobService) { }
@@ -52,7 +53,7 @@ export class StoresByHiringManagerComponent implements OnInit {
           ss.forEach(data =>{
             const j = data.data();
             this.positions.push(j);
-            this.positionsDataSource = new MatTableDataSource<Position>(this.positions);
+            this.positionsDataSource = new MatTableDataSource<JobPosting>(this.positions);
           });
         }
       });

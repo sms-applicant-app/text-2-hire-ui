@@ -10,7 +10,8 @@ const httpOptions = {
 })
 
 export class SmsService {
-  lambdaSmsService = 'https://m0dwmc1b67.execute-api.us-east-1.amazonaws.com/dev/api/requestInterview';
+  requestInterviewEndPoint = 'https://m0dwmc1b67.execute-api.us-east-1.amazonaws.com/dev/api/requestInterview';
+  sendOnboardingLinksEndPoint = 'https://m0dwmc1b67.execute-api.us-east-1.amazonaws.com/dev/api/sendOnboardingForms'
   constructor(private http: HttpClient) { }
 
   requestInterview(name, positionId, clientPhoneNumber, calendarLink){
@@ -22,8 +23,22 @@ export class SmsService {
     };
     const dataObj = {...data};
     const obj = JSON.stringify(data);
-    console.log('sending request to ', this.lambdaSmsService, data, obj, dataObj);
-    return this.http.post(`${this.lambdaSmsService}`, obj, httpOptions);
+
+    return this.http.post(`${this.requestInterviewEndPoint}`, obj, httpOptions);
+  }
+  sendNewHireForms(action, name, applicantPhone, linkToOnboardingForms, franchiseName, hiringManagersName, storePhone, startDate){
+    const data = {
+      name,
+      applicantPhone,
+      linkToOnboardingForms,
+      franchiseName,
+      hiringManagersName,
+      storePhone,
+      startDate,
+      action
+    }
+    const obj = JSON.stringify(data);
+    return this.http.post(`${this.sendOnboardingLinksEndPoint}`, obj, httpOptions);
   }
 }
 

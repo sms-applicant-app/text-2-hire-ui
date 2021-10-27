@@ -1,3 +1,7 @@
 export class OnboardingPackage {
-  onBoardingForms = [];
+  userId: string;
+  positionId: string;
+  confirmPersonalInformation: boolean;
+  completedI9: boolean;
+  policyFormURLs = [];
 }

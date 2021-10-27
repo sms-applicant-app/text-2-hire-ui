@@ -13,4 +13,6 @@ export class Applicant {
   jobTitle?: string;
   dob?: string;
   gender?: string;
+  interviewNotes?: string;
+  onboardPacketId?: string;
 }

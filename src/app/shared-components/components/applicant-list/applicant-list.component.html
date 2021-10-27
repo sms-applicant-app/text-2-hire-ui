@@ -16,61 +16,57 @@
       <div class="card mb-5 mb-xl-8">
         <div class="card-body py3">
           <div class="table-responsive">
+            <form [formGroup]="actionsFrom">
+
             <table class="table align-middle gs-0 gy-4">
               <thead>
               <tr class="fw-bolder text-muted bg-light">
-               <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
+                <!--<th class="ps-4 min-w-300px rounded-start">Select</th>-->
                 <th class="ps-4 min-w-300px rounded-start">Name</th>
                 <th class="ps-4 min-w-300px rounded-start">Schedule Status</th>
-                <th class="ps-4 min-w-300px rounded-start">Add Feed Back</th>
+                <!--<th class="ps-4 min-w-300px rounded-start">Add Feed Back</th>-->
                 <th class="ps-4 min-w-300px rounded-start">Phone Number</th>
-                <th class="ps-4 min-w-300px rounded-start">Schedule Interview</th>
-                <th class="ps-4 min-w-300px rounded-start">Actions</th>
+                <th class="ps-4 min-w-300px rounded-start">Select Action</th>
+               <!-- <th class="ps-4 min-w-300px rounded-start">Actions</th>-->
                 <th class="ps-4 min-w-300px rounded-start">Submit</th>
-
               </tr>
               </thead>
               <tbody>
+              <ng-container formArrayName="tableRows" *ngFor="let group of getFormControls.controls ; let i=index">
+              <tr *ngFor="let a of applicants" [formGroupName]="i">
 
-              <tr *ngFor="let a of applicants" >
-              <!--  <td>
-                  <div class="form-check form-check-sm form-check-custom form-check-solid">
-                    <input type="checkbox" value="{{a.id}}" class="form-check-input widget-9-check">
-                  </div>
-                </td>-->
                 <td>
                   <div class="d-flex align-items-center">
-
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.name}}</a>
+                   <input class="visually-hidden" type="hidden" id="applicantId" [(ngModel)]="a.id" formControlName="applicantId" name="applicantId" value="{{a.id}}">
+                    <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.name}}</p>
                   </div>
                 </td>
                <td>
                   <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.status}}</a>
+                    <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.status}}</p>
                   </div>
                 </td>
-                <td>
+               <!-- <td>
                   <div class="d-flex align-items-center">
                     <input class="input-group">
                   </div>
-                </td>
-                <td>
+                </td>-->
+             <td>
                   <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</a>
+                    <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</p>
                   </div>
                 </td>
-                <td>
-                  <i class="fa fa-clock-o text-center"></i><br>
-                  <select class="text-center">
-                    <option>Applicant Next Steps</option>
+                <td class="row">
+                  <select formControlName="actions" class="form-select form-select-lg text-center">
+                    <option selected>Applicant Next Steps</option>
                     <option value="scheduleInterview">Schedule Interview</option>
-                    <option value="interviewedCompleted">Interview Completed</option>
-                    <option value="senOnboardLink">Send OnBoard Packages</option>
+                    <option value="interviewCompleted">Interview Completed</option>
+                    <option value="hireApplicant">Hire Applicant</option>
                     <option value="onBoardComplete">OnBoard Complete</option>
                     <option value="applicantDeclined">Decline Applicant</option>
                   </select>
                 </td>
-                    <td>
+                    <!--<td>
                       <i class="fa fa-chevron-circle-down"></i>
                       <br><p>Move Applicant</p>
                      <select class="text-center">
@@ -79,18 +75,25 @@
                        <option>Add Notes</option>
                        <option>Decline</option>
                      </select>
-                    </td>
+                    </td>-->
                   <td>
+
                   <ion-item>
-                    <ion-button (click)="submitActionsToApplicants(a.id)"  fill="outline" size="default" color="secondary">Submit</ion-button>
+                    <div class="action-container">
+                      <!-- <button mat-raised-button type="submit" (click)="addRow()">Add row</button>-->
+                      <button mat-raised-button [disabled]="actionsFrom.invalid" type="submit" (click)="submitForm()">Update Applicant</button>
+                    </div>
+                    <ion-button class="float-left" fill="outline" size="default" color="primary">Notes</ion-button>
                   </ion-item>
-              <ion-item>
-                <ion-button  fill="outline" size="default" color="secondary">Details</ion-button>
-              </ion-item>
+
                 </td>
+
               </tr>
+              </ng-container>
               </tbody>
             </table>
+
+            </form>
           </div>
         </div>
       </div>

@@ -87,9 +87,8 @@ export class LoginPage implements OnInit {
   }
   login(email, password){
         this.authService.SignIn(email.value, password.value).then(user =>{
-        this.userId = JSON.parse(localStorage.getItem('user')).email;
-          console.log(this.userId);
-          this.routeUserBasedOnRole(this.userId);
+          const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+          this.routeUserBasedOnRole(userRole);
     });
   }
   goToLogin(){
@@ -118,9 +117,8 @@ export class LoginPage implements OnInit {
         });
     });
   }
-  routeUserBasedOnRole(userId){
-
-      const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+  routeUserBasedOnRole(userRole){
+      console.log('is first time login?', this.firstTimeLogin, 'user role', userRole)
       if (userRole === 'franchisee' && this.firstTimeLogin === true){
         this.router.navigate(['admin/admin-add-franchise']);
       }

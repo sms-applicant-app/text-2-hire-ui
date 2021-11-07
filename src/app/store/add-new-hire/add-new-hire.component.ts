@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-add-new-hire',
@@ -6,9 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-new-hire.component.scss'],
 })
 export class AddNewHireComponent implements OnInit {
-
+  @Input() applicant: any;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('incoming applicant', this.applicant);
+  }
 
 }

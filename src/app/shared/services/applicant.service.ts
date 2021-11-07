@@ -5,6 +5,7 @@ import {Franchisee} from "../models/franchisee";
 import {Applicant} from "../models/applicant";
 import {OnboardingPackage} from "../models/onboarding-package";
 import {map} from "rxjs/operators";
+import {FirestoreHelperService} from "../firestore-helper.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,12 @@ export class ApplicantService {
   currentData = this.dataSub.asObservable();
   applicantsByPosition: any;
   positionId: string;
+  applicantRef: any;
   constructor(
-    public firestore: AngularFirestore
+    public firestore: AngularFirestore, public dbHelper: FirestoreHelperService
   ) {
     this.currentData.subscribe(data => localStorage.setItem('selectedPosition', data));
+    this.applicantRef = this.firestore.collection('applicant');
   }
 
   async createApplicant(applicant: Applicant): Promise<any>{
@@ -33,6 +36,7 @@ export class ApplicantService {
     });
   }
   updateApplicant(applicantId, data) {
+    console.log('id', applicantId, 'updated user', data);
     this.firestore.doc(`applicant/${applicantId}`).update(data).then(resp => {
       console.log('updated user', resp);
     });
@@ -49,6 +53,10 @@ export class ApplicantService {
           });
         }
       });
+  }
+  getApplicantById(docId: string){
+    return this.dbHelper.doc$(`applicant/${docId}`);
+
   }
   getApplicantsByFranchise(franchiseId){
     return this.firestore.collection('applicant', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
@@ -83,9 +91,9 @@ export class ApplicantService {
     return this.firestore.collection('jobs').doc(`${id}`).snapshotChanges();
   }
   getApplicantsByJobId(positionId): Observable<any>{
-    return this.firestore.collection(`applicant`, ref =>ref.where(`${positionId}`, '==', positionId)).valueChanges();
+    return this.firestore.collection(`applicant`, ref =>ref.where(`${positionId}`, '==', positionId)).snapshotChanges();
   }
-  getApplicantByEmail(email){
+  getApplicantByEmail(email): Observable<any>{
     return this.firestore.collection(`applicant`, ref => ref.where(`${email}`, '==', email)).valueChanges();
   }
   getApplicantsByStatusAndPositionId(status, positionId): Observable<any>{

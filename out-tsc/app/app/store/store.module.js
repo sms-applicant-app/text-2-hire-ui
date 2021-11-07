@@ -8,6 +8,7 @@ import { StorePage } from './store.page';
 import { AddStoreComponent } from './add-store/add-store.component';
 import { SharedComponentsModule } from '../shared-components/shared-components.module';
 import { AngularMaterialModule } from "../app-material/angular-material.module";
+import { AddNewHireComponent } from "./add-new-hire/add-new-hire.component";
 let StorePageModule = class StorePageModule {
 };
 StorePageModule = __decorate([
@@ -21,7 +22,7 @@ StorePageModule = __decorate([
             SharedComponentsModule,
             AngularMaterialModule
         ],
-        declarations: [StorePage, AddStoreComponent],
+        declarations: [StorePage, AddStoreComponent, AddNewHireComponent],
         schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
 ], StorePageModule);

@@ -19,6 +19,9 @@ const routes = [
         path: 'store',
         loadChildren: () => import('./store/store.module').then(m => m.StorePageModule)
     },
+    /*  {
+        path: 'multi-alerts', component: MultiAlertsComponent
+      },*/
     {
         path: 'applicant',
         loadChildren: () => import('./applicant/applicant.module').then(m => m.ApplicantPageModule)

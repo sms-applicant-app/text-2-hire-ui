@@ -16,7 +16,6 @@
       <div class="card mb-5 mb-xl-8">
         <div class="card-body py3">
           <div class="table-responsive">
-            <form [formGroup]="actionsFrom">
 
             <table class="table align-middle gs-0 gy-4">
               <thead>
@@ -32,68 +31,65 @@
               </tr>
               </thead>
               <tbody>
-              <ng-container formArrayName="tableRows" *ngFor="let group of getFormControls.controls ; let i=index">
-              <tr *ngFor="let a of applicants" [formGroupName]="i">
-
+              <tr *ngFor="let a of applicants">
                 <td>
                   <div class="d-flex align-items-center">
-                   <input class="visually-hidden" type="hidden" id="applicantId" [(ngModel)]="a.id" formControlName="applicantId" name="applicantId" value="{{a.id}}">
-                    <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.name}}</p>
+
+                    <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.name}}</p>
                   </div>
                 </td>
-               <td>
+                <td>
                   <div class="d-flex align-items-center">
-                    <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.status}}</p>
+                    <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.status}}</p>
                   </div>
                 </td>
-               <!-- <td>
+                <!-- <td>
+                   <div class="d-flex align-items-center">
+                     <input class="input-group">
+                   </div>
+                 </td>-->
+                <td>
                   <div class="d-flex align-items-center">
-                    <input class="input-group">
-                  </div>
-                </td>-->
-             <td>
-                  <div class="d-flex align-items-center">
+                    <!--<input class="form-control" value="{{a.id}}" formControlName="applicantId" type="text" placeholder="{{a.id}}" readonly>-->
                     <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</p>
                   </div>
                 </td>
                 <td class="row">
-                  <select formControlName="actions" class="form-select form-select-lg text-center">
-                    <option selected>Applicant Next Steps</option>
-                    <option value="scheduleInterview">Schedule Interview</option>
-                    <option value="interviewCompleted">Interview Completed</option>
-                    <option value="hireApplicant">Hire Applicant</option>
-                    <option value="onBoardComplete">OnBoard Complete</option>
-                    <option value="applicantDeclined">Decline Applicant</option>
-                  </select>
+                  <form [formGroup]="actionsFrom">
+                    <select formControlName="actions" class="form-select form-select-lg text-center">
+                      <option selected>Applicant Next Steps</option>
+                      <option value="scheduleInterview">Schedule Interview</option>
+                      <option value="interviewApplicant">Interview Applicant</option>
+                      <option value="hireApplicant">Hire Applicant</option>
+                      <option value="onBoardComplete">OnBoard Complete</option>
+                      <option value="applicantDeclined">Decline Applicant</option>
+                    </select>
+                  </form>
                 </td>
-                    <!--<td>
-                      <i class="fa fa-chevron-circle-down"></i>
-                      <br><p>Move Applicant</p>
-                     <select class="text-center">
-                       <option>Send SMS</option>
-                       <option>Reschedule</option>
-                       <option>Add Notes</option>
-                       <option>Decline</option>
-                     </select>
-                    </td>-->
-                  <td>
+                <!--<td>
+                  <i class="fa fa-chevron-circle-down"></i>
+                  <br><p>Move Applicant</p>
+                 <select class="text-center">
+                   <option>Send SMS</option>
+                   <option>Reschedule</option>
+                   <option>Add Notes</option>
+                   <option>Decline</option>
+                 </select>
+                </td>-->
+                <td>
 
                   <ion-item>
                     <div class="action-container">
                       <!-- <button mat-raised-button type="submit" (click)="addRow()">Add row</button>-->
-                      <button mat-raised-button [disabled]="actionsFrom.invalid" type="submit" (click)="submitForm()">Update Applicant</button>
+                      <button mat-raised-button type="submit" (click)="submitForm(a)">Update Applicant</button>
                     </div>
                     <ion-button class="float-left" fill="outline" size="default" color="primary">Notes</ion-button>
                   </ion-item>
 
                 </td>
-
               </tr>
-              </ng-container>
               </tbody>
             </table>
-
-            </form>
           </div>
         </div>
       </div>

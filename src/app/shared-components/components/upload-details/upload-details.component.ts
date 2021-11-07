@@ -11,7 +11,9 @@ export class UploadDetailsComponent implements OnInit {
   @Input() fileUpload!: FileUpload;
   constructor(private uploadService: FileUploadService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('files uploaded', this.fileUpload);
+  }
 
   deleteFileUpload(fileUpload: FileUpload): void {
     this.uploadService.deleteFile(fileUpload);

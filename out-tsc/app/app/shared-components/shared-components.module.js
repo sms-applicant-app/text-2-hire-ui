@@ -25,12 +25,14 @@ import { AddJobReqComponent } from "./components/add-job-req/add-job-req.compone
 import { UsersForFranchiseListComponent } from "./components/users-for-franchise-list/users-for-franchise-list.component";
 import { StoresByHiringManagerComponent } from "./components/stores-by-hiring-manager/stores-by-hiring-manager.component";
 import { AddFranchiseComponent } from "./components/add-franchise/add-franchise.component";
+import { ApplicantDetailsComponent } from "./components/applicant-details/applicant-details.component";
 let SharedComponentsModule = class SharedComponentsModule {
 };
 SharedComponentsModule = __decorate([
     NgModule({
         declarations: [FranchiseListComponent,
             ApplicantListComponent,
+            ApplicantDetailsComponent,
             StoreListByFranchiseComponent,
             JobsListComponent,
             AddressFormComponent,

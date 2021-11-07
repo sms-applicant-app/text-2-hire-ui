@@ -27,6 +27,8 @@ import {UsersForFranchiseListComponent} from "./components/users-for-franchise-l
 import {StoresByHiringManagerComponent} from "./components/stores-by-hiring-manager/stores-by-hiring-manager.component";
 import {AddFranchiseComponent} from "./components/add-franchise/add-franchise.component";
 import {ApplicantDetailsComponent} from "./components/applicant-details/applicant-details.component";
+import {ApplicantTableRowComponent} from "./components/applicant-table-row/applicant-table-row.component";
+import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on-board-packet.component";
 
 
 
@@ -54,7 +56,9 @@ import {ApplicantDetailsComponent} from "./components/applicant-details/applican
       AddJobReqComponent,
       UsersForFranchiseListComponent,
       StoresByHiringManagerComponent,
-      AddFranchiseComponent
+      AddFranchiseComponent,
+      ApplicantTableRowComponent,
+      AddOnBoardPacketComponent
     ],
   imports: [
     CommonModule,
@@ -66,6 +70,7 @@ import {ApplicantDetailsComponent} from "./components/applicant-details/applican
   ],
     exports: [FranchiseListComponent,
         ApplicantListComponent,
+        AddOnBoardPacketComponent,
         StoreListByFranchiseComponent,
         JobsListComponent,
         AddressFormComponent,
@@ -81,7 +86,8 @@ import {ApplicantDetailsComponent} from "./components/applicant-details/applican
         AddJobReqComponent,
         AddStoreComponent,
         StoresByHiringManagerComponent,
-        AddFranchiseComponent
+        AddFranchiseComponent,
+      ApplicantTableRowComponent
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

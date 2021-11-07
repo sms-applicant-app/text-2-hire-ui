@@ -75,6 +75,9 @@ let ApplicantService = class ApplicantService {
     getApplicantsByJobId(positionId) {
         return this.firestore.collection(`applicant`, ref => ref.where(`${positionId}`, '==', positionId)).valueChanges();
     }
+    getApplicantByEmail(email) {
+        return this.firestore.collection(`applicant`, ref => ref.where(`${email}`, '==', email)).valueChanges();
+    }
     getApplicantsByStatusAndPositionId(status, positionId) {
         return this.firestore.collection('applicant', ref => ref.where(`${status}`, '==', status).where(`${positionId}`, '==', positionId)).valueChanges();
     }

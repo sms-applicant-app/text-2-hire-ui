@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, Input} from '@angular/core';
 import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
 import {AngularFireStorage} from '@angular/fire/storage';
 import {finalize} from "rxjs/operators";
@@ -9,11 +9,13 @@ import {FileUpload} from "../models/file-upload";
   providedIn: 'root'
 })
 export class FileUploadService {
-  private basePath = '/uploads';
-  constructor(private firestore: AngularFireDatabase, private storage: AngularFireStorage) { }
 
-  getFiles(numberItems: number): AngularFireList<FileUpload> {
-    return this.firestore.list(this.basePath, ref =>
+  basePath: string;
+  constructor(private firestore: AngularFireDatabase, private storage: AngularFireStorage) {
+
+  }
+  getFiles(path, numberItems: number): AngularFireList<FileUpload> {
+    return this.firestore.list(path, ref =>
       ref.limitToLast(numberItems));
   }
   deleteFile(fileUpload: FileUpload): void {
@@ -23,7 +25,8 @@ export class FileUploadService {
       })
       .catch(error => console.log(error));
   }
-  pushFileToStorage(fileUpload: FileUpload): Observable<number> {
+  pushFileToStorage(basePath, fileUpload: FileUpload): Observable<number> {
+    this.basePath = basePath;
     const filePath = `${this.basePath}/${fileUpload.file.name}`;
     const storageRef = this.storage.ref(filePath);
     const uploadTask = this.storage.upload(filePath, fileUpload.file);

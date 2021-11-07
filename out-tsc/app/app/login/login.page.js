@@ -18,12 +18,9 @@ let LoginPage = class LoginPage {
             email: [
                 { type: 'required', message: 'Enter your email to login' },
                 { type: 'email', message: 'Must be a valid email' },
-                // { type: 'maxlength', message: 'Display Name cannot be more than 25 characters long.' }
             ],
             name: [
                 { type: 'required', message: 'Name is required.' },
-                // { type: 'minlength', message: 'Display Name must be at least 4 characters long.' },
-                // { type: 'maxlength', message: 'Display Name cannot be more than 25 characters long.' }
             ],
             phoneNumber: [
                 { type: 'required', message: 'Phone Number is required.' },
@@ -61,9 +58,8 @@ let LoginPage = class LoginPage {
     }
     login(email, password) {
         this.authService.SignIn(email.value, password.value).then(user => {
-            this.userId = JSON.parse(localStorage.getItem('user')).email;
-            console.log(this.userId);
-            this.routeUserBasedOnRole(this.userId);
+            const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+            this.routeUserBasedOnRole(userRole);
         });
     }
     goToLogin() {
@@ -92,8 +88,7 @@ let LoginPage = class LoginPage {
             });
         });
     }
-    routeUserBasedOnRole(userId) {
-        const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+    routeUserBasedOnRole(userRole) {
         console.log('is first time login?', this.firstTimeLogin, 'user role', userRole);
         if (userRole === 'franchisee' && this.firstTimeLogin === true) {
             this.router.navigate(['admin/admin-add-franchise']);

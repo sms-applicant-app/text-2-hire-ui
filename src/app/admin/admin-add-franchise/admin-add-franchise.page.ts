@@ -7,7 +7,7 @@ import {FranchiseService} from "../../shared/services/franchise.service";
 import {Franchisee} from "../../shared/models/franchisee";
 import {Address} from "../../shared/models/address";
 import { v4 as uuidv4 } from 'uuid';
-import {MatStepper} from "@angular/material/stepper";
+import {MatStepper} from '@angular/material/stepper';
 import {MatDialog} from "@angular/material/dialog";
 
 

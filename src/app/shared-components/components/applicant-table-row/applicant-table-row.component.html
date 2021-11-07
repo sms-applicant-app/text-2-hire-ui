@@ -1,0 +1,56 @@
+<ng-content></ng-content>
+<td>
+  <div class="d-flex align-items-center">
+
+    <p class="text-dark fw-bolder text-hover-primary fs-6"> name</p>
+  </div>
+</td>
+<td>
+  <div class="d-flex align-items-center">
+   <p class="text-dark fw-bolder text-hover-primary fs-6"> Status</p>
+  </div>
+</td>
+<!-- <td>
+   <div class="d-flex align-items-center">
+     <input class="input-group">
+   </div>
+ </td>-->
+<td>
+  <div class="d-flex align-items-center">
+    <!--<input class="form-control" value="{{a.id}}" formControlName="applicantId" type="text" placeholder="{{a.id}}" readonly>-->
+     <p class="text-dark fw-bolder text-hover-primary fs-6">phoneNumber</p>
+  </div>
+</td>
+<td class="row">
+  <form [formGroup]="actionsFrom">
+  <select formControlName="actions" class="form-select form-select-lg text-center">
+    <option selected>Applicant Next Steps</option>
+    <option value="scheduleInterview">Schedule Interview</option>
+    <option value="interviewCompleted">Interview Completed</option>
+    <option value="hireApplicant">Hire Applicant</option>
+    <option value="onBoardComplete">OnBoard Complete</option>
+    <option value="applicantDeclined">Decline Applicant</option>
+  </select>
+  </form>
+</td>
+<!--<td>
+  <i class="fa fa-chevron-circle-down"></i>
+  <br><p>Move Applicant</p>
+ <select class="text-center">
+   <option>Send SMS</option>
+   <option>Reschedule</option>
+   <option>Add Notes</option>
+   <option>Decline</option>
+ </select>
+</td>-->
+<td>
+
+  <ion-item>
+    <div class="action-container">
+      <!-- <button mat-raised-button type="submit" (click)="addRow()">Add row</button>-->
+     <button mat-raised-button type="submit" (click)="submitForm()">Update Applicant</button>
+    </div>
+    <ion-button class="float-left" fill="outline" size="default" color="primary">Notes</ion-button>
+  </ion-item>
+
+</td>

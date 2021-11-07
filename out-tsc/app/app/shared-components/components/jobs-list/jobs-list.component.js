@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { map } from "rxjs/operators";
 import { MatTableDataSource } from "@angular/material/table";
 import { AddJobReqComponent } from "../add-job-req/add-job-req.component";
+import { AddOnBoardPacketComponent } from "../add-on-board-packet/add-on-board-packet.component";
 let JobsListComponent = class JobsListComponent {
     //todo action see applicant status update position, schedule interview
     constructor(uploadService, jobService, firestore, modalController, applicantService, dbHelper) {
@@ -97,6 +98,22 @@ let JobsListComponent = class JobsListComponent {
                 }
             });
             return yield addJobRec.present();
+        });
+    }
+    createOnboardingPacket() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const franchiseId = this.franchiseId;
+            const storeId = localStorage.getItem('selectedStore');
+            console.log('display add Job Model', storeId, franchiseId);
+            const createOnboardPackage = yield this.modalController.create({
+                component: AddOnBoardPacketComponent,
+                swipeToClose: true,
+                componentProps: {
+                    franchiseId,
+                    storeId
+                }
+            });
+            return yield createOnboardPackage.present();
         });
     }
     getApplicants(positionId) {

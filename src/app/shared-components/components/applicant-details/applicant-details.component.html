@@ -1,25 +1,25 @@
 <div class="card" *ngIf="applicantData">
   <div class="card-header">
-    <h3 class="card-title fw-bolder text-dark">Applicant Information</h3>
+    <h3 class="card-title fw-bolder text-dark">Interview Notes</h3>
 
   </div>
   <div class="card-body p-9">
     <div class="row mb-7">
       <label class="col-lg-4 fw-bold text-muted">Legal Name: </label>
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{applicantData.name}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{applicant.applicant.name}}</span>
       </div>
     </div>
     <div class="row mb-7">
       <label class="col-lg-4 fw-bold text-muted">Contact Email: </label>
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{applicantData.email}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{applicant.applicant.email}}</span>
       </div>
     </div>
     <div class="row mb-7">
       <label class="col-lg-4 fw-bold text-muted">Contact Phone Number: </label>
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-800">{{applicantData.phoneNumber}}</span>
+        <span class="fw-bolder fs-6 text-gray-800">{{applicant.applicant.phoneNumber}}</span>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
       <div class="card-body">
         <form [formGroup]="interviewNotes">
           <label>Notes</label>
-          <textarea class="form-control form-control-flush mb-3" auto-grow formControlName="interviewNotes" placeholder="Notes on the applicant"></textarea>
+          <textarea class="form-control form-control-solid" auto-grow formControlName="interviewNotes" placeholder="Notes on the applicant"></textarea>
         </form>
         <div class="row">
           <ion-item>

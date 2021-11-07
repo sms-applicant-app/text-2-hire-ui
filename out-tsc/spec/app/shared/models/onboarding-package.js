@@ -1,6 +1,6 @@
 export class OnboardingPackage {
     constructor() {
-        this.onBoardingForms = [];
+        this.policyFormURLs = [];
     }
 }
 //# sourceMappingURL=onboarding-package.js.map

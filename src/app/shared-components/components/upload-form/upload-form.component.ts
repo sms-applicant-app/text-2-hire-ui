@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {EventEmitter, Component, Input, OnInit, Output} from '@angular/core';
 import {FileUpload} from '../../../shared/models/file-upload';
 import {FileUploadService} from '../../../shared/services/file-upload.service';
+
+
 
 @Component({
   selector: 'app-upload-form',
@@ -10,13 +12,15 @@ import {FileUploadService} from '../../../shared/services/file-upload.service';
 export class UploadFormComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
-
+  @Output() formAddedEvent = new EventEmitter<FileUpload>();
   selectedFiles?: FileList;
   currentFileUpload?: FileUpload;
   percentage = 0;
   constructor(private uploadService: FileUploadService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('store id', this.storeId);
+  }
 
   selectFile(event: any): void {
     this.selectedFiles = event.target.files;
@@ -28,10 +32,12 @@ export class UploadFormComponent implements OnInit {
       this.selectedFiles = undefined;
 
       if (file) {
+        const path = this.storeId;
         this.currentFileUpload = new FileUpload(file);
-        this.uploadService.pushFileToStorage(this.currentFileUpload).subscribe(
+        this.uploadService.pushFileToStorage(path, this.currentFileUpload).subscribe(
           percentage => {
             this.percentage = Math.round(percentage ? percentage : 0);
+            this.sendUploadedFormMessage();
           },
           error => {
             console.log(error);
@@ -39,7 +45,9 @@ export class UploadFormComponent implements OnInit {
         );
       }
     }
-
+  }
+  sendUploadedFormMessage(){
+    this.formAddedEvent.emit(this.currentFileUpload);
   }
 
 }

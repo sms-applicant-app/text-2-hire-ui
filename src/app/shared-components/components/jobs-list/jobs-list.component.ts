@@ -11,6 +11,8 @@ import {ModalController} from "@ionic/angular";
 import {BehaviorSubject, Observable, pipe} from "rxjs";
 import {ApplicantService} from "../../../shared/services/applicant.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
+import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
+import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
 
 @Component({
   selector: 'app-jobs-list',
@@ -45,14 +47,6 @@ export class JobsListComponent implements OnInit {
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
     //this.storeId = JSON.parse(localStorage.getItem('selectedStore'));
     console.log(' store Id from local storage', this.storeId);
-    this.uploadService.getFiles(6).snapshotChanges().pipe(
-      map(changes =>
-        // store the key
-        changes.map(c => ({key: c.payload.key, ...c.payload.val()}))
-      )
-    ).subscribe(fileUploads => {
-      this.fileUploads = fileUploads;
-    });
    // if user role is hiring manager get jobs by storeId
    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
@@ -122,8 +116,19 @@ export class JobsListComponent implements OnInit {
     });
     return await addJobRec.present();
   }
-  createOnboardingPacket(){
-
+  async createOnboardingPacket(){
+    const franchiseId = this.franchiseId;
+    const storeId = localStorage.getItem('selectedStore');
+    console.log('display add Job Model',storeId, franchiseId);
+    const createOnboardPackage = await this.modalController.create({
+      component: AddOnBoardPacketComponent,
+      swipeToClose: true,
+      componentProps: {
+        franchiseId,
+        storeId
+      }
+    });
+    return await createOnboardPackage.present();
   }
   getApplicants(positionId){
     this.viewApplicants = true;

@@ -10,6 +10,7 @@ import {SmsService} from "../../../shared/services/sms.service";
 import {ModalController} from "@ionic/angular";
 import {AddNewHireComponent} from "../../../store/add-new-hire/add-new-hire.component";
 import {ApplicantDetailsComponent} from "../applicant-details/applicant-details.component";
+import {AlertService} from "../../../shared/services/alert.service";
 
 
 
@@ -30,6 +31,7 @@ export class ApplicantListComponent implements OnInit {
   isSubmitted: boolean;
   touchedRows: any;
   applicantId: string;
+  applicantRetrieved: boolean;
   control: FormArray;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
   constructor(public fb: FormBuilder,
@@ -37,84 +39,88 @@ export class ApplicantListComponent implements OnInit {
               public firestore: AngularFirestore,
               public dbHelper: FirestoreHelperService,
               public smsService: SmsService,
-              public modalController: ModalController
+              public modalController: ModalController,
+              public alertService: AlertService
   ) { }
 
   ngOnInit() {
-    this.touchedRows = []
+    this.touchedRows = [];
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
-    })
-    this.addRow()
+    });
+
     console.log('incoming positionId', this.positionId);
     this.getApplicantsByJobId(this.positionId);
-    this.isSubmitted = false
-  /*  this.actionsFrom = this.fb.group({
+    this.isSubmitted = false;
+    this.actionsFrom = this.fb.group({
       actions: [''],
-      applicantId: ['']
-    });*/
+    });
+    this.applicantRetrieved = false;
   }
   ngAfterOnInit(){
     this.control = this.actionsFrom.get('tableRows') as FormArray;
   }
-  initiateForm(): FormGroup {
-    return this.fb.group({
-      actions: [''],
-      applicantId: [''],
-      isEditable: [true]
-    });
-  }
-  addRow() {
-    const control =  this.actionsFrom.get('tableRows') as FormArray;
-    control.push(this.initiateForm());
-  }
-  editRow(group: FormGroup) {
-    group.get('isEditable').setValue(true);
-  }
-  get getFormControls() {
-    const control = this.actionsFrom.get('tableRows') as FormArray;
-    return control;
-  }
-  submitForm() {
-    const control = this.actionsFrom.get('tableRows') as FormArray;
-    this.touchedRows = control.controls.filter(row => row.touched).map(row => row.value);
 
-    let formValues = this.touchedRows
-    const id = formValues[0].applicantId
-    const action = formValues[0].actions
-    this.applicantId = id;
-    console.log(id, action);
-    this.dbHelper.doc$(`applicant/${id}`).subscribe(data =>{
-      this.applicantData = data
+
+  submitForm(applicant) {
+    const action = this.actionsFrom.controls.actions.value;
+    console.log(action);
+    console.log(applicant, action);
+     if (action === 'scheduleInterview'){
+        this.getApplicantAndSendCalendarLink(applicant, action);
+      }
+    if(action === 'interviewApplicant'){
+      // route to a notes/ applicant details
+      console.log('Interviewing applicant', applicant);
+      this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
+      }
+    if(action === 'hireApplicant') {
+      this.getApplicantAndSendOnboardingLinks(applicant, action);
+    }
+
+   // this.submitActionsToApplicants(this.touchedRows)*/
+    //this.applicantService.updateApplicant(applicantId, {status: action} );
+  }
+
+  getApplicantAndSendOnboardingLinks(applicant, action){
+    this.addNewHire(applicant).then(data =>{
+      console.log('display onboarding modal');
 
     });
-    if(action === 'scheduleInterview'){
-      const applicant = this.applicantData.name;
-      const phoneNumber = this.applicantData.phoneNumber;
+  }
+  getApplicantAndBringUpInterviewNotesModal(applicant, action){
+      // route hiring manger to new hire page
+      const email = applicant.email;
+      console.log('Hire Applicant', applicant);
+      this.applicantDetails(applicant).then(data =>{
+        console.log('display new hire modal');
+      });
+
+  }
+    getApplicantAndSendCalendarLink(applicant, action){
+      console.log('applicant data ', applicant);
+      const applicantName = applicant.name;
+      const phoneNumber = applicant.phoneNumber;
       const positionId = this.positionId;
       const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
-      this.smsService.requestInterview(applicant, positionId, phoneNumber, calendarLink).subscribe(resp =>{
-        console.log('sent request to lambda', resp);
+      this.smsService.requestInterview(applicantName, positionId, phoneNumber, calendarLink).subscribe((data: any) =>{
+        console.log('sent request to lambda', data);
+        if(data.errorType === 'Error'){
+          const options = {
+            autoClose: false,
+            keepAfterRouteChange: false
+          };
+          console.log('trigger alert', data.errorType);
+          this.applicantService.updateApplicant(applicant.email, {status: 'Last Message Failed'} );
+          this.alertService.onAlert('default-alert').subscribe(m =>{
+            console.log('where is my alert?', m, data.errorMessage);
+          });
+        } else {
+          this.applicantService.updateApplicant(applicant.email, {status: action} );
+        }
       });
+
     }
-    if(action === "hireApplicant"){
-      // route hiring manger to new hire page
-      const email = this.applicantId
-      console.log('applcant data', this.applicantData)
-      this.addNewHire(email).then(data =>{
-        console.log('display new hire modal')
-      })
-    }
-    if(action === 'interviewCompleted'){
-      // route to a notes/ applicant details
-      const email = this.applicantId
-      console.log('applicant data', this.applicantData)
-      this.applicantDetails(email).then(data =>{
-        console.log('applicant details')
-      })
-    }
-   // this.submitActionsToApplicants(this.touchedRows)
-  }
   // get applicants by job
   getApplicantsByJobId(positionId){
       this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
@@ -134,40 +140,7 @@ export class ApplicantListComponent implements OnInit {
         });
 
   }
-  submitActionsToApplicants(formValues){
-    console.log('status update', formValues);
-    const id = formValues[0].applicantId
-    const action = formValues[0].actions
-   // const id = this.actionsFrom.controls.applicantId.value;
-    this.isSubmitted = true
-      this.dbHelper.doc$(`applicant/${id}`).subscribe((data: any) =>{
-        this.applicantData = data;
-        const applicant = this.applicantData.name;
-        const phoneNumber = this.applicantData.phoneNumber;
-        const positionId = this.positionId;
-        if(action === 'scheduleInterview'){
-          const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
-          this.smsService.requestInterview(applicant, positionId, phoneNumber, calendarLink).subscribe(resp =>{
-            console.log('sent request to lambda', resp);
-          });
-        }
-        if(action === "hireApplicant"){
-          // route hiring manger to new hire page
-          this.addNewHire(this.applicantData).then(data =>{
-            console.log('display new hire modal')
-          })
-        }
-        if(action === 'interviewCompleted'){
-          // route to a notes/ applicant details
-          this.applicantDetails(this.applicantData).then(data =>{
-            console.log('applicant details')
-          })
-        }
 
-      });
-
-    this.applicantService.updateApplicant(id, {status: action} );
-  }
   async applicantDetails(applicant){
     const applicantDetails = await this.modalController.create({
       component: ApplicantDetailsComponent,
@@ -175,33 +148,27 @@ export class ApplicantListComponent implements OnInit {
       componentProps: {
         applicant
       }
-    })
-    return await applicantDetails.present()
+    });
+    return await applicantDetails.present();
   }
   async addNewHire(applicant){
     // add onboarding packages
-    console.log('applicant', applicant)
+    console.log('applicant', applicant);
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
         applicant
       }
-    })
-    return await addNewHireModal.present()
-  }
-  moveApplicantToNextStatus(id){
-    console.log('applicant to update status', id);
-    this.dbHelper.doc$(`applicant/${id}`).subscribe(data =>{
-      console.log('applicant data', data);
     });
+    return await addNewHireModal.present();
   }
   sendMessageGoBackToJobsList(){
     this.messageEvent.emit(false);
   }
   declineApplicant(id){
     const status = 'applicantDeclined';
-
+    // todo send message from Lambda
     this.applicantService.updateApplicant(id, status);
   }
 }

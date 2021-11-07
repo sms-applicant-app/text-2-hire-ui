@@ -1,34 +1,48 @@
 import { Router } from '@angular/router';
 import { HostListener, Injectable } from '@angular/core';
-
-declare var UIkit: any;
+import {Observable, Subject} from 'rxjs';
+import {AlertInfo} from '../models/alert-info';
+import {filter} from 'rxjs/operators';
+import {Alert, AlertType} from '../models/alert.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
-
+  private subject = new Subject<Alert>();
+  private defaultId = 'default-alert';
   constructor(
     public router: Router
     ) { }
+  // enable subscribing to alerts observable
+  onAlert(id = this.defaultId): Observable<Alert> {
+    return this.subject.asObservable().pipe(filter(x => x && x.id === id));
+  }
+  // convenience methods
+  success(message: string, options?: any) {
+    this.alert(new Alert({ ...options, type: AlertType.Success, message }));
+  }
 
-  trigger(alertMessage: string, {status = '', details = '', seconds = 7}: {status?: string, details?: string, seconds?: number} = {}) {
-    UIkit.notification.closeAll();
+  error(message: string, options?: any) {
+    this.alert(new Alert({ ...options, type: AlertType.Error, message }));
+  }
 
-    let messageHTML: string;
+  info(message: string, options?: any) {
+    this.alert(new Alert({ ...options, type: AlertType.Info, message }));
+  }
 
-    if (details) {
-      messageHTML = '<figure class="complex"><span class="title">' + alertMessage + '</span>';
-      messageHTML += '<span class="details">' + details + '</span>';
-    } else {
-      messageHTML = '<figure>' + alertMessage;
-    }
-    messageHTML += '</figure>';
+  warn(message: string, options?: any) {
+    this.alert(new Alert({ ...options, type: AlertType.Warning, message }));
+  }
 
-    UIkit.notification(messageHTML, {
-      pos: 'bottom-center',
-      timeout: (seconds * 1000),
-      status: status
-    });
+  // main alert method
+  alert(alert: Alert) {
+    alert.id = alert.id || this.defaultId;
+    this.subject.next(alert);
+  }
+
+  // clear alerts
+  clear(id = this.defaultId) {
+    this.subject.next(new Alert({ id }));
   }
 }

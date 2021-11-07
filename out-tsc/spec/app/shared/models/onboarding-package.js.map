@@ -1,1 +1,1 @@
-{"version":3,"file":"onboarding-package.js","sourceRoot":"","sources":["../../../../../src/app/shared/models/onboarding-package.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,iBAAiB;IAA9B;QACE,oBAAe,GAAG,EAAE,CAAC;IACvB,CAAC;CAAA"}
+{"version":3,"file":"onboarding-package.js","sourceRoot":"","sources":["../../../../../src/app/shared/models/onboarding-package.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,iBAAiB;IAA9B;QAKE,mBAAc,GAAG,EAAE,CAAC;IACtB,CAAC;CAAA"}

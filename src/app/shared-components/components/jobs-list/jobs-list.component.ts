@@ -13,6 +13,7 @@ import {ApplicantService} from "../../../shared/services/applicant.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
 import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-jobs-list',
@@ -39,7 +40,8 @@ export class JobsListComponent implements OnInit {
               public firestore: AngularFirestore,
               public modalController: ModalController,
               public applicantService: ApplicantService,
-              public dbHelper: FirestoreHelperService) {
+              public dbHelper: FirestoreHelperService,
+              public route: Router) {
   }
 
   ngOnInit() {
@@ -115,6 +117,9 @@ export class JobsListComponent implements OnInit {
       }
     });
     return await addJobRec.present();
+  }
+  newOnboardPage(){
+    this.route.navigate(['store/onboarding']);
   }
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;

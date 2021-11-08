@@ -1,7 +1,7 @@
 import { __decorate } from "tslib";
-import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StorePage } from './store.page';
+import { NgModule } from "@angular/core";
 const routes = [
     {
         path: '',

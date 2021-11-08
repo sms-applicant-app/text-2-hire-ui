@@ -1,9 +1,14 @@
 import { __decorate } from "tslib";
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 let AddNewHireComponent = class AddNewHireComponent {
     constructor() { }
-    ngOnInit() { }
+    ngOnInit() {
+        console.log('incoming applicant', this.applicant);
+    }
 };
+__decorate([
+    Input()
+], AddNewHireComponent.prototype, "applicant", void 0);
 AddNewHireComponent = __decorate([
     Component({
         selector: 'app-add-new-hire',

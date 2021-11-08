@@ -21,85 +21,72 @@ let ApplicantListComponent = class ApplicantListComponent {
         this.actionsFrom = this.fb.group({
             tableRows: this.fb.array([])
         });
-        this.addRow();
         console.log('incoming positionId', this.positionId);
         this.getApplicantsByJobId(this.positionId);
         this.isSubmitted = false;
-        /*  this.actionsFrom = this.fb.group({
+        this.actionsFrom = this.fb.group({
             actions: [''],
-            applicantId: ['']
-          });*/
+        });
+        this.applicantRetrieved = false;
     }
     ngAfterOnInit() {
         this.control = this.actionsFrom.get('tableRows');
     }
-    initiateForm() {
-        return this.fb.group({
-            actions: [''],
-            applicantId: [''],
-            isEditable: [true]
-        });
-    }
-    addRow() {
-        const control = this.actionsFrom.get('tableRows');
-        control.push(this.initiateForm());
-    }
-    editRow(group) {
-        group.get('isEditable').setValue(true);
-    }
-    get getFormControls() {
-        const control = this.actionsFrom.get('tableRows');
-        return control;
-    }
-    submitForm() {
-        const control = this.actionsFrom.get('tableRows');
-        this.touchedRows = control.controls.filter(row => row.touched).map(row => row.value);
-        let formValues = this.touchedRows;
-        const id = formValues[0].applicantId;
-        const action = formValues[0].actions;
-        this.applicantId = id;
-        console.log(id, action);
-        this.dbHelper.doc$(`applicant/${id}`).subscribe(data => {
-            this.applicantData = data;
-        });
-        if (action === 'scheduleInterview' && this.applicantData) {
-            const applicant = this.applicantData.name;
-            const phoneNumber = this.applicantData.phoneNumber;
-            const positionId = this.positionId;
-            const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
-            this.smsService.requestInterview(applicant, positionId, phoneNumber, calendarLink).subscribe((data) => {
-                console.log('sent request to lambda', data);
-                if (data.errorType === 'Error') {
-                    const options = {
-                        autoClose: false,
-                        keepAfterRouteChange: false
-                    };
-                    console.log('trigger alert', data);
-                    this.alertService.error(data.errorMessage, options);
-                }
-                else {
-                    this.applicantService.updateApplicant(id, { status: action });
-                }
-            });
+    submitForm(applicant) {
+        const action = this.actionsFrom.controls.actions.value;
+        console.log(action);
+        console.log(applicant, action);
+        if (action === 'scheduleInterview') {
+            this.getApplicantAndSendCalendarLink(applicant, action);
         }
-        if (action === "hireApplicant") {
-            // route hiring manger to new hire page
-            const email = this.applicantId;
-            console.log('applcant data', this.applicantData);
-            this.addNewHire(email).then(data => {
-                console.log('display new hire modal');
-            });
-        }
-        if (action === 'interviewCompleted') {
+        if (action === 'interviewApplicant') {
             // route to a notes/ applicant details
-            const email = this.applicantId;
-            console.log('applicant data', this.applicantData);
-            this.applicantDetails(email).then(data => {
-                console.log('applicant details');
-            });
+            console.log('Interviewing applicant', applicant);
+            this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
         }
-        // this.submitActionsToApplicants(this.touchedRows)
-        this.applicantService.updateApplicant(id, { status: action });
+        if (action === 'hireApplicant') {
+            this.getApplicantAndSendOnboardingLinks(applicant, action);
+        }
+        // this.submitActionsToApplicants(this.touchedRows)*/
+        //this.applicantService.updateApplicant(applicantId, {status: action} );
+    }
+    getApplicantAndSendOnboardingLinks(applicant, action) {
+        this.addNewHire(applicant).then(data => {
+            console.log('display onboarding modal');
+        });
+    }
+    getApplicantAndBringUpInterviewNotesModal(applicant, action) {
+        // route hiring manger to new hire page
+        const email = applicant.email;
+        console.log('Hire Applicant', applicant);
+        this.applicantDetails(applicant).then(data => {
+            console.log('display new hire modal');
+        });
+    }
+    getApplicantAndSendCalendarLink(applicant, action) {
+        console.log('applicant data ', applicant);
+        const email = applicant.applicant.email;
+        const applicantName = applicant.applicant.name;
+        const phoneNumber = applicant.applicant.phoneNumber;
+        const positionId = this.positionId;
+        const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
+        this.smsService.requestInterview(applicantName, positionId, phoneNumber, calendarLink).subscribe((data) => {
+            console.log('sent request to lambda', data);
+            if (data.errorType === 'Error') {
+                const options = {
+                    autoClose: false,
+                    keepAfterRouteChange: false
+                };
+                console.log('trigger alert', data.errorType);
+                this.applicantService.updateApplicant(email, { status: 'Last Message Failed' });
+                this.alertService.onAlert('default-alert').subscribe(m => {
+                    console.log('where is my alert?', m, data.errorMessage);
+                });
+            }
+            else {
+                this.applicantService.updateApplicant(email, { status: action });
+            }
+        });
     }
     // get applicants by job
     getApplicantsByJobId(positionId) {
@@ -119,38 +106,6 @@ let ApplicantListComponent = class ApplicantListComponent {
                 console.log(this.applicants);
             }
         });
-    }
-    submitActionsToApplicants(formValues) {
-        console.log('status update', formValues);
-        const id = formValues[0].applicantId;
-        const action = formValues[0].actions;
-        // const id = this.actionsFrom.controls.applicantId.value;
-        this.isSubmitted = true;
-        this.dbHelper.doc$(`applicant/${id}`).subscribe((data) => {
-            this.applicantData = data;
-            const applicant = this.applicantData.name;
-            const phoneNumber = this.applicantData.phoneNumber;
-            const positionId = this.positionId;
-            if (action === 'scheduleInterview') {
-                const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
-                this.smsService.requestInterview(applicant, positionId, phoneNumber, calendarLink).subscribe(resp => {
-                    console.log('sent request to lambda', resp);
-                });
-            }
-            if (action === "hireApplicant") {
-                // route hiring manger to new hire page
-                this.addNewHire(this.applicantData).then(data => {
-                    console.log('display new hire modal');
-                });
-            }
-            if (action === 'interviewCompleted') {
-                // route to a notes/ applicant details
-                this.applicantDetails(this.applicantData).then(data => {
-                    console.log('applicant details');
-                });
-            }
-        });
-        this.applicantService.updateApplicant(id, { status: action });
     }
     applicantDetails(applicant) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -178,17 +133,12 @@ let ApplicantListComponent = class ApplicantListComponent {
             return yield addNewHireModal.present();
         });
     }
-    moveApplicantToNextStatus(id) {
-        console.log('applicant to update status', id);
-        this.dbHelper.doc$(`applicant/${id}`).subscribe(data => {
-            console.log('applicant data', data);
-        });
-    }
     sendMessageGoBackToJobsList() {
         this.messageEvent.emit(false);
     }
     declineApplicant(id) {
         const status = 'applicantDeclined';
+        // todo send message from Lambda
         this.applicantService.updateApplicant(id, status);
     }
 };

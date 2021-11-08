@@ -99,8 +99,9 @@ export class ApplicantListComponent implements OnInit {
   }
     getApplicantAndSendCalendarLink(applicant, action){
       console.log('applicant data ', applicant);
-      const applicantName = applicant.name;
-      const phoneNumber = applicant.phoneNumber;
+      const email = applicant.applicant.email;
+      const applicantName = applicant.applicant.name;
+      const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
       const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
       this.smsService.requestInterview(applicantName, positionId, phoneNumber, calendarLink).subscribe((data: any) =>{
@@ -111,12 +112,12 @@ export class ApplicantListComponent implements OnInit {
             keepAfterRouteChange: false
           };
           console.log('trigger alert', data.errorType);
-          this.applicantService.updateApplicant(applicant.email, {status: 'Last Message Failed'} );
+          this.applicantService.updateApplicant(email, {status: 'Last Message Failed'} );
           this.alertService.onAlert('default-alert').subscribe(m =>{
             console.log('where is my alert?', m, data.errorMessage);
           });
         } else {
-          this.applicantService.updateApplicant(applicant.email, {status: action} );
+          this.applicantService.updateApplicant(email, {status: action} );
         }
       });
 

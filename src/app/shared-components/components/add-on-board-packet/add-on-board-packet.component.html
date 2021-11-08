@@ -35,7 +35,9 @@
   <div class="card-footer">
     <label class="required form-label">Upload Custom Forms</label>
     <div class="row">
-      <app-upload-form (formAddedEvent)="formUploaded($event)" [storeId]="storeId"></app-upload-form>
+      <app-upload-form (uploadCompleteEvent)="uploadTask($event)" (formAddedEvent)="formUploaded($event)" [storeId]="storeId"></app-upload-form>
     </div>
   </div>
 </div>
+
+

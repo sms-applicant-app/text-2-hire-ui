@@ -2,12 +2,14 @@ import { __awaiter, __decorate } from "tslib";
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
 let ApplicantService = class ApplicantService {
-    constructor(firestore) {
+    constructor(firestore, dbHelper) {
         this.firestore = firestore;
+        this.dbHelper = dbHelper;
         this.applicants = {};
         this.dataSub = new BehaviorSubject(this.applicants);
         this.currentData = this.dataSub.asObservable();
         this.currentData.subscribe(data => localStorage.setItem('selectedPosition', data));
+        this.applicantRef = this.firestore.collection('applicant');
     }
     createApplicant(applicant) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -21,6 +23,7 @@ let ApplicantService = class ApplicantService {
         });
     }
     updateApplicant(applicantId, data) {
+        console.log('id', applicantId, 'updated user', data);
         this.firestore.doc(`applicant/${applicantId}`).update(data).then(resp => {
             console.log('updated user', resp);
         });
@@ -38,6 +41,9 @@ let ApplicantService = class ApplicantService {
                 });
             }
         });
+    }
+    getApplicantById(docId) {
+        return this.dbHelper.doc$(`applicant/${docId}`);
     }
     getApplicantsByFranchise(franchiseId) {
         return this.firestore.collection('applicant', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
@@ -73,7 +79,7 @@ let ApplicantService = class ApplicantService {
         return this.firestore.collection('jobs').doc(`${id}`).snapshotChanges();
     }
     getApplicantsByJobId(positionId) {
-        return this.firestore.collection(`applicant`, ref => ref.where(`${positionId}`, '==', positionId)).valueChanges();
+        return this.firestore.collection(`applicant`, ref => ref.where(`${positionId}`, '==', positionId)).snapshotChanges();
     }
     getApplicantByEmail(email) {
         return this.firestore.collection(`applicant`, ref => ref.where(`${email}`, '==', email)).valueChanges();

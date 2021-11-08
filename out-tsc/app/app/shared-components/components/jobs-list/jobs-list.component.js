@@ -1,6 +1,5 @@
 import { __awaiter, __decorate } from "tslib";
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { map } from "rxjs/operators";
 import { MatTableDataSource } from "@angular/material/table";
 import { AddJobReqComponent } from "../add-job-req/add-job-req.component";
 import { AddOnBoardPacketComponent } from "../add-on-board-packet/add-on-board-packet.component";
@@ -23,11 +22,6 @@ let JobsListComponent = class JobsListComponent {
         this.userData = JSON.parse(localStorage.getItem('appUserData'));
         //this.storeId = JSON.parse(localStorage.getItem('selectedStore'));
         console.log(' store Id from local storage', this.storeId);
-        this.uploadService.getFiles(6).snapshotChanges().pipe(map(changes => 
-        // store the key
-        changes.map(c => (Object.assign({ key: c.payload.key }, c.payload.val()))))).subscribe(fileUploads => {
-            this.fileUploads = fileUploads;
-        });
         // if user role is hiring manager get jobs by storeId
         this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
         if (this.userRole === 'hiringManager') {

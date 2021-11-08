@@ -26,6 +26,8 @@ import { UsersForFranchiseListComponent } from "./components/users-for-franchise
 import { StoresByHiringManagerComponent } from "./components/stores-by-hiring-manager/stores-by-hiring-manager.component";
 import { AddFranchiseComponent } from "./components/add-franchise/add-franchise.component";
 import { ApplicantDetailsComponent } from "./components/applicant-details/applicant-details.component";
+import { ApplicantTableRowComponent } from "./components/applicant-table-row/applicant-table-row.component";
+import { AddOnBoardPacketComponent } from "./components/add-on-board-packet/add-on-board-packet.component";
 let SharedComponentsModule = class SharedComponentsModule {
 };
 SharedComponentsModule = __decorate([
@@ -50,7 +52,9 @@ SharedComponentsModule = __decorate([
             AddJobReqComponent,
             UsersForFranchiseListComponent,
             StoresByHiringManagerComponent,
-            AddFranchiseComponent
+            AddFranchiseComponent,
+            ApplicantTableRowComponent,
+            AddOnBoardPacketComponent
         ],
         imports: [
             CommonModule,
@@ -61,6 +65,7 @@ SharedComponentsModule = __decorate([
         ],
         exports: [FranchiseListComponent,
             ApplicantListComponent,
+            AddOnBoardPacketComponent,
             StoreListByFranchiseComponent,
             JobsListComponent,
             AddressFormComponent,
@@ -76,7 +81,8 @@ SharedComponentsModule = __decorate([
             AddJobReqComponent,
             AddStoreComponent,
             StoresByHiringManagerComponent,
-            AddFranchiseComponent
+            AddFranchiseComponent,
+            ApplicantTableRowComponent
         ],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
         providers: [

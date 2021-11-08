@@ -5,10 +5,9 @@ let FileUploadService = class FileUploadService {
     constructor(firestore, storage) {
         this.firestore = firestore;
         this.storage = storage;
-        this.basePath = '/uploads';
     }
-    getFiles(numberItems) {
-        return this.firestore.list(this.basePath, ref => ref.limitToLast(numberItems));
+    getFiles(path, numberItems) {
+        return this.firestore.list(path, ref => ref.limitToLast(numberItems));
     }
     deleteFile(fileUpload) {
         this.deleteFileDatabase(fileUpload.key)
@@ -17,7 +16,8 @@ let FileUploadService = class FileUploadService {
         })
             .catch(error => console.log(error));
     }
-    pushFileToStorage(fileUpload) {
+    pushFileToStorage(basePath, fileUpload) {
+        this.basePath = basePath;
         const filePath = `${this.basePath}/${fileUpload.file.name}`;
         const storageRef = this.storage.ref(filePath);
         const uploadTask = this.storage.upload(filePath, fileUpload.file);

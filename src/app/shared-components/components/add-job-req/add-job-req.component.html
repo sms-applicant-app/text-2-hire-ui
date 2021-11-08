@@ -1,9 +1,11 @@
 
 <mat-dialog-content>
   <mat-horizontal-stepper #stepper (selectionChange)="selectionChange($event)">
-    <mat-stepper linear>
+    <mat-stepper >
       <mat-step [stepControl]="addJoblistingFrom">
         <form [formGroup]="addJoblistingFrom">
+          <ng-template matStepLabel>Position Details</ng-template>
+
           <div class="form-row">
             <div class="form-group col-lg-6">
               <ion-item lines="full">
@@ -20,10 +22,10 @@
               </ion-item>
               <ion-item lines="full">
                 <ion-label position="stacked" required>Job Type</ion-label>
-                <ion-select class="form-control" id="state" formControlName="jobType"  type="select">
-                  <ion-select-option value="fullTime">Full-Time</ion-select-option>
-                  <ion-select-option value="partTime">Part-Time</ion-select-option>
-                </ion-select>
+                <select class="form-select form-select text-center " id="state" formControlName="jobType"  type="select">
+                  <option value="fullTime">Full-Time</option>
+                  <option value="partTime">Part-Time</option>
+                </select>
               </ion-item>
             </div>
               <div class="col-lg-6">
@@ -77,7 +79,8 @@
 
 
       <mat-step label="Add Another store" style="padding-bottom: 10px;">
-      <ion-button color="success" >Add Another Listing</ion-button>
+      <ion-button (click) = "stepper.reset()" color="success" >Add Another Listing</ion-button>
+
         <ion-button (click)="refreshPage()">Done</ion-button>
       </mat-step>
     </mat-stepper>

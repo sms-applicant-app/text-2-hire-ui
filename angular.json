@@ -39,7 +39,11 @@
               "src/global.scss",
               "src/assets/scss/style.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/metronic.js",
+              "src/assets/plugins/create-account.js"
+
+            ]
           },
           "configurations": {
             "production": {
@@ -60,8 +64,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "4mb",
+                  "maximumError": "8mb"
                 }
               ]
             },

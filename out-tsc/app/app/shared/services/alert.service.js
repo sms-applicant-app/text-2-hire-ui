@@ -1,8 +1,8 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { filter } from "rxjs/operators";
-import { Alert, AlertType } from "../models/alert.model";
+import { filter } from 'rxjs/operators';
+import { Alert, AlertType } from '../models/alert.model';
 let AlertService = class AlertService {
     constructor(router) {
         this.router = router;
@@ -34,23 +34,6 @@ let AlertService = class AlertService {
     // clear alerts
     clear(id = this.defaultId) {
         this.subject.next(new Alert({ id }));
-    }
-    trigger(alertMessage, { status = '', details = '', seconds = 7 } = {}) {
-        UIkit.notification.closeAll();
-        let messageHTML;
-        if (details) {
-            messageHTML = '<figure class="complex"><span class="title">' + alertMessage + '</span>';
-            messageHTML += '<span class="details">' + details + '</span>';
-        }
-        else {
-            messageHTML = '<figure>' + alertMessage;
-        }
-        messageHTML += '</figure>';
-        UIkit.notification(messageHTML, {
-            pos: 'bottom-center',
-            timeout: (seconds * 1000),
-            status: status
-        });
     }
 };
 AlertService = __decorate([

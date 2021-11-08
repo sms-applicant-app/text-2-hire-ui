@@ -2,11 +2,12 @@ import { __decorate } from "tslib";
 import { Component, Input } from '@angular/core';
 import { JobPosting } from "../../../shared/models/job-posting";
 let AddJobReqComponent = class AddJobReqComponent {
-    constructor(fb, firestore, dbHelper, jobService) {
+    constructor(fb, firestore, dbHelper, jobService, modalController) {
         this.fb = fb;
         this.firestore = firestore;
         this.dbHelper = dbHelper;
         this.jobService = jobService;
+        this.modalController = modalController;
         this.newJobListing = new JobPosting();
         this.jobsData = [];
     }
@@ -73,6 +74,11 @@ let AddJobReqComponent = class AddJobReqComponent {
         this.jobService.addJobRec(this.newJobListing).then(data => {
             console.log('added job listing', data);
         });
+    }
+    closeModal() {
+        this.modalController
+            .dismiss()
+            .then();
     }
     selectionChange(event) {
     }

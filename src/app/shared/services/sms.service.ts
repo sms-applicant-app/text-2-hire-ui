@@ -36,7 +36,7 @@ export class SmsService {
       storePhone,
       startDate,
       action
-    }
+    };
     const obj = JSON.stringify(data);
     return this.http.post(`${this.sendOnboardingLinksEndPoint}`, obj, httpOptions);
   }

@@ -6,23 +6,23 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import {AngularFireStorageModule} from "@angular/fire/storage";
-import {AngularFirestoreModule} from "@angular/fire/firestore";
-import {AngularFireDatabaseModule} from "@angular/fire/database";
-import {AngularFireAuthModule} from "@angular/fire/auth";
-import {environment} from "../environments/environment";
-import {AngularFireModule} from "@angular/fire";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {AngularFireStorageModule} from '@angular/fire/storage';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {AngularFireDatabaseModule} from '@angular/fire/database';
+import {AngularFireAuthModule} from '@angular/fire/auth';
+import {environment} from '../environments/environment';
+import {AngularFireModule} from '@angular/fire';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AngularMaterialModule} from './app-material/angular-material.module';
-import {ModalModule} from "./shared-components/pop-over-window/model/modal/modal.module";
-import {SharedComponentsModule} from "./shared-components/shared-components.module";
+import {ModalModule} from './shared-components/pop-over-window/model/modal/modal.module';
+import {SharedComponentsModule} from './shared-components/shared-components.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {HttpClientModule} from "@angular/common/http";
-import {AlertModule} from "./alert/alert.module";
-import {MultiAlertComponent} from "./alert/multi-alert";
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {HttpClientModule} from '@angular/common/http';
+import {AlertModule} from './alert/alert.module';
+
 
 
 

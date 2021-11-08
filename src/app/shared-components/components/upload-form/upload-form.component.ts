@@ -13,13 +13,15 @@ export class UploadFormComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
   @Output() formAddedEvent = new EventEmitter<FileUpload>();
+  @Output() uploadCompleteEvent = new EventEmitter();
   selectedFiles?: FileList;
   currentFileUpload?: FileUpload;
   percentage = 0;
   constructor(private uploadService: FileUploadService) { }
 
   ngOnInit() {
-    console.log('store id', this.storeId);
+    console.log('store id', this.storeId, this.uploadCompleteEvent);
+
   }
 
   selectFile(event: any): void {
@@ -37,7 +39,7 @@ export class UploadFormComponent implements OnInit {
         this.uploadService.pushFileToStorage(path, this.currentFileUpload).subscribe(
           percentage => {
             this.percentage = Math.round(percentage ? percentage : 0);
-            this.sendUploadedFormMessage();
+            this.sendUploadedFormMessage(this.percentage);
           },
           error => {
             console.log(error);
@@ -46,8 +48,9 @@ export class UploadFormComponent implements OnInit {
       }
     }
   }
-  sendUploadedFormMessage(){
+  sendUploadedFormMessage(p){
     this.formAddedEvent.emit(this.currentFileUpload);
+    this.uploadCompleteEvent.emit(p);
   }
 
 }

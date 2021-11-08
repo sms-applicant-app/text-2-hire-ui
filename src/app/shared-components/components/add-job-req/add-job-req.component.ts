@@ -4,6 +4,7 @@ import {JobPosting} from "../../../shared/models/job-posting";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {JobService} from "../../../shared/services/job.service";
+import {ModalController} from "@ionic/angular";
 
 @Component({
   selector: 'app-add-job-req',
@@ -20,7 +21,7 @@ export class AddJobReqComponent implements OnInit {
   hiringManagerId: string;
   private userData: any;
   private userId: string;
-  constructor(public fb: FormBuilder, public firestore: AngularFirestore, public dbHelper: FirestoreHelperService, public jobService: JobService) { }
+  constructor(public fb: FormBuilder, public firestore: AngularFirestore, public dbHelper: FirestoreHelperService, public jobService: JobService, public modalController: ModalController) { }
 
   ngOnInit() {
     console.log('incoming store Id', this.storeId);
@@ -86,6 +87,11 @@ export class AddJobReqComponent implements OnInit {
     this.jobService.addJobRec(this.newJobListing).then(data=>{
       console.log('added job listing', data);
     });
+  }
+  closeModal() {
+    this.modalController
+      .dismiss()
+      .then();
   }
   selectionChange(event){
 

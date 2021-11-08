@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 
-import { StorePage } from './store.page';
+import {StorePage} from './store.page';
+import {NgModule} from "@angular/core";
 
 const routes: Routes = [
   {
@@ -31,9 +31,12 @@ const routes: Routes = [
   {
     path: 'hiring-manager-sign-up',
     loadChildren: () => import('./hiring-manager-sign-up/hiring-manager-sign-up.module').then( m => m.HiringManagerSignUpPageModule)
+  },
+  {
+    path: 'onboarding',
+    loadChildren: () => import('./onboarding/onboarding.module').then( m => m.OnboardingPageModule)
   }
 ];
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],

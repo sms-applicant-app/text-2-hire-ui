@@ -4,7 +4,7 @@ import { Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { Franchisee } from "../../shared/models/franchisee";
 import { v4 as uuidv4 } from 'uuid';
-import { MatStepper } from "@angular/material/stepper";
+import { MatStepper } from '@angular/material/stepper';
 let AdminAddFranchisePage = class AdminAddFranchisePage {
     constructor(dbHelper, datePipe, fb, router, franchiseService, dialog) {
         this.dbHelper = dbHelper;

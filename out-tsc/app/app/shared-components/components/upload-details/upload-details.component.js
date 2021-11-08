@@ -4,7 +4,9 @@ let UploadDetailsComponent = class UploadDetailsComponent {
     constructor(uploadService) {
         this.uploadService = uploadService;
     }
-    ngOnInit() { }
+    ngOnInit() {
+        console.log('files uploaded', this.fileUpload);
+    }
     deleteFileUpload(fileUpload) {
         this.uploadService.deleteFile(fileUpload);
     }

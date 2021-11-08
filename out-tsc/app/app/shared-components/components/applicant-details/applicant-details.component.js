@@ -7,20 +7,13 @@ let ApplicantDetailsComponent = class ApplicantDetailsComponent {
         this.dbHelper = dbHelper;
     }
     ngOnInit() {
-        const applicant = this.applicant;
-        console.log('incoming applicant', applicant);
-        this.getApplicantDetailsByID(applicant);
+        console.log('incoming applicant', this.applicant);
         this.interviewFormInit();
+        this.applicantData = this.applicant;
     }
     interviewFormInit() {
         this.interviewNotes = this.fb.group({
             interviewNotes: ['']
-        });
-    }
-    getApplicantDetailsByID(email) {
-        this.dbHelper.doc$(`applicant/${email}`).subscribe(data => {
-            this.applicantData = data;
-            console.log('applicant details', this.applicantData);
         });
     }
 };

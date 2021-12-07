@@ -1,18 +1,15 @@
 import { Injectable, NgZone } from '@angular/core';
-
-
-import { Router } from '@angular/router';
+import {NavigationExtras, Router} from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import {User} from '../models/user';
-
-import {stringify} from 'querystring';
 
 import {AlertController} from '@ionic/angular';
 import {first} from 'rxjs/operators';
 import {of} from 'rxjs';
 import firebase from 'firebase';
 import {UserService} from "./user.service";
+import {Store} from "../models/store";
 
 @Injectable({
   providedIn: 'root'
@@ -49,20 +46,41 @@ export class AuthService {
 
   // Login in with email/password
   SignIn(email, password) {
-    return this.ngFireAuth.signInWithEmailAndPassword(email, password).then((data: any) => {
-      if (data) {
-        const displayName = data.user.displayName;
-        // If the user exists and nothing is in LocalStorage yet, store it there.
-        if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
-          this.userService.getUserById(email).subscribe(resp =>{
-            localStorage.setItem('appUserData', JSON.stringify(resp));
+    return this.ngFireAuth.signInWithEmailAndPassword(email, password)
+      .then((result) => {
+        this.userService.getUserById(email).subscribe((data :any) =>{
+          console.log(data, 'returned from log in')
+          localStorage.setItem('appUserData', JSON.stringify(data))
+          this.ngZone.run(() =>{
+            this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}})
           });
-        }
-      }
-    });
-  }
+        })
 
+  })
+  }
+  routeUserBasedOnRole(userRole) {
+    console.log('user role', userRole);
+    /*if (userRole === 'franchisee' && this.firstTimeLogin === true){
+      this.router.navigate(['admin/admin-add-franchise']);
+    }*/
+    /*  if (userRole === 'franchisee' && this.firstTimeLogin !== true){
+        const navigationExtras: NavigationExtras ={
+          state: {
+            userId: this.userId
+          }
+        };
+        this.router.navigate(['franchise'], navigationExtras);
+        console.log('Route Franchisee');
+      }*/
+    // combining user roles for franchise and hiring manager to minimize change management on the dashboard
+    if (userRole === "hiringManager") {
+      console.log('route by user role', userRole);
+      this.router.navigate(['store']);
+    }
+    if (userRole === 'admin') {
+      this.router.navigate(['admin']);
+    }
+  }
   // Register user with email/password
   RegisterUser(email, password) {
     return this.ngFireAuth.createUserWithEmailAndPassword(email, password);

@@ -10,6 +10,7 @@ import {SharedComponentsModule} from '../shared-components/shared-components.mod
 import {AngularMaterialModule} from '../app-material/angular-material.module';
 import {AddNewHireComponent} from './add-new-hire/add-new-hire.component';
 import {StorePageRoutingModule} from './store-routing.module';
+import {ListStoresComponent} from "./list-stores/list-stores.component";
 
 
 
@@ -25,7 +26,7 @@ import {StorePageRoutingModule} from './store-routing.module';
         SharedComponentsModule,
         AngularMaterialModule
     ],
-    declarations: [StorePage, AddStoreComponent, AddNewHireComponent],
+    declarations: [StorePage, AddStoreComponent, AddNewHireComponent, ListStoresComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class StorePageModule {}

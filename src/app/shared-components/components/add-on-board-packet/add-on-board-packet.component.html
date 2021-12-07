@@ -2,42 +2,71 @@
   <div class="card-header">
     <h3 class="card-title">Create OnBoarding Package</h3>
     <div class="card-toolbar">
-      <button type="button" class="btn btn-sm btn-dark">
+      <div *ngIf="!addCustomForm">
+        <button (click)="addCustomFormButton()" type="button" class="btn btn-sm btn-dark ion-padding">
+          Add Custom Form
+        </button>
+      </div>
+      <button (click)="submitCustomForms()" type="button" class="btn btn-sm btn-light">
         Save Onboarding Package
       </button>
     </div>
   </div>
   <div class="card-body">
+    <form [formGroup]="federalForms">
     <div class="mb-10">
       <label class="required form-label">Onboard Package Name</label>
-      <input type="text" class="form-control form-control-solid" placeholder="Driver Onboard Package"/>
+      <input type="text" formControlName="name" class="form-control form-control-solid" placeholder="Driver Onboard Package"/>
     </div>
     <label class="required form-label">Select Forms to include</label>
     <div class="form-check form-check-custom form-check-solid ion-padding">
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+      <input class="form-check-input" formControlName="w4" type="checkbox" value="w4" id="flexCheckDefault"/>
       <label style="padding-left: 20px;" class="form-check-label" for="flexCheckDefault">
         W-4 Employee With Holding Certificate
       </label>
     </div>
     <div class="form-check form-check-custom form-check-solid ion-padding">
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1"/>
+      <input class="form-check-input" type="checkbox" formControlName="i9" value="i9" id="flexCheckDefault1"/>
       <label style="padding-left: 20px;" class="form-check-label" for="flexCheckDefault1">
         I9 Employment Eligibility Verification
       </label>
     </div>
     <div class="form-check form-check-custom form-check-solid ion-padding">
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2"/>
+      <input class="form-check-input" type="checkbox" formControlName="stateW4" value="stateW4" id="flexCheckDefault2"/>
       <label style="padding-left: 20px;" class="form-check-label" for="flexCheckDefault2">
         MO W-4 Employee Withholding Certificate (certificate as in its an award to have with holdings)
       </label>
     </div>
+    </form>
+    <div *ngIf="customFormsAdded">
+    <form [formGroup]="customForms">
+      <table class="table table-boarder">
+        <thead class="no-wrap">
+        <th>Form Name</th>
+        <th></th>
+        </thead>
+        <tbody>
+        <span *ngFor="let forms of formNames">
+          <p>{{forms}}</p>
+        </span>
+        <ng-container formArrayName="onBoardingPackageName" *ngFor="let group of getFormControls.controls ; let i=index">
+          <tr [formGroupName]="i">
+            <mat-form-field>
+              <input matInput type="text" formControlName="fileName" value="{{formNames}}">
+            </mat-form-field>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+    </form>
+  </div>
   </div>
   <div class="card-footer">
+    <div *ngIf="addCustomForm === true">
     <label class="required form-label">Upload Custom Forms</label>
     <div class="row">
       <app-upload-form (uploadCompleteEvent)="uploadTask($event)" (formAddedEvent)="formUploaded($event)" [storeId]="storeId"></app-upload-form>
     </div>
   </div>
+  </div>
 </div>
-
-

@@ -3,20 +3,38 @@ import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {Franchisee} from "../models/franchisee";
 import {FirestoreHelperService} from "../firestore-helper.service";
+import {Store} from "../models/store";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FranchiseService {
-
+  message: string;
+  storeData: any;
   constructor(
     public firestore: AngularFirestore, public dbHelper: FirestoreHelperService
   ) { }
   getFranchiseOwner(id): Observable<any>{
     return this.firestore.doc(`users/${id}`).valueChanges();
   }
-  getFranchiseById(id): Observable<any>{
-    return this.firestore.doc(`franchisee/${id}`).valueChanges();
+  getStoreByFranchiseById(franchiseId: string){
+   return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
+     .subscribe(ss =>{
+       if(ss.docs.length === 0){
+         this.message =" no stores with franchise id"
+       } else {
+         ss.docs.forEach(doc =>{
+           this.storeData = doc.data();
+           console.log(this.storeData)
+         })
+       }
+     })
+  }
+  getFranchiseById(id){
+    return this.dbHelper.collectionWithIds$(`franchise/${id}`).subscribe(data =>{
+      console.log('returned from franchise', data)
+    })
   }
  async createFranchise(franchise: Franchisee): Promise<any>{
     const franchiseObj = {...franchise};

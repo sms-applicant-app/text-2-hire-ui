@@ -4,13 +4,13 @@ import {Applicant} from '../../../shared/models/applicant';
 import {ApplicantService} from '../../../shared/services/applicant.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {ApplicantStatus} from '../../../shared/models/applicant-status';
-import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
-import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
-import {SmsService} from "../../../shared/services/sms.service";
-import {ModalController} from "@ionic/angular";
-import {AddNewHireComponent} from "../../../store/add-new-hire/add-new-hire.component";
-import {ApplicantDetailsComponent} from "../applicant-details/applicant-details.component";
-import {AlertService} from "../../../shared/services/alert.service";
+import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {SmsService} from '../../../shared/services/sms.service';
+import {ModalController} from '@ionic/angular';
+import {AddNewHireComponent} from '../../../store/add-new-hire/add-new-hire.component';
+import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
+import {AlertService} from '../../../shared/services/alert.service';
 
 
 
@@ -23,11 +23,13 @@ import {AlertService} from "../../../shared/services/alert.service";
 export class ApplicantListComponent implements OnInit {
   @Input() positionId: string;
   @Output() messageEvent = new EventEmitter<any>();
+  @Input() store: any;
   applicantStatus: ApplicantStatus;
   applicants: any = [];
   dataSource: MatTableDataSource<Applicant>;
   actionsFrom: FormGroup;
   applicantData: any;
+  storeData: any;
   isSubmitted: boolean;
   touchedRows: any;
   applicantId: string;
@@ -48,7 +50,7 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-
+    this.storeData = this.store;
     console.log('incoming positionId', this.positionId);
     this.getApplicantsByJobId(this.positionId);
     this.isSubmitted = false;
@@ -75,15 +77,15 @@ export class ApplicantListComponent implements OnInit {
       this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
       }
     if(action === 'hireApplicant') {
-      this.getApplicantAndSendOnboardingLinks(applicant, action);
+      this.getApplicantAndSendOnboardingLinks(applicant, this.storeData);
     }
 
    // this.submitActionsToApplicants(this.touchedRows)*/
     //this.applicantService.updateApplicant(applicantId, {status: action} );
   }
 
-  getApplicantAndSendOnboardingLinks(applicant, action){
-    this.addNewHire(applicant).then(data =>{
+  getApplicantAndSendOnboardingLinks(applicant, storeData){
+    this.addNewHire(applicant, storeData).then(data =>{
       console.log('display onboarding modal');
 
     });
@@ -152,9 +154,9 @@ export class ApplicantListComponent implements OnInit {
     });
     return await applicantDetails.present();
   }
-  async addNewHire(applicant){
+  async addNewHire(applicant, storeData){
     // add onboarding packages
-    console.log('applicant', applicant);
+    console.log('applicant', applicant, storeData);
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,

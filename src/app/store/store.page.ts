@@ -7,6 +7,10 @@ import {StoreService} from '../shared/services/store.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {MatTableDataSource} from '@angular/material/table';
 import {Store} from '../shared/models/store';
+import {ActivatedRoute, Router} from "@angular/router";
+import {UserService} from "../shared/services/user.service";
+import {AuthService} from "../shared/services/auth.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-store',
@@ -17,22 +21,46 @@ export class StorePage implements OnInit {
   franchiseId: string;
   storeId: string;
   storeHiringManger: string;
-  stores: any = [];
+  storesData: any = [];
+  userId: string;
+  role: string;
+  isHiringManager: boolean;
   dataSource: MatTableDataSource<Store>;
+  userData: any;
+  state$: Observable<any>;
+
   constructor(public franchiseService: FranchiseService,
               public modelController: ModalController,
               public storeService: StoreService,
-              public firestore: AngularFirestore
-  ) { }
+              public firestore: AngularFirestore,
+              public router: Router,
+              public userService: UserService,
+              public authService: AuthService,
+              public activatedRoute: ActivatedRoute
+  ) {
+
+  }
 
   ngOnInit() {
-    this.franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
-    this.storeId = JSON.parse(localStorage.getItem('appUserData')).storeIds;
-    console.log('store id', this.storeId);
-    localStorage.setItem('selectedStore', this.storeId);
-    this.franchiseService.getFranchiseOwner(this.franchiseId).subscribe(data => [
-      console.log('franchise data ', data)
-    ]);
+    this.userData = JSON.parse(localStorage.getItem('appUserData'));
+    console.log('user', this.userData.franchiseId, this.userData.role);
+    if(this.userData.role === "hiringManager"){
+      console.log('im a hiring manager')
+      this.role = 'hiringManager';
+    }
+    if (this.userData.role === "franchisee"){
+      this.franchiseId = this.userData.franchiseId;
+      console.log('im a franchise owner', this.franchiseId)
+       this.role = "franchisee"
+    }
+
+  }
+
+  getAllFranchiseStoresById(){
+  console.log('franchise id', this.franchiseId)
+   this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
+
+   console.log('retrieved stores', this.storesData)
 
   }
 

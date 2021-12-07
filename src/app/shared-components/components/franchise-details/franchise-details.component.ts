@@ -24,10 +24,9 @@ export class FranchiseDetailsComponent implements OnInit, OnChanges {
     this.franchiseId = this.activatedRoute.snapshot.paramMap.get('id');
     console.log('franchise ID =', this.franchiseId);
 
-      this.franchiseService.getFranchiseById(this.franchiseId).subscribe(data =>{
-        console.log('franchise details', data);
-        this.franchiseData = data;
-      });
+      this.franchiseData = this.franchiseService.getFranchiseById(this.franchiseId);
+      console.log('franchise in component ', this.franchiseData)
+
 
 
 

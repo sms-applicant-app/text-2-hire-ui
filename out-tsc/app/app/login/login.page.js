@@ -1,7 +1,7 @@
-import { __decorate } from "tslib";
+import { __awaiter, __decorate } from "tslib";
 import { Component } from '@angular/core';
-import { User } from "../shared/models/user";
-import { DatePipe } from "@angular/common";
+import { User } from '../shared/models/user';
+import { DatePipe } from '@angular/common';
 let LoginPage = class LoginPage {
     constructor(authService, fb, router, dbHelper, datePipe, userService) {
         this.authService = authService;
@@ -18,9 +18,12 @@ let LoginPage = class LoginPage {
             email: [
                 { type: 'required', message: 'Enter your email to login' },
                 { type: 'email', message: 'Must be a valid email' },
+                // { type: 'maxlength', message: 'Display Name cannot be more than 25 characters long.' }
             ],
             name: [
                 { type: 'required', message: 'Name is required.' },
+                // { type: 'minlength', message: 'Display Name must be at least 4 characters long.' },
+                // { type: 'maxlength', message: 'Display Name cannot be more than 25 characters long.' }
             ],
             phoneNumber: [
                 { type: 'required', message: 'Phone Number is required.' },
@@ -57,9 +60,14 @@ let LoginPage = class LoginPage {
         console.log('go terms and conditions');
     }
     login(email, password) {
-        this.authService.SignIn(email.value, password.value).then(user => {
-            const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
-            this.routeUserBasedOnRole(userRole);
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.authService.SignIn(email.value, password.value).then(user => {
+                console.log('logged in user', user);
+                const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+                if (userRole) {
+                    this.routeUserBasedOnRole(userRole);
+                }
+            });
         });
     }
     goToLogin() {
@@ -90,22 +98,24 @@ let LoginPage = class LoginPage {
     }
     routeUserBasedOnRole(userRole) {
         console.log('is first time login?', this.firstTimeLogin, 'user role', userRole);
-        if (userRole === 'franchisee' && this.firstTimeLogin === true) {
-            this.router.navigate(['admin/admin-add-franchise']);
-        }
-        if (userRole === 'franchisee' && this.firstTimeLogin !== true) {
-            const navigationExtras = {
-                state: {
-                    userId: this.userId
-                }
+        /*if (userRole === 'franchisee' && this.firstTimeLogin === true){
+          this.router.navigate(['admin/admin-add-franchise']);
+        }*/
+        /*  if (userRole === 'franchisee' && this.firstTimeLogin !== true){
+            const navigationExtras: NavigationExtras ={
+              state: {
+                userId: this.userId
+              }
             };
             this.router.navigate(['franchise'], navigationExtras);
             console.log('Route Franchisee');
-        }
-        if (userRole === 'hiringManager') {
+          }*/
+        // combining user roles for franchise and hiring manager to minimize change management on the dashboard
+        if (userRole === 'hiringManager' || userRole === 'franchise') {
             const navigationExtras = {
                 state: {
-                    userId: this.userId
+                    userId: this.userId,
+                    role: userRole
                 }
             };
             this.router.navigate(['store'], navigationExtras);

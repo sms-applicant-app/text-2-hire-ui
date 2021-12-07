@@ -38,7 +38,7 @@ export class StoreListByFranchiseComponent implements OnInit {
               public router: Router,
               public modalController: ModalController
   ) {
-    this.storeData = '';
+
     this.userId = JSON.parse(localStorage.getItem('user')).email;
 
   }
@@ -82,7 +82,6 @@ export class StoreListByFranchiseComponent implements OnInit {
               this.store.push(s);
               console.log(this.store, 'stores' );
               this.dataSource = new MatTableDataSource<Store>(this.store);
-              console.log(this.store.length, 'length', this.store);
             });
           }
         });

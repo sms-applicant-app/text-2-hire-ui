@@ -49,5 +49,13 @@
   </div>
 </div>
   </div>
-<app-jobs-list [storeId]="storeId"></app-jobs-list>
+  <span *ngIf="role === 'franchisee'">
+    <app-list-stores [franchiseIdFromList]="franchiseId"></app-list-stores>
+  </span>
+
+  <span *ngIf="role === 'hiringManager'">
+    <app-jobs-list [franchiseId]="franchiseId"></app-jobs-list>
+  </span>
+
 </ion-content>
+l

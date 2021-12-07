@@ -1,8 +1,8 @@
 import { __awaiter, __decorate } from "tslib";
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { AddNewHireComponent } from "../../../store/add-new-hire/add-new-hire.component";
-import { ApplicantDetailsComponent } from "../applicant-details/applicant-details.component";
+import { AddNewHireComponent } from '../../../store/add-new-hire/add-new-hire.component';
+import { ApplicantDetailsComponent } from '../applicant-details/applicant-details.component';
 let ApplicantListComponent = class ApplicantListComponent {
     constructor(fb, applicantService, firestore, dbHelper, smsService, modalController, alertService) {
         this.fb = fb;
@@ -21,6 +21,7 @@ let ApplicantListComponent = class ApplicantListComponent {
         this.actionsFrom = this.fb.group({
             tableRows: this.fb.array([])
         });
+        this.storeData = this.store;
         console.log('incoming positionId', this.positionId);
         this.getApplicantsByJobId(this.positionId);
         this.isSubmitted = false;
@@ -45,13 +46,13 @@ let ApplicantListComponent = class ApplicantListComponent {
             this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
         }
         if (action === 'hireApplicant') {
-            this.getApplicantAndSendOnboardingLinks(applicant, action);
+            this.getApplicantAndSendOnboardingLinks(applicant, this.storeData);
         }
         // this.submitActionsToApplicants(this.touchedRows)*/
         //this.applicantService.updateApplicant(applicantId, {status: action} );
     }
-    getApplicantAndSendOnboardingLinks(applicant, action) {
-        this.addNewHire(applicant).then(data => {
+    getApplicantAndSendOnboardingLinks(applicant, storeData) {
+        this.addNewHire(applicant, storeData).then(data => {
             console.log('display onboarding modal');
         });
     }
@@ -119,10 +120,10 @@ let ApplicantListComponent = class ApplicantListComponent {
             return yield applicantDetails.present();
         });
     }
-    addNewHire(applicant) {
+    addNewHire(applicant, storeData) {
         return __awaiter(this, void 0, void 0, function* () {
             // add onboarding packages
-            console.log('applicant', applicant);
+            console.log('applicant', applicant, storeData);
             const addNewHireModal = yield this.modalController.create({
                 component: AddNewHireComponent,
                 swipeToClose: true,
@@ -148,6 +149,9 @@ __decorate([
 __decorate([
     Output()
 ], ApplicantListComponent.prototype, "messageEvent", void 0);
+__decorate([
+    Input()
+], ApplicantListComponent.prototype, "store", void 0);
 ApplicantListComponent = __decorate([
     Component({
         selector: 'app-applicant-list',

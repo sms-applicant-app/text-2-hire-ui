@@ -22,7 +22,7 @@ let SmsService = class SmsService {
         const obj = JSON.stringify(data);
         return this.http.post(`${this.requestInterviewEndPoint}`, obj, httpOptions);
     }
-    sendNewHireForms(action, name, applicantPhone, linkToOnboardingForms, franchiseName, hiringManagersName, storePhone, startDate) {
+    sendNewHireForms(name, applicantPhone, linkToOnboardingForms, franchiseName, hiringManagersName, storePhone, startDate) {
         const data = {
             name,
             applicantPhone,
@@ -30,8 +30,7 @@ let SmsService = class SmsService {
             franchiseName,
             hiringManagersName,
             storePhone,
-            startDate,
-            action
+            startDate
         };
         const obj = JSON.stringify(data);
         return this.http.post(`${this.sendOnboardingLinksEndPoint}`, obj, httpOptions);

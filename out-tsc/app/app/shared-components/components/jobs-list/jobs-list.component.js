@@ -5,13 +5,14 @@ import { AddJobReqComponent } from "../add-job-req/add-job-req.component";
 import { AddOnBoardPacketComponent } from "../add-on-board-packet/add-on-board-packet.component";
 let JobsListComponent = class JobsListComponent {
     //todo action see applicant status update position, schedule interview
-    constructor(uploadService, jobService, firestore, modalController, applicantService, dbHelper) {
+    constructor(uploadService, jobService, firestore, modalController, applicantService, dbHelper, route) {
         this.uploadService = uploadService;
         this.jobService = jobService;
         this.firestore = firestore;
         this.modalController = modalController;
         this.applicantService = applicantService;
         this.dbHelper = dbHelper;
+        this.route = route;
         this.messageEvent = new EventEmitter();
         this.jobs = [];
         this.applicants = [];
@@ -93,6 +94,9 @@ let JobsListComponent = class JobsListComponent {
             });
             return yield addJobRec.present();
         });
+    }
+    newOnboardPage() {
+        this.route.navigate(['store/onboarding']);
     }
     createOnboardingPacket() {
         return __awaiter(this, void 0, void 0, function* () {

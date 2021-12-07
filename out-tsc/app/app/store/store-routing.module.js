@@ -30,6 +30,10 @@ const routes = [
     {
         path: 'hiring-manager-sign-up',
         loadChildren: () => import('./hiring-manager-sign-up/hiring-manager-sign-up.module').then(m => m.HiringManagerSignUpPageModule)
+    },
+    {
+        path: 'onboarding',
+        loadChildren: () => import('./onboarding/onboarding.module').then(m => m.OnboardingPageModule)
     }
 ];
 let StorePageRoutingModule = class StorePageRoutingModule {

@@ -19,7 +19,10 @@ import {AngularMaterialModule} from "../app-material/angular-material.module";
         FranchisePageRoutingModule,
         AngularMaterialModule
     ],
-  declarations: [FranchisePage, ListStoresComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    declarations: [FranchisePage, ListStoresComponent],
+    exports: [
+        ListStoresComponent
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class FranchisePageModule {}

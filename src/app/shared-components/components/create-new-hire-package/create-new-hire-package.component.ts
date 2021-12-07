@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {OnboardingService} from "../../../shared/services/onboarding.service";
 
 @Component({
   selector: 'app-create-new-hire-package',
@@ -7,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateNewHirePackageComponent implements OnInit {
   title: string;
-  constructor() { }
+  constructor(public onboadService: OnboardingService) { }
 
   ngOnInit() {
     this.title = 'Brandons Form Upload';
   }
-
+  getOnboardingByStore(storeId){
+    this.onboadService.getAllOnboardingPackagesByStoreId(storeId);
+  }
 }

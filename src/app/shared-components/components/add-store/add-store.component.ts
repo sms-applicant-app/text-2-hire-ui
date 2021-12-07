@@ -186,6 +186,7 @@ export class AddStoreComponent implements OnInit {
     this.newStore.storeName = this.addStoreForm.controls.storeName.value;
     this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
     this.newStore.addressId = this.addressAdded.addressId;
+    this.newStore.storeId = '003';
     this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
     this.newStore.storeHiringManager = this.addingNewUser? this.newUserHiringManagerData.userId : this.existingHiringManagerId;
     this.storeService.createStore(this.newStore).then((resp: any) =>{

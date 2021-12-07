@@ -1,6 +1,6 @@
 import { __awaiter, __decorate } from "tslib";
 import { Component } from '@angular/core';
-import { AddFranchiseComponent } from "./shared-components/components/add-franchise/add-franchise.component";
+import { AddFranchiseComponent } from './shared-components/components/add-franchise/add-franchise.component';
 let AppComponent = class AppComponent {
     constructor(authService, modalController) {
         this.authService = authService;

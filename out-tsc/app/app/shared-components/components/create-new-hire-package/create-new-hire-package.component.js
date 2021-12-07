@@ -1,9 +1,14 @@
 import { __decorate } from "tslib";
 import { Component } from '@angular/core';
 let CreateNewHirePackageComponent = class CreateNewHirePackageComponent {
-    constructor() { }
+    constructor(onboadService) {
+        this.onboadService = onboadService;
+    }
     ngOnInit() {
         this.title = 'Brandons Form Upload';
+    }
+    getOnboardingByStore(storeId) {
+        this.onboadService.getAllOnboardingPackagesByStoreId(storeId);
     }
 };
 CreateNewHirePackageComponent = __decorate([

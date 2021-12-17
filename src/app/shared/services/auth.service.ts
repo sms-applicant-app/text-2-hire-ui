@@ -43,7 +43,31 @@ export class AuthService {
       }
     });
   }
+  adminSignIn(email, password){
+    return this.ngFireAuth.signInWithEmailAndPassword(email, password)
 
+      .then((result) => {
+        console.log('result from log in', result)
+        this.ngFireAuth.authState.subscribe(user => {
+          if (user) {
+            this.userData = user;
+            localStorage.setItem('user', JSON.stringify(this.userData));
+            //  console.warn('SET USER', user);
+            JSON.parse(localStorage.getItem('user'));
+          } else {
+            localStorage.setItem('user', null);
+            //  console.warn('USER IS NULL');
+            JSON.parse(localStorage.getItem('user'));
+          }
+        });
+        this.userService.getUserById(email).subscribe((data :any) => {
+          console.log(data.role, 'returned from log in')
+          localStorage.setItem('appUserData', JSON.stringify(data))
+          this.routeUserBasedOnRole(data.role);
+        })
+       // localStorage.setItem('appUserData', JSON.stringify(result))
+      });
+  }
   // Login in with email/password
   SignIn(email, password) {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
@@ -157,6 +181,7 @@ export class AuthService {
   SignOut() {
     return this.ngFireAuth.signOut().then(() => {
       localStorage.removeItem('user');
+      localStorage.removeItem('appUserData');
       localStorage.clear();
       // TEMP SEND LOGGED OUT USER TO MAIN PAGE TO CLEAR STORAGE DURING DEV
       this.router.navigate(['']);

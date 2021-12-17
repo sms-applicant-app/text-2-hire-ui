@@ -15,7 +15,7 @@ export class AdminLoginComponent implements OnInit {
 
   ngOnInit() {}
   adminLogin(email, password){
-    this.authService.SignIn(email.value, password.value).then(user =>{
+    this.authService.adminSignIn(email.value, password.value).then(user =>{
       this.route.navigate(['admin']);
     });
       //this.routeUserBasedOnRole(this.authService.userData.email);

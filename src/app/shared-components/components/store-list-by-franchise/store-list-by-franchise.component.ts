@@ -9,6 +9,8 @@ import {UserService} from '../../../shared/services/user.service';
 import {Router} from '@angular/router';
 import {AddJobReqComponent} from '../add-job-req/add-job-req.component';
 import {ModalController} from '@ionic/angular';
+import * as uuid from 'uuid';
+import {AddStoreComponent} from "../add-store/add-store.component";
 
 
 @Component({
@@ -107,6 +109,18 @@ export class StoreListByFranchiseComponent implements OnInit {
       this.franchiseData = data;
     });
 
+  }
+  async addStore(){
+    const franchiseId = this.franchiseId;
+    console.log('display add store');
+    const addStoreModel = await this.modalController.create({
+      component: AddStoreComponent,
+      swipeToClose: true,
+      componentProps: {
+        franchiseId
+      }
+    });
+    return await addStoreModel.present();
   }
   getStoreDetails(id){
     console.log('store details', id);

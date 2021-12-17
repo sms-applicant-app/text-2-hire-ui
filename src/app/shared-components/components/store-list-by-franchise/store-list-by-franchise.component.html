@@ -8,11 +8,11 @@
       <h3 class="card-title align-items-start flex-column">
       </h3>
       <ion-item>
-        <ion-button fill="outline" size="default" color="secondary" >Add Store</ion-button>
+        <ion-button (click)="addStore()" fill="outline" size="default" color="secondary" >Add Store</ion-button>
       </ion-item>
-      <ion-item>
+      <!--<ion-item>
         <ion-button fill="outline" size="default" color="secondary">Add Hiring Manager</ion-button>
-      </ion-item>
+      </ion-item>-->
     </div>
     <span *ngIf="seeStores === true">
     <div class="card-body">

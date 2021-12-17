@@ -27,20 +27,20 @@
         </div>
       </form>
   </mat-step>
-  <mat-step label="Store Address" style="margin-bottom: 20px;">
+  <mat-step label="Address" style="margin-bottom: 20px;">
     <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
     <button mat-button matStepperPrevious type="button">Back</button>
     <button mat-button matStepperNext type="button">Next</button>
   </mat-step>
-  <mat-step label="Register User For Store">
+  <mat-step label="Hiring Manager">
     <span *ngIf="!addingNewUser">
     <ion-button (click)="addNewUserToStore()">Add New Hiring Manager</ion-button>
       <div class="card card-custom">
-      <p *ngIf="hiringManagers.length <= 0">No Users for this store</p>
+      <h3 *ngIf="hiringManagers.length <= 0">No Users for this store</h3>
       <div class="card-header flex-wrap border-0 pt-6 pb-0">
-        <div class="card-title">
+       <!-- <div class="card-title">
           <h3 class="card-label">Hiring Managers for this Store</h3>
-        </div>
+        </div>-->
         <!-- <div class="card-toolbar">
            <button class="btn btn-light-primary" (click)="export()">Export</button>
          </div>-->
@@ -82,7 +82,7 @@
     </div>
   </mat-step>
 
-  <mat-step label="Add Another store" style="padding-bottom: 10px;">
+  <mat-step label="Store Added" style="padding-bottom: 10px;">
     <h4>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h4><br>
     <h4>Swipe or click off this window if finished</h4>
     <!--<ion-button (click)="goBack(stepper)">Add Another Store</ion-button>-->

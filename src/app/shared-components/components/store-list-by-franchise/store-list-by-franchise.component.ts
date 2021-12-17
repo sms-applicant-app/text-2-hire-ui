@@ -32,6 +32,10 @@ export class StoreListByFranchiseComponent implements OnInit {
   userId: string;
   userData: any;
   userRole: string;
+  seeStores: boolean;
+  seePositions: boolean;
+  seeApplicants: boolean;
+  storeId: string;
   constructor(public dbHelper: FirestoreHelperService,
               public firestore: AngularFirestore,
               public userService: UserService,
@@ -46,7 +50,17 @@ export class StoreListByFranchiseComponent implements OnInit {
   ngOnInit() {
     console.log('need to add when selecting franchise to bring up stores for that franchise on admin', this.franchiseId);
     this.store= [];
-    this.getListOfStoresBasedOnUser();
+      this.getListOfStoresBasedOnUser();
+
+    this.seeStores = true;
+    this.seeApplicants = false;
+    this.seePositions = false;
+  }
+  getPositionsForStore(storeId){
+    console.log('this store id', storeId);
+    this.storeId = storeId;
+    this.seeStores = false;
+    this.seePositions = true;
   }
  /* getListOfStoresByFranchise(){
     this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.franchiseIdFromList)).get()
@@ -89,7 +103,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
   getFranchisee(franchiseId){
     this.dbHelper.collectionWithIds$(`franchisee/${franchiseId}`).subscribe((data: []) => {
-      console.log(data);
+      console.log('franchise',data);
       this.franchiseData = data;
     });
 

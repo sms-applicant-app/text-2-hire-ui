@@ -22,19 +22,19 @@ export class FranchiseService {
    return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
      .subscribe(ss =>{
        if(ss.docs.length === 0){
-         this.message =" no stores with franchise id"
+         this.message = " no stores with franchise id";
        } else {
          ss.docs.forEach(doc =>{
            this.storeData = doc.data();
-           console.log(this.storeData)
-         })
+           console.log(this.storeData);
+         });
        }
-     })
+     });
   }
   getFranchiseById(id){
     return this.dbHelper.collectionWithIds$(`franchise/${id}`).subscribe(data =>{
-      console.log('returned from franchise', data)
-    })
+      console.log('returned from franchise', data);
+    });
   }
  async createFranchise(franchise: Franchisee): Promise<any>{
     const franchiseObj = {...franchise};

@@ -44,11 +44,11 @@ export class FirestoreHelperService {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
   set<T>(ref: DocPredicate<T>, data: any) {
-    const timestamp = this.timestamp;
+    //const timestamp = this.timestamp;
     return this.doc(ref).set({
       ...data,
-      updatedAt: timestamp,
-      createdAt: timestamp
+     /* updatedAt: timestamp,
+      createdAt: timestamp*/
     }, {merge: true});
   }
   update<T>(ref: DocPredicate<T>, data: any){

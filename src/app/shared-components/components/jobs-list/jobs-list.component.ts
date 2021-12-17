@@ -54,7 +54,7 @@ export class JobsListComponent implements OnInit {
     if (this.userRole === 'hiringManager'){
       this.getJobsByStoreId();
     } else {
-      this.getJobsByFranchiseId();
+      this.getJobsForFranchise(this.storeId);
     }
    this.sendJobsFranchiseIdMessage();
   }
@@ -70,6 +70,23 @@ export class JobsListComponent implements OnInit {
             this.positionId = data.id;
             const j = data.data();
             this.jobs.push(j);
+            this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
+          });
+        }
+      });
+  }
+  getJobsForFranchise(storeId){
+    this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+      .subscribe(jobs =>{
+        this.jobs = [];
+        if(jobs.docs.length === 0){
+          console.log('no jobs with that store', this.storeId);
+        } else {
+          jobs.forEach(job =>{
+            const j = job.data();
+            const positionId = job.id;
+            this.jobs.push({id: positionId, position:j});
+            console.log(this.jobs, 'id', positionId);
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }

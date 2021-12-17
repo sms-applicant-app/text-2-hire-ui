@@ -90,8 +90,8 @@ export class LoginPage implements OnInit {
 
   login(email, password) {
     this.authService.SignIn(email.value, password.value).then((data: any) =>{
-      console.log('sign in ', JSON.stringify(data))
-    })
+      console.log('sign in ', JSON.stringify(data));
+    });
 
   }
 
@@ -108,11 +108,13 @@ export class LoginPage implements OnInit {
       this.userId = this.registrationForm.controls.email.value;
       const user = {
         firstName: this.registrationForm.controls.firstName.value,
-        lastName: this.registrationForm.controls.lastName.value,
+        lastName: 'testing',
         email: this.registrationForm.controls.email.value,
         role: 'franchisee',
         phoneNumber: this.registrationForm.controls.phoneNumber.value,
-        dateCreated: this.latestDate
+        dateCreated: this.latestDate,
+        updatedAt: this.latestDate,
+        franchiseId: '0'
       };
       this.firstTimeLogin = true;
       this.authService.SendVerificationMail();

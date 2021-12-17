@@ -2,18 +2,19 @@
   <div class="card-title">
     <h3 class="card-label">Stores Listed By Franchise</h3>
   </div>
+
   <div class ="mat-elevation-z8 container-fluid">
     <div class="card card-header">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Positions for (todo add store name)</span>
       </h3>
       <ion-item>
         <ion-button fill="outline" size="default" color="secondary" >Add Store</ion-button>
       </ion-item>
       <ion-item>
-        <ion-button fill="outline" size="default" color="secondary">addHiringManager</ion-button>
+        <ion-button fill="outline" size="default" color="secondary">Add Hiring Manager</ion-button>
       </ion-item>
     </div>
+    <span *ngIf="seeStores === true">
     <div class="card-body">
       <div class="card mb-5 mb-xl-8">
         <div class="card-body py3">
@@ -23,9 +24,10 @@
               <tr class="fw-bolder text-muted bg-light">
                 <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
                 <!-- <th class="ps-4 min-w-300px rounded-start">Store ID</th>-->
-                <th class="ps-4 min-w-300px rounded-start">Job Title</th>
-                <th class="ps-4 min-w-300px rounded-start">Location</th>
-                <th class="ps-4 min-w-300px rounded-start">Position Active</th>
+                <th class="ps-4 min-w-300px rounded-start">Store Title</th>
+                <th class="ps-4 min-w-300px rounded-start">Phone Number</th>
+                <th class="ps-4 min-w-300px rounded-start">Hiring Manager</th>
+                <th class="ps-4 min-w-300px rounded-start">Number of Positions</th>
                 <th class="ps-4 min-w-300px rounded-start">Actions</th>
 
               </tr>
@@ -54,12 +56,12 @@
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">Number of Positions</a>
+                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeHiringManager}}</a>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex flex-shrink-0">
-                    <a class="text-center"  ><i class="fa fa-eye"></i><br><p>View Stores</p></a>
+                    <a class="text-center" (click)="getPositionsForStore(store.storeId)"  ><i class="fa fa-eye"></i><br><p>Get Positions By Store</p></a>
                     <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
                      <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
                   </div>
@@ -72,6 +74,9 @@
         </div>
       </div>
     </div>
+</span>
+    <span *ngIf="seePositions === true">
+      <app-jobs-list [storeId]="storeId"></app-jobs-list>
+    </span>
   </div>
-  </div>
-
+</div>

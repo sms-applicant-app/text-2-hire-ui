@@ -78,9 +78,9 @@ export class AuthService {
           this.ngZone.run(() =>{
             this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}})
           });
-        })
+        });
 
-  })
+  });
   }
   routeUserBasedOnRole(userRole) {
     console.log('user role', userRole);
@@ -97,7 +97,7 @@ export class AuthService {
         console.log('Route Franchisee');
       }*/
     // combining user roles for franchise and hiring manager to minimize change management on the dashboard
-    if (userRole === "hiringManager") {
+    if (userRole === 'hiringManager') {
       console.log('route by user role', userRole);
       this.router.navigate(['store']);
     }
@@ -183,7 +183,8 @@ export class AuthService {
       localStorage.removeItem('user');
       localStorage.removeItem('appUserData');
       localStorage.clear();
-      // TEMP SEND LOGGED OUT USER TO MAIN PAGE TO CLEAR STORAGE DURING DEV
+      console.log('logged out cleared storage');
+      // TEMP: SEND LOGGED OUT USER TO MAIN PAGE TO CLEAR STORAGE DURING DEV
       this.router.navigate(['']);
     });
   }

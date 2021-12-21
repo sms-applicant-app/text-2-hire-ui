@@ -12,9 +12,9 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 import {UserService} from '../../../shared/services/user.service';
 import {GeneratedStoreId} from '../../../shared/models/generatedStoreId';
-import {MatTableDataSource} from "@angular/material/table";
-import {User} from "../../../shared/models/user";
-import {JobService} from "../../../shared/services/job.service";
+import {MatTableDataSource} from '@angular/material/table';
+import {User} from '../../../shared/models/user';
+import {JobService} from '../../../shared/services/job.service';
 
 
 
@@ -42,7 +42,7 @@ export class AddStoreComponent implements OnInit {
   newGeneratedStoreId: GeneratedStoreId = new GeneratedStoreId();
   date;
   latestDate: string;
-  currentStepIndex: number = 0;
+  currentStepIndex = 0;
   storeId: string;
   addingNewUser: boolean;
   userId: string;
@@ -73,7 +73,7 @@ export class AddStoreComponent implements OnInit {
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.addAddress = false;
     this.addingNewUser = false;
-    console.log('franchiseId in query', this.franchiseId, this.storeIsAddedByAdmin);
+   // console.log('franchiseId in query', this.franchiseId, this.storeIsAddedByAdmin);
     this.userService.getUsersByFranchise(this.franchiseId);
    /* this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
       this.userData = doc.data();
@@ -84,7 +84,7 @@ export class AddStoreComponent implements OnInit {
     this.createStoreForm();
     console.log('incoming franchise Id', this.franchiseId);
     this.addStoreAddress();
-    this.initialStoreId = '001';
+    this.initialStoreId = '005';
     this.getHiringManagersPerFranchise();
   }
   createDate() {
@@ -108,9 +108,7 @@ export class AddStoreComponent implements OnInit {
   addNewUserToStore(){
     this.addingNewUser = true;
   }
-  addExistingUser(){
-    // get franchise id then get all users by Franchise Id
-  }
+
   receiveAddressMessage($event){
     console.log('address added', $event);
     this.addressAdded = $event;
@@ -126,7 +124,7 @@ export class AddStoreComponent implements OnInit {
 
   receiveUserMessage($event){
     this.newUserHiringManagerData = $event;
-    console.log('user added', $event);
+    console.log('user added', this.newUserHiringManagerData);
   }
   goBack(stepper: MatStepper){
     console.log('stepper index', stepper);
@@ -141,7 +139,7 @@ export class AddStoreComponent implements OnInit {
     // change state to HN for hirenow later we can make better unique ID
     this.storeService.getLastGeneratedStoreId();
     console.log('last used generated store Id from DB', this.lastUsedStoreId);
-    this.newStore.storeId = 'HN002';
+    this.newStore.storeId = 'HN007';
 /*  if(this.lastUsedStoreId){
     this.lastUsedStoreId.toString();
     const removedState = this.lastUsedStoreId.replace(this.addressAdded.state, '');
@@ -186,7 +184,7 @@ export class AddStoreComponent implements OnInit {
     this.newStore.storeName = this.addStoreForm.controls.storeName.value;
     this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
     this.newStore.addressId = this.addressAdded.addressId;
-    this.newStore.storeId = '003';
+    this.newStore.storeId = 'HN007';
     this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
     this.newStore.storeHiringManager = this.addingNewUser? this.newUserHiringManagerData.userId : this.existingHiringManagerId;
     this.storeService.createStore(this.newStore).then((resp: any) =>{
@@ -195,6 +193,7 @@ export class AddStoreComponent implements OnInit {
       this.newGeneratedStoreId.storeId = this.storeId;
       this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
       this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
+
     });
 
   }

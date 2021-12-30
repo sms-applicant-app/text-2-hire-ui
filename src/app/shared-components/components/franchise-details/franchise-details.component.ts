@@ -25,7 +25,7 @@ export class FranchiseDetailsComponent implements OnInit, OnChanges {
     console.log('franchise ID =', this.franchiseId);
 
       this.franchiseData = this.franchiseService.getFranchiseById(this.franchiseId);
-      console.log('franchise in component ', this.franchiseData)
+      console.log('franchise in component ', this.franchiseData);
 
 
 

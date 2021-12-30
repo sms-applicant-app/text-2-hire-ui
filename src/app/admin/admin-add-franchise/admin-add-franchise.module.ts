@@ -8,7 +8,6 @@ import { AdminAddFranchisePageRoutingModule } from './admin-add-franchise-routin
 
 import { AdminAddFranchisePage } from './admin-add-franchise.page';
 import {SharedComponentsModule} from '../../shared-components/shared-components.module';
-import {ModalModule} from '../../shared-components/pop-over-window/model/modal/modal.module';
 import {AngularMaterialModule} from '../../app-material/angular-material.module';
 
 
@@ -23,7 +22,6 @@ import {AngularMaterialModule} from '../../app-material/angular-material.module'
     AdminAddFranchisePageRoutingModule,
     ReactiveFormsModule,
     SharedComponentsModule,
-    ModalModule,
     AngularMaterialModule
   ],
   declarations: [AdminAddFranchisePage],

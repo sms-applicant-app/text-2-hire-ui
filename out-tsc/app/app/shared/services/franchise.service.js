@@ -23,7 +23,7 @@ let FranchiseService = class FranchiseService {
         });
     }
     getFranchiseById(id) {
-        return this.dbHelper.collectionWithIds$(`franchise/${id}`).subscribe(data => {
+        return this.dbHelper.doc$(`franchisee/${id}`).subscribe(data => {
             console.log('returned from franchise', data);
         });
     }

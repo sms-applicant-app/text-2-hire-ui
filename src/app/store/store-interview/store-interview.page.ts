@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {ApplicantService} from "../../shared/services/applicant.service";
 import {AuthService} from "../../shared/services/auth.service";
 import {FirestoreHelperService} from "../../shared/firestore-helper.service";
-import {ModalModule} from "../../shared-components/pop-over-window/model/modal/modal.module";
 import {ModalController} from "@ionic/angular";
 import {RegisterApplicantComponent} from "../../shared-components/components/register-applicant/register-applicant.component";
 import {UserService} from "../../shared/services/user.service";

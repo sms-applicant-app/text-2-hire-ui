@@ -8,8 +8,8 @@ import {AlertController} from '@ionic/angular';
 import {first} from 'rxjs/operators';
 import {of} from 'rxjs';
 import firebase from 'firebase';
-import {UserService} from "./user.service";
-import {Store} from "../models/store";
+import {UserService} from './user.service';
+import {Store} from '../models/store';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +47,7 @@ export class AuthService {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
 
       .then((result) => {
-        console.log('result from log in', result)
+        console.log('result from log in', result);
         this.ngFireAuth.authState.subscribe(user => {
           if (user) {
             this.userData = user;
@@ -60,11 +60,11 @@ export class AuthService {
             JSON.parse(localStorage.getItem('user'));
           }
         });
-        this.userService.getUserById(email).subscribe((data :any) => {
-          console.log(data.role, 'returned from log in')
-          localStorage.setItem('appUserData', JSON.stringify(data))
+        this.userService.getUserById(email).subscribe((data: any) => {
+          console.log(data.role, 'returned from log in');
+          localStorage.setItem('appUserData', JSON.stringify(data));
           this.routeUserBasedOnRole(data.role);
-        })
+        });
        // localStorage.setItem('appUserData', JSON.stringify(result))
       });
   }
@@ -72,11 +72,11 @@ export class AuthService {
   SignIn(email, password) {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.userService.getUserById(email).subscribe((data :any) =>{
-          console.log(data, 'returned from log in')
-          localStorage.setItem('appUserData', JSON.stringify(data))
+        this.userService.getUserById(email).subscribe((data: any) =>{
+          console.log(data, 'returned from log in');
+          localStorage.setItem('appUserData', JSON.stringify(data));
           this.ngZone.run(() =>{
-            this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}})
+            this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
           });
         });
 

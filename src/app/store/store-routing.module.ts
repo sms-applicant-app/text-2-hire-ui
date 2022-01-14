@@ -9,10 +9,6 @@ const routes: Routes = [
     component: StorePage
   },
   {
-    path: 'store-details',
-    loadChildren: () => import('./store-details/store-details.module').then( m => m.StoreDetailsPageModule)
-  },
-  {
     path: 'edit-store',
     loadChildren: () => import('./edit-store/edit-store.module').then( m => m.EditStorePageModule)
   },

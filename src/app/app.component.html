@@ -6,13 +6,16 @@
         <ion-list id="inbox-list">
           <ion-list-header> - HIRENOW.US</ion-list-header><br>
           <ion-note>Software - Registered Trademark</ion-note>
-          <div *ngIf="authService.isLogin"></div>
+
+          <div *ngIf="authService.userData">
+            <p>{{userData?.role}}</p>
           <span *ngIf="showStoresByHiringManager">
             <app-stores-by-hiring-manager></app-stores-by-hiring-manager>
           </span>
           <span *ngIf="showStoresByFranchise">
             <app-stores-list-by-franchise></app-stores-list-by-franchise>
           </span>
+          </div>
           <span >
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">

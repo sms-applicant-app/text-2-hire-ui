@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Store} from '../models/store';
 import {FranchiseService} from './franchise.service';
 import {GeneratedStoreId} from '../models/generatedStoreId';
+import {AngularFireObject} from "@angular/fire/database";
 
 
 
@@ -15,7 +16,7 @@ export class StoreService {
   storeData: any;
   generatedStoreIdRef: AngularFirestoreCollection<GeneratedStoreId>;
   lastGeneratedId: any;
-
+  storeIdRef: AngularFireObject<any>;
   constructor(
     public firestore: AngularFirestore, public franchiseService: FranchiseService
   ) { }
@@ -60,6 +61,7 @@ export class StoreService {
       const returnId = docRef.id;
     });
   }
+
   getStores(){
     return this.firestore.collection('store').snapshotChanges();
   }
@@ -71,13 +73,15 @@ export class StoreService {
     return
   }
   getLastGeneratedStoreId(){
-    return this.firestore.collection('storeIds', ref => ref.orderBy('date', 'desc').limit(1)).get()
+    return this.firestore.collection('storeIds', ref => ref.orderBy('createdAt', 'desc').limit(1)).get()
       .subscribe(ss =>{
         ss.docs.forEach(doc =>{
           this.lastGeneratedId = doc.data();
           console.log('retrieving last used store Id', this.lastGeneratedId, 'doc data =',doc.data());
+
         });
       });
+
    /* this.lastGeneratedId = this.generatedStoreIdRef.snapshotChanges().pipe(map(actions => {
       return actions.map(a =>{
         const data = a.payload.doc.data () as GeneratedStoreId;
@@ -86,6 +90,10 @@ export class StoreService {
         return { docId, ...data };
       });
     }));*/
+  }
+  lastGeneratedStoreId(): Observable<any>{
+    this.lastGeneratedId = this.getLastGeneratedStoreId();
+    return this.lastGeneratedId;
   }
   deleteStore(franchiseId){
     this.firestore.doc(`store/${franchiseId}`).delete().then(resp =>{

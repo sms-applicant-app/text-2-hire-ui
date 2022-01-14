@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { AdminFranchiseListPageRoutingModule } from './admin-franchise-list-routing.module';
 import { AdminFranchiseListPage } from './admin-franchise-list.page';
 import { SharedComponentsModule } from "../../shared-components/shared-components.module";
-import { ModalModule } from "../../shared-components/pop-over-window/model/modal/modal.module";
 import { MatStepperModule } from "@angular/material/stepper";
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 let AdminFranchiseListPageModule = class AdminFranchiseListPageModule {
@@ -19,7 +18,6 @@ AdminFranchiseListPageModule = __decorate([
             IonicModule,
             AdminFranchiseListPageRoutingModule,
             SharedComponentsModule,
-            ModalModule,
             MatStepperModule
         ],
         exports: [],

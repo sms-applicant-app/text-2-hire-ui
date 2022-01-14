@@ -8,10 +8,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
-  },
-  {
     path: 'franchise',
     loadChildren: () => import('./franchise/franchise.module').then( m => m.FranchisePageModule)
   },
@@ -33,10 +29,6 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'jobs',
-    loadChildren: () => import('./jobs/jobs.module').then( m => m.JobsPageModule)
   },
   {
     path: 'logout',

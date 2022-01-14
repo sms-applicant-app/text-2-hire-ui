@@ -3,7 +3,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {Store} from '../../../shared/models/store';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {JobService} from '../../../shared/services/job.service';
-import {JobPosting} from "../../../shared/models/job-posting";
+import {JobPosting} from '../../../shared/models/job-posting';
 
 @Component({
   selector: 'app-stores-by-hiring-manager',

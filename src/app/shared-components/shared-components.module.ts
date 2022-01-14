@@ -12,8 +12,6 @@ import {AddStoreComponent} from './components/add-store/add-store.component';
 import {RegisterUserComponent} from './components/register-user/register-user.component';
 import {AngularMaterialModule} from '../app-material/angular-material.module';
 import {UserDetailsComponent} from './components/user-details/user-details.component';
-import {CarListComponentComponent} from './car-list-component/car-list-component.component';
-
 import {AddUserComponent} from '../admin/admin-franchise-list/add-user/add-user.component';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import {UploadFormComponent} from './components/upload-form/upload-form.component';
@@ -21,7 +19,6 @@ import {UploadDetailsComponent} from './components/upload-details/upload-details
 import {UploadListComponent} from './components/upload-list/upload-list.component';
 import {CreateNewHirePackageComponent} from './components/create-new-hire-package/create-new-hire-package.component';
 import {RegisterApplicantComponent} from "./components/register-applicant/register-applicant.component";
-import {AddJobComponent} from "../jobs/add-job/add-job.component";
 import {AddJobReqComponent} from "./components/add-job-req/add-job-req.component";
 import {UsersForFranchiseListComponent} from "./components/users-for-franchise-list/users-for-franchise-list.component";
 import {StoresByHiringManagerComponent} from "./components/stores-by-hiring-manager/stores-by-hiring-manager.component";
@@ -46,7 +43,6 @@ import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on
       AddStoreComponent,
       RegisterUserComponent,
       UserDetailsComponent,
-      CarListComponentComponent,
       AddUserComponent,
       UploadFormComponent,
       UploadDetailsComponent,
@@ -77,7 +73,6 @@ import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on
         FranchiseDetailsComponent,
         RegisterUserComponent,
         UserDetailsComponent,
-        CarListComponentComponent,
         UploadFormComponent,
         UploadDetailsComponent,
         UploadListComponent,

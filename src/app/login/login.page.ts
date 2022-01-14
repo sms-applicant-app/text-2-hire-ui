@@ -7,6 +7,7 @@ import {NavigationExtras, Router} from '@angular/router';
 import {FirestoreHelperService} from '../shared/firestore-helper.service';
 import {DatePipe} from '@angular/common';
 import {UserService} from '../shared/services/user.service';
+import * as uuid from 'uuid';
 
 
 @Component({
@@ -114,7 +115,7 @@ export class LoginPage implements OnInit {
         phoneNumber: this.registrationForm.controls.phoneNumber.value,
         dateCreated: this.latestDate,
         updatedAt: this.latestDate,
-        franchiseId: '0'
+        franchiseId: uuid.v4()
       };
       this.firstTimeLogin = true;
       this.authService.SendVerificationMail();

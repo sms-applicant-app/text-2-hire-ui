@@ -15,13 +15,13 @@ import {AngularFireModule} from '@angular/fire';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AngularMaterialModule} from './app-material/angular-material.module';
-import {ModalModule} from './shared-components/pop-over-window/model/modal/modal.module';
+
 import {SharedComponentsModule} from './shared-components/shared-components.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {HttpClientModule} from '@angular/common/http';
-import {AlertModule} from './alert/alert.module';
+
 
 
 
@@ -44,8 +44,6 @@ import {AlertModule} from './alert/alert.module';
     AngularFireStorageModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
-    ModalModule,
-    AlertModule,
     HttpClientModule,
     SharedComponentsModule,
     FontAwesomeModule,

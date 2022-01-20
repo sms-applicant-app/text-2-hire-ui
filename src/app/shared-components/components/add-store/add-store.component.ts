@@ -125,7 +125,9 @@ export class AddStoreComponent implements OnInit {
 
   receiveUserMessage($event){
     this.newUserHiringManagerData = $event;
-    console.log('user added', this.newUserHiringManagerData);
+    console.log('user added', this.newUserHiringManagerData.email);
+    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+    this.getHiringManagersPerFranchise();
   }
   goBack(stepper: MatStepper){
     console.log('stepper index', stepper);
@@ -162,7 +164,7 @@ export class AddStoreComponent implements OnInit {
     let increment = 0;
     increment = 1;
     this.newStore.storeId = +increment + lastId;
-    this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId
+    this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId;
     console.log('new store id plus 1 =', this.newStore.storeId);
 
   }
@@ -202,7 +204,6 @@ export class AddStoreComponent implements OnInit {
     this.newStore.addressId = this.addressAdded.addressId;
     this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
     this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-    this.newStore.storeHiringManager = this.existingHiringManagerId;
     this.storeService.createStore(this.newStore).then((resp: any) =>{
       this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
       this.newGeneratedStoreId.storeId = this.storeId;

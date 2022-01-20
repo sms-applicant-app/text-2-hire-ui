@@ -62,7 +62,7 @@ let StoreService = class StoreService {
         return;
     }
     getLastGeneratedStoreId() {
-        return this.firestore.collection('storeIds', ref => ref.orderBy('date', 'desc').limit(1)).get()
+        return this.firestore.collection('storeIds', ref => ref.orderBy('createdAt', 'desc').limit(1)).get()
             .subscribe(ss => {
             ss.docs.forEach(doc => {
                 this.lastGeneratedId = doc.data();
@@ -77,6 +77,10 @@ let StoreService = class StoreService {
              return { docId, ...data };
            });
          }));*/
+    }
+    lastGeneratedStoreId() {
+        this.lastGeneratedId = this.getLastGeneratedStoreId();
+        return this.lastGeneratedId;
     }
     deleteStore(franchiseId) {
         this.firestore.doc(`store/${franchiseId}`).delete().then(resp => {

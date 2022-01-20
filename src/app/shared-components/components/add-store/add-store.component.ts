@@ -164,19 +164,7 @@ export class AddStoreComponent implements OnInit {
     this.newStore.storeId = +increment + lastId;
     this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId
     console.log('new store id plus 1 =', this.newStore.storeId);
-/*  if(this.lastUsedStoreId){
-    this.lastUsedStoreId.toString();
-    const removedState = this.lastUsedStoreId.replace(this.addressAdded.state, '');
-    const toNum = Number(removedState);
-    const incrementOne = toNum + 1;
-    const statePlusGenID = this.addressAdded.state + incrementOne;
-    this.newStore.storeId = statePlusGenID;
-    console.log( 'generated store ID', statePlusGenID, this.storeUniqueId, toNum);
-  } else {
-    this.storeUniqueId = 'HN' + this.initialStoreId;
-    this.newStore.storeId = this.storeUniqueId;
-    console.log('else statement storeId', this.newStore.storeId);
-  }*/
+
   }
   getHiringManagersPerFranchise(){
     this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager').where('franchiseId', '==', this.franchiseId)).get()

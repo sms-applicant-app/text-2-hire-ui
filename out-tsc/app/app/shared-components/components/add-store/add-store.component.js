@@ -36,7 +36,6 @@ let AddStoreComponent = class AddStoreComponent {
      
            this.franchiseId = this.storeIsAddedByAdmin? this.userData.franchiseId : this.franchiseIdFromList;
          });*/
-        this.storeService.getLastGeneratedStoreId();
         this.createStoreForm();
         console.log('incoming franchise Id', this.franchiseId);
         this.addStoreAddress();
@@ -66,7 +65,7 @@ let AddStoreComponent = class AddStoreComponent {
         console.log('address added', $event);
         this.addressAdded = $event;
         if ($event) {
-            this.createStoreUniqueId();
+            this.getLastGeneratedStoreId();
             console.log('go to next step', this.addressAdded);
         }
     }
@@ -85,11 +84,33 @@ let AddStoreComponent = class AddStoreComponent {
         console.log('stepper index', stepper);
         stepper.next();
     }
-    createStoreUniqueId() {
+    getLastGeneratedStoreId() {
+        return this.firestore.collection('storeIds', ref => ref.orderBy('createdAt', 'desc').limit(1)).get()
+            .subscribe(ss => {
+            if (ss.docs.length === 0) {
+                const id = 0o01;
+                this.newGeneratedStoreId.generatedStoreId = 0o000101;
+                this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
+                this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then(data => {
+                    console.log('added generated store Id');
+                });
+            }
+            ss.docs.forEach(doc => {
+                this.lastGeneratedId = doc.data();
+                console.log('retrieving last used store Id', this.lastGeneratedId.generatedStoreId, 'doc data =', doc.data());
+                const lastId = this.lastGeneratedId.generatedStoreId;
+                this.createStoreUniqueId(lastId);
+            });
+        });
+    }
+    createStoreUniqueId(lastId) {
         // change state to HN for hirenow later we can make better unique ID
-        this.storeService.getLastGeneratedStoreId();
-        console.log('last used generated store Id from DB', this.lastUsedStoreId);
-        this.newStore.storeId = 'HN007';
+        console.log('last used generated store Id from DB', lastId);
+        let increment = 0;
+        increment = 1;
+        this.newStore.storeId = +increment + lastId;
+        this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId;
+        console.log('new store id plus 1 =', this.newStore.storeId);
         /*  if(this.lastUsedStoreId){
             this.lastUsedStoreId.toString();
             const removedState = this.lastUsedStoreId.replace(this.addressAdded.state, '');
@@ -124,22 +145,25 @@ let AddStoreComponent = class AddStoreComponent {
     addHiringManagerToStore(userId) {
         // update hiring manager by assigning the store to id to their user object
         // if new user create User if existing just update user
+        if (this.addingNewUser === true) {
+            this.newStore.storeHiringManager = this.newUserHiringManagerData.userId;
+        }
         this.existingHiringManagerId = userId;
         const storeId = this.newStore.storeId;
         this.userService.updateUser(userId, { storeIds: storeId });
     }
     addStore() {
         this.createDate();
+        // this.createStoreUniqueId();
         this.newStore.franchiseId = this.franchiseId;
         this.newStore.storeName = this.addStoreForm.controls.storeName.value;
         this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
         this.newStore.addressId = this.addressAdded.addressId;
-        this.newStore.storeId = 'HN007';
+        this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
         this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-        this.newStore.storeHiringManager = this.addingNewUser ? this.newUserHiringManagerData.userId : this.existingHiringManagerId;
+        this.newStore.storeHiringManager = this.existingHiringManagerId;
         this.storeService.createStore(this.newStore).then((resp) => {
             this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
-            this.newGeneratedStoreId.generatedStoreId = this.storeUniqueId;
             this.newGeneratedStoreId.storeId = this.storeId;
             this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
             this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();

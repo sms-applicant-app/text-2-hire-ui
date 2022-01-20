@@ -2,9 +2,10 @@ import { __awaiter, __decorate } from "tslib";
 import { Component } from '@angular/core';
 import { AddFranchiseComponent } from './shared-components/components/add-franchise/add-franchise.component';
 let AppComponent = class AppComponent {
-    constructor(authService, modalController) {
+    constructor(authService, modalController, ngFireAuth) {
         this.authService = authService;
         this.modalController = modalController;
+        this.ngFireAuth = ngFireAuth;
         this.appPages = [
             /*{ title: 'Home', url: '/admin', icon: 'home' },
             { title: 'Franchises', url: '/franchise', icon: 'mail' },
@@ -15,20 +16,14 @@ let AppComponent = class AppComponent {
         ];
     }
     ngOnInit() {
-        const loggedIn = this.authService.isLoggedIn();
-        loggedIn.subscribe(data => {
-            console.log('are you logged in', data);
-        });
-        if (loggedIn) {
-            this.userData = JSON.parse(localStorage.getItem('appUserData'));
-            if (this.userData.role === 'franchisee') {
-                // get all stores for the franchise
-                this.showStoresByFranchise = true;
-            }
-            if (this.userData.role === 'hiringManager') {
-                // get stores for the hiring manager
-                this.showStoresByHiringManager = true;
-            }
+        this.userData = JSON.parse(localStorage.getItem('appUserData'));
+        if (this.userData.role === 'franchisee') {
+            // get all stores for the franchise
+            this.showStoresByFranchise = true;
+        }
+        if (this.userData.role === 'hiringManager') {
+            // get stores for the hiring manager
+            this.showStoresByHiringManager = true;
         }
     }
     addFranchise() {

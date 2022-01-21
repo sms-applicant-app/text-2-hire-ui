@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {FirestoreHelperService} from "../firestore-helper.service";
 import {AngularFirestore} from "@angular/fire/firestore";
@@ -20,7 +21,7 @@ export class UserService {
 
   getUserById(id): Observable<any> {
     console.log(id);
-    return this.firestore.doc(`users/${id}`).valueChanges();
+    return this.firestore.doc(`users/${id}`).valueChanges().pipe(take(1));
   }
   getUsersByFranchise(franchiseId){
     return this.firestore.collection('user', ref => ref.where(`${franchiseId}`, '==', franchiseId )).get()

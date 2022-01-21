@@ -6,6 +6,8 @@ import {AuthService} from '../../../shared/services/auth.service';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 
 import {Role} from '../../../shared/models/role';
+import { AlertService } from './../../../shared/services/alert.service';
+import { toastMess } from '../../../shared/constants/messages';
 
 @Component({
   selector: 'app-register-user',
@@ -27,7 +29,13 @@ export class RegisterUserComponent implements OnInit {
   registrationForm: FormGroup;
   userAdded: boolean;
   isRegisteringStoreManager: boolean;
-  constructor(public datePipe: DatePipe, public fb: FormBuilder, public authService: AuthService, public dbHelper: FirestoreHelperService) { }
+  constructor(
+    public datePipe: DatePipe,
+    public fb: FormBuilder,
+    public authService: AuthService,
+    public dbHelper: FirestoreHelperService,
+    public alertService: AlertService
+    ) { }
 
   ngOnInit() {
     console.log('incoming franchise Id and or storeId', this.franchiseId, this.storeId);
@@ -59,7 +67,6 @@ export class RegisterUserComponent implements OnInit {
     const password = this.userForm.controls.password.value;
     this.userId = this.newUser.email;
     this.authService.RegisterUser(this.newUser.email, password).then(u=>{
-      console.log('registered user', u, this.registrationForm.value);
       this.newUser.fullName = this.registrationForm.controls.fullName.value;
       this.newUser.email = this.userForm.controls.email.value;
       this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
@@ -67,11 +74,13 @@ export class RegisterUserComponent implements OnInit {
       this.newUser.dateCreated = this.latestDate;
       this.newUser.franchiseId = this.franchiseId;
       this.newUser.storeIds = this.isRegisteringStoreManager? this.storeId: null;
-      console.log('can I make a store manger', this.newUser);
       this.dbHelper.set(`users/${this.userId}`, this.newUser);
+      this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
       this.authService.SendVerificationMail();
       this.userAdded = true;
       this.sendUserMessage();
+    }).catch((err) => {
+      this.alertService.showError(toastMess.CREATE_FAILED);
     });
   }
   registerFranchiseOwner(){

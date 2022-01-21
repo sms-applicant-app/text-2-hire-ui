@@ -28,11 +28,11 @@ export class AppComponent implements OnInit{
               public ngFireAuth: AngularFireAuth) {}
   ngOnInit() {
       this.userData = JSON.parse(localStorage.getItem('appUserData'));
-      if (this.userData.role === 'franchisee'){
+      if (this.userData && this.userData.role === 'franchisee'){
         // get all stores for the franchise
         this.showStoresByFranchise = true;
       }
-      if (this.userData.role === 'hiringManager'){
+      if (this.userData && this.userData.role === 'hiringManager'){
         // get stores for the hiring manager
         this.showStoresByHiringManager = true;
       }

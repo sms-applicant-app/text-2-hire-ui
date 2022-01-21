@@ -50,24 +50,26 @@ let StoreListByFranchiseComponent = class StoreListByFranchiseComponent {
          });
      }*/
     getListOfStoresBasedOnUser() {
-        this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
-            this.userData = doc.data();
-            // console.log('franchiseId in query', this.userData.franchiseId);
-            this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
-                .subscribe(stores => {
-                this.store = [];
-                if (stores.docs.length === 0) {
-                    console.log('no docs with that franchise', this.franchiseId);
-                }
-                else {
-                    stores.forEach(data => {
-                        const s = data.data();
-                        this.storeData = data.data();
-                        this.store.push(s);
-                        console.log(this.store, 'stores');
-                        this.dataSource = new MatTableDataSource(this.store);
-                    });
-                }
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
+                this.userData = doc.data();
+                // console.log('franchiseId in query', this.userData.franchiseId);
+                this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
+                    .subscribe(stores => {
+                    this.store = [];
+                    if (stores.docs.length === 0) {
+                        console.log('no docs with that franchise', this.franchiseId);
+                    }
+                    else {
+                        stores.forEach(data => {
+                            const s = data.data();
+                            this.storeData = data.data();
+                            this.store.push(s);
+                            console.log(this.store, 'stores');
+                            this.dataSource = new MatTableDataSource(this.store);
+                        });
+                    }
+                });
             });
         });
     }

@@ -135,7 +135,7 @@ let AddStoreComponent = class AddStoreComponent {
         // update hiring manager by assigning the store to id to their user object
         // if new user create User if existing just update user
         if (this.addingNewUser === true) {
-            this.newStore.storeHiringManager = this.newUserHiringManagerData.userId;
+            this.newStore.storeHiringManager = this.newStore.storeId;
         }
         this.existingHiringManagerId = userId;
         const storeId = this.newStore.storeId;

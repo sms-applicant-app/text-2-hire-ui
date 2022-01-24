@@ -15,6 +15,7 @@ import {GeneratedStoreId} from '../../../shared/models/generatedStoreId';
 import {MatTableDataSource} from '@angular/material/table';
 import {User} from '../../../shared/models/user';
 import {JobService} from '../../../shared/services/job.service';
+import { Subject } from 'rxjs';
 
 
 
@@ -55,7 +56,8 @@ export class AddStoreComponent implements OnInit {
   hiringManagers: any = [];
   lastGeneratedId: any;
   displayColumns= ['name', 'phoneNumber', 'actions'];
-
+  onStoreAddedSub: Subject<Store>;
+  
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -71,6 +73,7 @@ export class AddStoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.addAddress = false;
     this.addingNewUser = false;
@@ -88,6 +91,7 @@ export class AddStoreComponent implements OnInit {
     this.initialStoreId = '005';
     this.getHiringManagersPerFranchise();
   }
+
   createDate() {
     this.date = new Date();
     this.latestDate = this.datePipe.transform(this.date, 'MM-dd-yyyy');
@@ -209,8 +213,9 @@ export class AddStoreComponent implements OnInit {
       this.newGeneratedStoreId.storeId = this.storeId;
       this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
       this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
-
+      this.onStoreAddedSub.next({
+        ...this.newStore
+      });
     });
-
   }
 }

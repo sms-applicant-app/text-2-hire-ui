@@ -4,7 +4,10 @@ import {Observable, Subject} from 'rxjs';
 import {AlertInfo} from '../models/alert-info';
 import {filter} from 'rxjs/operators';
 import {Alert, AlertType} from '../models/alert.model';
+import { ToastController } from '@ionic/angular';
+import { ToastrService } from 'ngx-toastr';
 
+const TIME_SHOW_ALERT = 3000;
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +15,34 @@ export class AlertService {
   private subject = new Subject<Alert>();
   private defaultId = 'default-alert';
   constructor(
-    public router: Router
-    ) { }
+    public router: Router,
+    private toastr: ToastrService
+    ) {}
+  // new alert service
+  showSuccess(message: string, title?: any) {
+    this.toastr.success(message, title, {
+      timeOut: TIME_SHOW_ALERT,
+      positionClass: 'toast-top-right'
+    });
+  }
+  showInfo(message: string, title?: any) {
+    this.toastr.info(message, title, {
+      timeOut: TIME_SHOW_ALERT,
+      positionClass: 'toast-top-right'
+    });
+  }
+  showWarning(message: string, title?: any) {
+    this.toastr.warning(message, title, {
+      timeOut: TIME_SHOW_ALERT,
+      positionClass: 'toast-top-right'
+    });
+  }
+  showError(message: string, title?: any) {
+    this.toastr.error(message, title, {
+      timeOut: TIME_SHOW_ALERT,
+      positionClass: 'toast-top-right'
+    });
+  }
   // enable subscribing to alerts observable
   onAlert(id = this.defaultId): Observable<Alert> {
     return this.subject.asObservable().pipe(filter(x => x && x.id === id));

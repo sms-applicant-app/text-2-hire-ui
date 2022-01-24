@@ -22,9 +22,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {HttpClientModule} from '@angular/common/http';
 
-
-
-
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -47,7 +45,8 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     SharedComponentsModule,
     FontAwesomeModule,
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    ToastrModule.forRoot(),
   ],
   providers: [
     AngularFirestoreModule,

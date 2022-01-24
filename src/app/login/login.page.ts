@@ -89,11 +89,8 @@ export class LoginPage implements OnInit {
     console.log('go terms and conditions');
   }
 
-  login(email, password) {
-    this.authService.SignIn(email.value, password.value).then((data: any) =>{
-      console.log('sign in ', JSON.stringify(data));
-    });
-
+  async login(email, password) {
+     await this.authService.SignIn(email.value, password.value);
   }
 
   goToLogin() {

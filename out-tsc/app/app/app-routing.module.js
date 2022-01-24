@@ -8,10 +8,6 @@ const routes = [
         pathMatch: 'full'
     },
     {
-        path: 'franchise',
-        loadChildren: () => import('./franchise/franchise.module').then(m => m.FranchisePageModule)
-    },
-    {
         path: 'store',
         loadChildren: () => import('./store/store.module').then(m => m.StorePageModule)
     },

@@ -10,7 +10,8 @@ import {of} from 'rxjs';
 import firebase from 'firebase';
 import {UserService} from './user.service';
 import {Store} from '../models/store';
-
+import { AlertService } from '../../shared/services/alert.service';
+import {toastMess} from '../../shared/constants/messages';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,7 +29,8 @@ export class AuthService {
       public router: Router,
       public ngZone: NgZone,
       public alertController: AlertController,
-      public userService: UserService
+      public userService: UserService,
+      public alertService: AlertService,
   ) {
     this.ngFireAuth.authState.subscribe(user => {
       if (user) {
@@ -73,14 +75,15 @@ export class AuthService {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.userService.getUserById(email).subscribe((data: any) =>{
-          console.log(data, 'returned from log in');
           localStorage.setItem('appUserData', JSON.stringify(data));
           this.ngZone.run(() =>{
             this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
+            this.alertService.showSuccess(toastMess.LOGIN_SUCCESS);
           });
         });
-
-  });
+  }).catch((err) => {
+    this.alertService.showError(toastMess.LOGIN_FAILED);
+    });
   }
   routeUserBasedOnRole(userRole) {
     console.log('user role', userRole);

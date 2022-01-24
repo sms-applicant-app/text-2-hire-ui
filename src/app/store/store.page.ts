@@ -7,10 +7,10 @@ import {StoreService} from '../shared/services/store.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {MatTableDataSource} from '@angular/material/table';
 import {Store} from '../shared/models/store';
-import {ActivatedRoute, Router} from "@angular/router";
-import {UserService} from "../shared/services/user.service";
-import {AuthService} from "../shared/services/auth.service";
-import {Observable} from "rxjs";
+import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../shared/services/user.service';
+import {AuthService} from '../shared/services/auth.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-store',
@@ -44,23 +44,24 @@ export class StorePage implements OnInit {
   ngOnInit() {
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
     console.log('user', this.userData.franchiseId, this.userData.role);
-    if(this.userData.role === "hiringManager"){
-      console.log('im a hiring manager')
+    if(this.userData.role === 'hiringManager'){
+      console.log('im a hiring manager');
       this.role = 'hiringManager';
     }
-    if (this.userData.role === "franchisee"){
+    if (this.userData.role === 'franchisee'){
       this.franchiseId = this.userData.franchiseId;
-      console.log('im a franchise owner', this.franchiseId)
-       this.role = "franchisee"
+      console.log('im a franchise owner', this.franchiseId);
+       this.role = 'franchisee';
     }
+    this.getAllFranchiseStoresById();
 
   }
 
   getAllFranchiseStoresById(){
-  console.log('franchise id', this.franchiseId)
+  console.log('franchise id', this.franchiseId);
    this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
 
-   console.log('retrieved stores', this.storesData)
+   console.log('retrieved stores', this.storesData);
 
   }
 

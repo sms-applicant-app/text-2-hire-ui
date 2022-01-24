@@ -16,15 +16,16 @@ let StorePage = class StorePage {
     ngOnInit() {
         this.userData = JSON.parse(localStorage.getItem('appUserData'));
         console.log('user', this.userData.franchiseId, this.userData.role);
-        if (this.userData.role === "hiringManager") {
+        if (this.userData.role === 'hiringManager') {
             console.log('im a hiring manager');
             this.role = 'hiringManager';
         }
-        if (this.userData.role === "franchisee") {
+        if (this.userData.role === 'franchisee') {
             this.franchiseId = this.userData.franchiseId;
             console.log('im a franchise owner', this.franchiseId);
-            this.role = "franchisee";
+            this.role = 'franchisee';
         }
+        this.getAllFranchiseStoresById();
     }
     getAllFranchiseStoresById() {
         console.log('franchise id', this.franchiseId);

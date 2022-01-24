@@ -74,7 +74,9 @@ let AddStoreComponent = class AddStoreComponent {
     }
     receiveUserMessage($event) {
         this.newUserHiringManagerData = $event;
-        console.log('user added', this.newUserHiringManagerData);
+        console.log('user added', this.newUserHiringManagerData.email);
+        this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+        this.getHiringManagersPerFranchise();
     }
     goBack(stepper) {
         console.log('stepper index', stepper);
@@ -111,19 +113,6 @@ let AddStoreComponent = class AddStoreComponent {
         this.newStore.storeId = +increment + lastId;
         this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId;
         console.log('new store id plus 1 =', this.newStore.storeId);
-        /*  if(this.lastUsedStoreId){
-            this.lastUsedStoreId.toString();
-            const removedState = this.lastUsedStoreId.replace(this.addressAdded.state, '');
-            const toNum = Number(removedState);
-            const incrementOne = toNum + 1;
-            const statePlusGenID = this.addressAdded.state + incrementOne;
-            this.newStore.storeId = statePlusGenID;
-            console.log( 'generated store ID', statePlusGenID, this.storeUniqueId, toNum);
-          } else {
-            this.storeUniqueId = 'HN' + this.initialStoreId;
-            this.newStore.storeId = this.storeUniqueId;
-            console.log('else statement storeId', this.newStore.storeId);
-          }*/
     }
     getHiringManagersPerFranchise() {
         this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager').where('franchiseId', '==', this.franchiseId)).get()
@@ -146,7 +135,7 @@ let AddStoreComponent = class AddStoreComponent {
         // update hiring manager by assigning the store to id to their user object
         // if new user create User if existing just update user
         if (this.addingNewUser === true) {
-            this.newStore.storeHiringManager = this.newUserHiringManagerData.userId;
+            this.newStore.storeHiringManager = this.newStore.storeId;
         }
         this.existingHiringManagerId = userId;
         const storeId = this.newStore.storeId;
@@ -161,7 +150,6 @@ let AddStoreComponent = class AddStoreComponent {
         this.newStore.addressId = this.addressAdded.addressId;
         this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
         this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-        this.newStore.storeHiringManager = this.existingHiringManagerId;
         this.storeService.createStore(this.newStore).then((resp) => {
             this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
             this.newGeneratedStoreId.storeId = this.storeId;

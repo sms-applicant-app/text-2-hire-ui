@@ -5,8 +5,8 @@ export class OnBoardPacket {
   i9: string;
   stateW4: string;
   storeId: string;
-  customForms: string;
+  customForms?: string;
 }
 export class CustomForms {
-  formUrl: string;
+  formUrl?: string;
 }

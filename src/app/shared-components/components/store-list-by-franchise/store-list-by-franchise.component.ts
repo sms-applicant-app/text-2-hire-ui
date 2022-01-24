@@ -82,8 +82,8 @@ export class StoreListByFranchiseComponent implements OnInit {
         }
       });
   }*/
-  getListOfStoresBasedOnUser(){
-    this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
+  async getListOfStoresBasedOnUser(){
+   await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
      // console.log('franchiseId in query', this.userData.franchiseId);
       this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
@@ -112,7 +112,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
   async addStore(){
     const franchiseId = this.franchiseId;
-    console.log('display add store');
+    console.log('display add store passing in franchise id', this.franchiseId);
     const addStoreModel = await this.modalController.create({
       component: AddStoreComponent,
       swipeToClose: true,
@@ -126,19 +126,5 @@ export class StoreListByFranchiseComponent implements OnInit {
     console.log('store details', id);
     this.router.navigate([`franchise/store-details/${id}`]);
   }
-  async addJodOpening(id){
-    const franchiseId = this.franchiseId;
-    const storeId = id;
-    console.log('display add job model');
-    const addJobModel = await this.modalController.create({
-      component: AddJobReqComponent,
-      swipeToClose: true,
-      componentProps: {
-        // may need franchise id
-        franchiseId,
-        storeId
-      }
-    });
-    return await addJobModel.present();
-  }
+
 }

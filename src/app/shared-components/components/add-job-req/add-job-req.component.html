@@ -2,6 +2,7 @@
 <mat-dialog-content>
   <mat-horizontal-stepper #stepper (selectionChange)="selectionChange($event)">
     <mat-stepper >
+     
       <mat-step [stepControl]="addJoblistingFrom">
         <form [formGroup]="addJoblistingFrom">
           <ng-template matStepLabel>Position Details</ng-template>
@@ -78,7 +79,7 @@
       </mat-step>
 
 
-      <mat-step label="Add Another store" style="padding-bottom: 10px;">
+      <mat-step label="Add Another Position" style="padding-bottom: 10px;">
       <ion-button (click) = "stepper.reset()" color="success" >Add Another Listing</ion-button>
 
         <ion-button (click)="refreshPage()">Done</ion-button>

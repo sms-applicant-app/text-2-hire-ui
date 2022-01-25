@@ -2,13 +2,16 @@
 <form [formGroup]="userForm">
     <div class="form-row">
       <div class="form-group col-lg-7 col-sm-12">
-    <ion-item lines="full">
+    <ion-item lines="full" class="mb-3">
       <ion-label position="stacked" required>Email</ion-label>
       <ion-input clearInput type="email" formControlName="email" required placeholder="New Users Email .."></ion-input>
+      <span class="field-err" *ngIf="userForm.controls.email.errors?.required && (userForm.controls.email.dirty || userForm.controls.email.touched)">Email is required</span>
     </ion-item>
-    <ion-item lines="full" class="uk-margin-bottom">
+    <ion-item lines="full" class="mb-3">
       <ion-label position="stacked" required>Password</ion-label>
       <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
+      <span class="field-err" *ngIf="userForm.controls.password.errors?.required && (userForm.controls.password.dirty || userForm.controls.password.touched)">Password is required</span>
+
     </ion-item>
       </div>
     </div>
@@ -16,16 +19,20 @@
   <form [formGroup]="registrationForm">
   <div class="form-row">
     <div class="form-group col-lg-7 col-sm-12">
-      <ion-item lines="full">
+      <ion-item class="mb-3" lines="full">
         <ion-label position="stacked" required>Full Name</ion-label>
         <ion-input clearInput type="text" formControlName="fullName" required></ion-input>
+        <span class="field-err" *ngIf="registrationForm.controls.fullName.errors?.required && (registrationForm.controls.fullName.dirty || registrationForm.controls.fullName.touched)">Full Name required</span>
+
       </ion-item>
 
-      <ion-item lines="full" class="uk-margin-bottom">
+      <ion-item lines="full" class="mb-3">
         <ion-label position="stacked" required>Phone Number</ion-label>
         <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
+        <span class="field-err" *ngIf="registrationForm.controls.phoneNumber.errors?.required && (registrationForm.controls.phoneNumber.dirty || registrationForm.controls.phoneNumber.touched)">Phone Number required</span>
+
       </ion-item>
-      <ion-item>
+      <ion-item class="mb-3">
         <ion-label position="stacked" required="true">Assign User a Role</ion-label>
         <ion-select class="form-control" placeholder="User Role" formControlName="role" name="User Role">
           <ion-select-option value="franchisee">Franchise</ion-select-option>

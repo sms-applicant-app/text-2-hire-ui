@@ -123,12 +123,7 @@ export class AddStoreComponent implements OnInit {
     console.log('store step', e);
   }
 
-  receiveUserMessage($event){
-    this.newUserHiringManagerData = $event;
-    console.log('user added', this.newUserHiringManagerData.email);
-    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
-    this.getHiringManagersPerFranchise();
-  }
+
   goBack(stepper: MatStepper){
     console.log('stepper index', stepper);
     stepper.previous();
@@ -168,6 +163,7 @@ export class AddStoreComponent implements OnInit {
     console.log('new store id plus 1 =', this.newStore.storeId);
 
   }
+
   getHiringManagersPerFranchise(){
     this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager').where('franchiseId', '==', this.franchiseId)).get()
       .subscribe(users =>{
@@ -184,15 +180,28 @@ export class AddStoreComponent implements OnInit {
         }
       });
   }
+
+  /**
+   * Add new hiring manager
+   * @param $event
+   */
+  receiveUserMessage($event){
+    this.newUserHiringManagerData = $event;
+    console.log('user added', this.newUserHiringManagerData.email);
+    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+    console.log('adding new manager',this.newStore);
+  }
+  /**
+   *
+   * Add new or Existing Hiring Manager to newly created store
+   * @param userId
+   */
   addHiringManagerToStore(userId){
     // update hiring manager by assigning the store to id to their user object
     // if new user create User if existing just update user
-    if(this.addingNewUser === true){
-      this.newStore.storeHiringManager = this.newStore.storeId;
-    }
-    this.existingHiringManagerId = userId;
-    const storeId = this.newStore.storeId;
-    this.userService.updateUser(userId, { storeIds: storeId });
+      const storeId = this.newStore.storeId;
+      this.userService.updateUser(userId, { storeIds: storeId });
+      this.newStore.storeHiringManager = userId;
 
   }
   addStore(){

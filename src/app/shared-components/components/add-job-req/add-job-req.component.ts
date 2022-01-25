@@ -1,10 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
+
 import {JobPosting} from "../../../shared/models/job-posting";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {JobService} from "../../../shared/services/job.service";
 import {ModalController} from "@ionic/angular";
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-add-job-req',
@@ -21,35 +24,40 @@ export class AddJobReqComponent implements OnInit {
   hiringManagerId: string;
   private userData: any;
   private userId: string;
-  constructor(public fb: FormBuilder, public firestore: AngularFirestore, public dbHelper: FirestoreHelperService, public jobService: JobService, public modalController: ModalController) { }
+  constructor(
+    public fb: FormBuilder,
+    public firestore: AngularFirestore,
+    public dbHelper: FirestoreHelperService,
+    public jobService: JobService,
+    public modalController: ModalController,
+    public alertService: AlertService
+    ) { }
 
   ngOnInit() {
-    console.log('incoming store Id', this.storeId);
     this.initAddJobForm();
     this.initJobsDetailsForm();
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
       this.userData = doc.data();
-      console.log('franchiseId in query', this.userData.franchiseId);
       this.franchiseId = this.userData.franchiseId;
     });
   }
   initAddJobForm(){
     this.addJoblistingFrom = this.fb.group({
-      recNumber:[''],
-      jobTitle:[''],
-      location: [''],
+      recNumber:['', Validators.required],
+      jobTitle:['',Validators.required],
+      location: ['', Validators.required],
       jobType: [''],
-      numberOfOpenSlots: [''],
+      numberOfOpenSlots: ['', Validators.required],
       shortDescription: [''],
-      positionExpiration: [''],
+      positionExpiration: ['', Validators.required],
       companyWebsite: [''],
-      salary: ['']
+      salary: ['', Validators.required]
     });
   }
   initJobsDetailsForm(){
     this.jobDetailsFrom = this.fb.group({
-      fullDescription: [''],
+      fullDescription: ['', Validators.required],
       benefits: [''],
       specialNotes: [''],
       qualifications: ['']
@@ -66,7 +74,7 @@ export class AddJobReqComponent implements OnInit {
     //TODO clear form controls and go back to step one
 
   }
-  addJobListing(){
+  addJobListing(stepper: MatStepper){
     this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
     this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
     this.newJobListing.jobTitle = this.addJoblistingFrom.controls.jobTitle.value;
@@ -82,11 +90,14 @@ export class AddJobReqComponent implements OnInit {
     this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
     this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
     this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
-    this.newJobListing.storeId = JSON.parse(localStorage.getItem('appUserData')).storeIds;
-    this.newJobListing.franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
-    this.jobService.addJobRec(this.newJobListing).then(data=>{
-      console.log('added job listing', data);
-    });
+    this.newJobListing.storeId = this.storeId;
+    this.newJobListing.franchiseId = this.franchiseId;
+    if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
+      this.jobService.addJobRec(this.newJobListing);
+      stepper.next();
+    } else if (this.addJoblistingFrom.invalid || this.jobDetailsFrom.invalid) {
+      this.alertService.showError('Please enter field is required');
+    }
   }
   closeModal() {
     this.modalController

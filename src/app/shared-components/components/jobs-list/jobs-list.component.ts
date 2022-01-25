@@ -24,7 +24,6 @@ export class JobsListComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
   @Output() messageEvent = new EventEmitter<any>();
-  //storeId: string;
   fileUploads?: any[];
   jobs: any = [];
   userData: any;
@@ -47,8 +46,7 @@ export class JobsListComponent implements OnInit {
   ngOnInit() {
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    //this.storeId = JSON.parse(localStorage.getItem('selectedStore'));
-    console.log(' store Id from local storage', this.storeId);
+    console.log('this.storeId', this.storeId);
    // if user role is hiring manager get jobs by storeId
    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
@@ -122,9 +120,8 @@ export class JobsListComponent implements OnInit {
     this.messageEvent.emit(this.franchiseId);
   }
   async addJobRec(){
-    const franchiseId = this.franchiseId;
-    const storeId = localStorage.getItem('selectedStore');
-    console.log('display add Job Model',storeId, franchiseId);
+    const franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+    const storeId = this.storeId;
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
@@ -140,8 +137,7 @@ export class JobsListComponent implements OnInit {
   }
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;
-    const storeId = localStorage.getItem('selectedStore');
-    console.log('display add Job Model',storeId, franchiseId);
+    const storeId = this.storeId;
     const createOnboardPackage = await this.modalController.create({
       component: AddOnBoardPacketComponent,
       swipeToClose: true,

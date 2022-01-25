@@ -75,6 +75,7 @@ export class AuthService {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.userService.getUserById(email).subscribe((data: any) =>{
+          this.userData = data;
           localStorage.setItem('appUserData', JSON.stringify(data));
           this.ngZone.run(() =>{
             this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
@@ -186,6 +187,7 @@ export class AuthService {
       localStorage.removeItem('user');
       localStorage.removeItem('appUserData');
       localStorage.clear();
+      this.userData = null;
       console.log('logged out cleared storage');
       // TEMP: SEND LOGGED OUT USER TO MAIN PAGE TO CLEAR STORAGE DURING DEV
       this.router.navigate(['']);

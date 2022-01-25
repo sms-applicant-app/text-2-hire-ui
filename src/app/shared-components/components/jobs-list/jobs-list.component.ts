@@ -96,6 +96,7 @@ export class JobsListComponent implements OnInit {
     this.jobService.currentData.subscribe(data =>{
       console.log('data changed from local storage', data);
       const storeId = data;
+      if(typeof storeId !== 'string' || !storeId) return;
       this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
         .subscribe(jobs =>{
           this.jobs = [];

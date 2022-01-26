@@ -3,8 +3,6 @@ import {FirestoreHelperService} from "../firestore-helper.service";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {JobPosting} from "../models/job-posting";
 import {BehaviorSubject, Observable} from "rxjs";
-import { AlertService } from './alert.service';
-import { toastMess } from '../constants/messages';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +14,7 @@ export class JobService {
   stores: any = {};
   dataSub = new BehaviorSubject<any>(this.stores);
   currentData = this.dataSub.asObservable();
-  constructor(public firestore: AngularFirestore, public alertService: AlertService) {
+  constructor(public firestore: AngularFirestore) {
     this.currentData.subscribe(data => localStorage.setItem('selectedStore', data));
   }
   storeSelection(newStore: any){
@@ -49,9 +47,6 @@ export class JobService {
     return this.firestore.collection('jobs').add(jobObj).then(docRef =>{
       const jobId = docRef.id;
       console.log('job added', jobId);
-      this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
-    }).catch((err) => {
-      this.alertService.showError(toastMess.CREATE_FAILED);
     });
   }
 }

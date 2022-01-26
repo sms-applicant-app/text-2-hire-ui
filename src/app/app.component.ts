@@ -4,6 +4,7 @@ import {AddStoreComponent} from './shared-components/components/add-store/add-st
 import {ModalController} from '@ionic/angular';
 import {AddFranchiseComponent} from './shared-components/components/add-franchise/add-franchise.component';
 import {AngularFireAuth} from "@angular/fire/auth";
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -19,32 +20,17 @@ export class AppComponent implements OnInit{
     { title: 'Log out', url: '/logout', icon: 'logout' },
 
   ];
-    showStoresByHiringManager: boolean;
-    showStoresByFranchise: boolean;
     userData: any;
     isLoggedIn: boolean;
   constructor(public authService: AuthService,
               public modalController: ModalController,
-              public ngFireAuth: AngularFireAuth) {}
+              public ngFireAuth: AngularFireAuth,
+              public router: Router) {}
   ngOnInit() {
-      this.userData = JSON.parse(localStorage.getItem('appUserData'));
-      if(this.userData){
-        if (this.userData.role === 'franchisee'){
-          // get all stores for the franchise
-          this.showStoresByFranchise = true;
-        }
-        if (this.userData.role === 'hiringManager'){
-          // get stores for the hiring manager
-          this.showStoresByHiringManager = true;
-        }
-      } else {
-        this.showStoresByFranchise = false;
-        this.showStoresByHiringManager = false;
-      }
-
+      this.authService.userData = JSON.parse(localStorage.getItem('appUserData'));
   }
   async addFranchise(){
-    const franchiseOwner = this.userData.email;
+    const franchiseOwner = this.authService.userData.email;
     console.log('display add franchise');
     const addFranchise = await this.modalController.create({
       component: AddFranchiseComponent,
@@ -54,5 +40,13 @@ export class AppComponent implements OnInit{
       }
     });
     return await addFranchise.present();
+  }
+
+  goToPage(url: string) {
+    if(url == '/logout') {
+      this.authService.SignOut();
+    } else {
+      this.router.navigate([url]);
+    }
   }
 }

@@ -57,7 +57,7 @@ export class AddJobReqComponent implements OnInit {
       shortDescription: [''],
       positionExpiration: ['', Validators.required],
       companyWebsite: [''],
-      salary: ['']
+      salary: ['', Validators.required]
     });
   }
   initJobsDetailsForm(){

@@ -1,4 +1,3 @@
-import { JobsListComponent } from './../jobs-list/jobs-list.component';
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 import {Store} from '../../../shared/models/store';
@@ -39,6 +38,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   seeStores: boolean;
   seePositions: boolean;
   seeApplicants: boolean;
+  storeId: string;
   constructor(public dbHelper: FirestoreHelperService,
               public firestore: AngularFirestore,
               public userService: UserService,
@@ -59,16 +59,11 @@ export class StoreListByFranchiseComponent implements OnInit {
     this.seeApplicants = false;
     this.seePositions = false;
   }
-  async getPositionsForStore(storeId){
+  getPositionsForStore(storeId){
+    console.log('this store id', storeId);
+    this.storeId = storeId;
+    this.seeStores = false;
     this.seePositions = true;
-    const getPositionModal = await this.modalController.create({
-      component: JobsListComponent,
-      swipeToClose: true,
-      componentProps: {
-        storeId
-      }
-    });
-    return await getPositionModal.present();
   }
  /* getListOfStoresByFranchise(){
     this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.franchiseIdFromList)).get()

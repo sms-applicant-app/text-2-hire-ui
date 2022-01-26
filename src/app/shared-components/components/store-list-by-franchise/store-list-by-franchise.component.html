@@ -25,7 +25,7 @@
                 <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
                 <!-- <th class="ps-4 min-w-300px rounded-start">Store ID</th>-->
                 <th class="ps-4 min-w-300px rounded-start">Store Title</th>
-                <th class="ps-4 min-w-300px rounded-start">Phone Number</th>
+                <th class="ps-4 rounded-start">Phone Number</th>
                 <th class="ps-4 min-w-300px rounded-start">Hiring Manager</th>
                 <th class="ps-4 min-w-300px rounded-start">Number of Positions</th>
                 <th class="ps-4 min-w-300px rounded-start">Actions</th>
@@ -51,14 +51,18 @@
                 </td>
                 <td>
                   <div class="d-flex flex-shrink-0">
-                    <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId)"  ><i class="fa fa-eye"></i><br><p>Get Positions By Store</p></span>
+                    <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId)"  >
+                      <i class="fa fa-eye"></i><br><p>Get Positions By Store</p>
+                    </span>
                     <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
                      <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
                   </div>
                 </td>
                  <td>
                   <div class="d-flex flex-shrink-0">
-                    <a class="text-center" (click)="deleteStore(store.uid)" ><i class="fa fa-xing-square"></i><br><p>Get Positions By Store</p></a>
+                    <span class="text-center cursor-pointer" (click)="deleteStore(store.uid)" >
+                      <i class="fa fa-xing-square"></i><br><span>Delete Store</span>
+                    </span>
                     <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
                      <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
                   </div>

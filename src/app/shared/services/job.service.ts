@@ -32,7 +32,7 @@ export class JobService {
     return this.jobsData;
   }
   getJobsByStore(storeId){
-    return this.firestore.collection('jobs', ref => ref.where(`${storeId}`, '==', storeId)).get()
+    return this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           this.message = 'Document not found! Try again!';

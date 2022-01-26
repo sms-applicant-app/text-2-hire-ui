@@ -8,7 +8,7 @@ import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {JobService} from "../../../shared/services/job.service";
 import {ModalController} from "@ionic/angular";
 import { AlertService } from '../../../shared/services/alert.service';
-
+import { OnboardingService } from './../../../shared/services/onboarding.service';
 @Component({
   selector: 'app-add-job-req',
   templateUrl: './add-job-req.component.html',
@@ -21,6 +21,8 @@ export class AddJobReqComponent implements OnInit {
   addJoblistingFrom: FormGroup;
   jobDetailsFrom: FormGroup;
   jobsData: any = [];
+  onboardingPackagesData: any = [];
+  onboardingPackageId: string;
   hiringManagerId: string;
   private userData: any;
   private userId: string;
@@ -30,12 +32,14 @@ export class AddJobReqComponent implements OnInit {
     public dbHelper: FirestoreHelperService,
     public jobService: JobService,
     public modalController: ModalController,
-    public alertService: AlertService
+    public alertService: AlertService,
+    public onboardingService: OnboardingService
     ) { }
 
   ngOnInit() {
     this.initAddJobForm();
     this.initJobsDetailsForm();
+    this.getOnboardingPackages();
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
       this.userData = doc.data();
@@ -48,19 +52,34 @@ export class AddJobReqComponent implements OnInit {
       jobTitle:['',Validators.required],
       location: ['', Validators.required],
       jobType: [''],
+      onboardingPackage: [''],
       numberOfOpenSlots: ['', Validators.required],
       shortDescription: [''],
       positionExpiration: ['', Validators.required],
       companyWebsite: [''],
-      salary: ['', Validators.required]
+      salary: ['']
     });
   }
   initJobsDetailsForm(){
     this.jobDetailsFrom = this.fb.group({
-      fullDescription: ['', Validators.required],
+      fullDescription: [''],
       benefits: [''],
       specialNotes: [''],
       qualifications: ['']
+    });
+  }
+  getOnboardingPackages() {
+    const storeId = this.storeId;
+    this.onboardingService.getAllOnboardingPackagesByStoreId(storeId).subscribe((res) => {
+      this.onboardingPackagesData = [];
+        if (res.docs.length === 0){
+          console.log('no docs with that franchise', this.franchiseId);
+        } else {
+          this.onboardingPackagesData = res.docs.map((data) => {
+            console.log('data.id', data.id);
+            return data.data();
+          });
+        }
     });
   }
   showJobList(){
@@ -92,6 +111,7 @@ export class AddJobReqComponent implements OnInit {
     this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
     this.newJobListing.storeId = this.storeId;
     this.newJobListing.franchiseId = this.franchiseId;
+    this.newJobListing.onboardingPackageName = this.addJoblistingFrom.controls.onboardingPackage.value;
     if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
       this.jobService.addJobRec(this.newJobListing);
       stepper.next();

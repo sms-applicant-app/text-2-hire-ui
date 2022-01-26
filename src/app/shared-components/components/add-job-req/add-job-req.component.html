@@ -39,6 +39,9 @@
                   <option value="partTime">Part-Time</option>
                 </select>
               </ion-item>
+              <ion-item lines="full">
+                <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
+              </ion-item>
             </div>
             <div class="col-lg-6">
               <ion-item lines="full">
@@ -54,18 +57,21 @@
 
               </ion-item>
               <ion-item lines="full">
-                <ion-label position="stacked" required>Salary *</ion-label>
+                <ion-label position="stacked" required>Salary</ion-label>
                 <ion-input clearInput type="text" formControlName="salary"></ion-input>
-                <span class="field-err" *ngIf="addJoblistingFrom.controls.salary.errors?.required && (addJoblistingFrom.controls.salary.dirty || addJoblistingFrom.controls.salary.touched)">Salary required</span>
               </ion-item>
               <ion-item lines="full">
                 <ion-label position="stacked" required>Company WebSite</ion-label>
                 <ion-input clearInput type="text" formControlName="companyWebsite"></ion-input>
               </ion-item>
-            </div>
-            <div class="col-lg-12">
-              <ion-item lines="full">
-                <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
+              <ion-item appearance="fill">
+                <ion-label position="stacked" >Select Onboarding Package</ion-label>
+                <select class="form-select" formControlName="onboardingPackage" type="select">
+                  <option value="" *ngIf="onboardingPackagesData.length === 0">No onboarding package</option>
+                  <option [value]="package.name" *ngFor="let package of onboardingPackagesData">
+                    {{package.name}}
+                  </option>
+                </select>
               </ion-item>
             </div>
               <div>
@@ -79,9 +85,8 @@
       <mat-step [stepControl]="jobDetailsFrom" label="Job Description" class="mb-4"  [editable]="true">
         <form [formGroup]="jobDetailsFrom">
           <div class="form-group">
-            <label class="form-label">Full Description *</label>
+            <label class="form-label">Full Description</label>
             <textarea class="form-control" auto-grow formControlName="fullDescription" placeholder="Enter Full Job Description..."></textarea>
-            <span class="field-err" *ngIf="jobDetailsFrom.controls.fullDescription.errors?.required && (jobDetailsFrom.controls.fullDescription.dirty || jobDetailsFrom.controls.fullDescription.touched)">Full Job Description required</span>
           </div>
           <div class="form-group">
             <label class="form-label">Benefits</label>

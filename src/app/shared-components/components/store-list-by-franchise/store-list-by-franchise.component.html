@@ -34,34 +34,24 @@
               </thead>
               <tbody>
               <tr *ngFor="let store of store">
-                <!--  <td>
-                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                      <input type="checkbox" value="{{job.id}}" class="form-check-input widget-9-check">
-                    </div>
-                  </td>-->
-                <!--  <td>
-                    <div class="d-flex align-items-center">
-                     <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.storeId}}</a>
-                    </div>
-                  </td>-->
                 <td>
                   <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeName}}</a>
+                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeName}}</span>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{store.storePhoneNumber}}</a>
+                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storePhoneNumber}}</span>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeHiringManager}}</a>
+                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeHiringManager}}</span>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex flex-shrink-0">
-                    <a class="text-center" (click)="getPositionsForStore(store.storeId)"  ><i class="fa fa-eye"></i><br><p>Get Positions By Store</p></a>
+                    <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId)"  ><i class="fa fa-eye"></i><br><p>Get Positions By Store</p></span>
                     <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
                      <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
                   </div>
@@ -82,8 +72,8 @@
       </div>
     </div>
 </span>
-    <span *ngIf="seePositions === true">
+    <!-- <span *ngIf="seePositions === true">
       <app-jobs-list [storeId]="storeId"></app-jobs-list>
-    </span>
+    </span> -->
   </div>
 </div>

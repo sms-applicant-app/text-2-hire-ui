@@ -12,7 +12,7 @@ import {JobPosting} from '../../../shared/models/job-posting';
 })
 export class StoresByHiringManagerComponent implements OnInit, OnChanges {
   @Input('storeManagerId') storeManagerId;
-  stores: any = [];
+  stores: any[] = [];
   positions: any = [];
   dataSource: MatTableDataSource<Store>;
   positionsDataSource: MatTableDataSource<JobPosting>;
@@ -33,12 +33,8 @@ export class StoresByHiringManagerComponent implements OnInit, OnChanges {
         if(store.docs.length === 0){
           console.log('no docs with that hiring manager', storeHiringManager);
         } else {
-          store.forEach(data =>{
-            const s = data.data();
-            this.stores.push(s);
-            this.dataSource = new MatTableDataSource<Store>(this.stores);
-            console.log(this.stores, 'stores returned for hiring manager');
-          });
+          this.stores = store.docs.map((data) => data.data());
+          this.dataSource = new MatTableDataSource<Store>(this.stores);
         }
       });
   }

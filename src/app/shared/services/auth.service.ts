@@ -18,6 +18,7 @@ import {toastMess} from '../../shared/constants/messages';
 
 export class AuthService {
   userData: any;
+  appUserData: any;
   profileData: any;
 
   user: User;
@@ -64,6 +65,7 @@ export class AuthService {
         });
         this.userService.getUserById(email).subscribe((data: any) => {
           console.log(data.role, 'returned from log in');
+          this.appUserData = data;
           localStorage.setItem('appUserData', JSON.stringify(data));
           this.routeUserBasedOnRole(data.role);
         });
@@ -75,7 +77,7 @@ export class AuthService {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.userService.getUserById(email).subscribe((data: any) =>{
-          this.userData = data;
+          this.appUserData = data;
           localStorage.setItem('appUserData', JSON.stringify(data));
           this.ngZone.run(() =>{
             this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
@@ -188,6 +190,7 @@ export class AuthService {
       localStorage.removeItem('appUserData');
       localStorage.clear();
       this.userData = null;
+      this.appUserData = null;
       console.log('logged out cleared storage');
       // TEMP: SEND LOGGED OUT USER TO MAIN PAGE TO CLEAR STORAGE DURING DEV
       this.router.navigate(['']);

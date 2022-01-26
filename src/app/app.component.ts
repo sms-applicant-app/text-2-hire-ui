@@ -27,7 +27,7 @@ export class AppComponent implements OnInit{
               public ngFireAuth: AngularFireAuth,
               public router: Router) {}
   ngOnInit() {
-      this.authService.userData = JSON.parse(localStorage.getItem('appUserData'));
+      this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;

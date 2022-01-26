@@ -59,10 +59,8 @@ export class StorePage implements OnInit {
 
   getAllFranchiseStoresById(){
   console.log('franchise id', this.franchiseId);
+  if(!this.franchiseId) return;
    this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
-
-   console.log('retrieved stores', this.storesData);
-
   }
 
     async addJobRec(){

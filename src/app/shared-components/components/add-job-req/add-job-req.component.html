@@ -8,7 +8,7 @@
 <mat-dialog-content>
   <mat-horizontal-stepper #stepper (selectionChange)="selectionChange($event)">
     <mat-stepper linear>
-     
+
       <mat-step [stepControl]="addJoblistingFrom" [editable]="true">
         <form [formGroup]="addJoblistingFrom">
           <ng-template matStepLabel>Position Details</ng-template>
@@ -28,7 +28,7 @@
               <ion-item lines="full">
                 <ion-label position="stacked" required>Location (will be drop down with store addresses) *</ion-label>
                 <ion-input clearInput type="text" formControlName="location"></ion-input>
-                <span class="field-err" 
+                <span class="field-err"
                 *ngIf="addJoblistingFrom.controls.location.errors?.required && (addJoblistingFrom.controls.location.dirty || addJoblistingFrom.controls.location.touched)">Location required</span>
 
               </ion-item>
@@ -48,7 +48,7 @@
                 <ion-label position="stacked" required>Number of Hires for this role *</ion-label>
                 <ion-input clearInput type="text" formControlName="numberOfOpenSlots"></ion-input>
                 <span class="field-err" *ngIf="addJoblistingFrom.controls.numberOfOpenSlots.errors?.required && (addJoblistingFrom.controls.numberOfOpenSlots.dirty || addJoblistingFrom.controls.numberOfOpenSlots.touched)">Number of Hires required</span>
-                
+
               </ion-item>
               <ion-item lines="full">
                 <ion-label position="stacked" required>Expiration Date *</ion-label>

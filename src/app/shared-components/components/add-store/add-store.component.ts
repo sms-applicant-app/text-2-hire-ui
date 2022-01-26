@@ -15,6 +15,7 @@ import {GeneratedStoreId} from '../../../shared/models/generatedStoreId';
 import {MatTableDataSource} from '@angular/material/table';
 import {User} from '../../../shared/models/user';
 import {JobService} from '../../../shared/services/job.service';
+import { Subject } from 'rxjs';
 
 
 
@@ -55,7 +56,8 @@ export class AddStoreComponent implements OnInit {
   hiringManagers: any = [];
   lastGeneratedId: any;
   displayColumns= ['name', 'phoneNumber', 'actions'];
-
+  onStoreAddedSub: Subject<Store>;
+  
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -71,6 +73,7 @@ export class AddStoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.addAddress = false;
     this.addingNewUser = false;
@@ -88,6 +91,7 @@ export class AddStoreComponent implements OnInit {
     this.initialStoreId = '005';
     this.getHiringManagersPerFranchise();
   }
+
   createDate() {
     this.date = new Date();
     this.latestDate = this.datePipe.transform(this.date, 'MM-dd-yyyy');
@@ -123,10 +127,7 @@ export class AddStoreComponent implements OnInit {
     console.log('store step', e);
   }
 
-  receiveUserMessage($event){
-    this.newUserHiringManagerData = $event;
-    console.log('user added', this.newUserHiringManagerData);
-  }
+
   goBack(stepper: MatStepper){
     console.log('stepper index', stepper);
     stepper.previous();
@@ -162,10 +163,11 @@ export class AddStoreComponent implements OnInit {
     let increment = 0;
     increment = 1;
     this.newStore.storeId = +increment + lastId;
-    this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId
+    this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId;
     console.log('new store id plus 1 =', this.newStore.storeId);
 
   }
+
   getHiringManagersPerFranchise(){
     this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager').where('franchiseId', '==', this.franchiseId)).get()
       .subscribe(users =>{
@@ -182,15 +184,28 @@ export class AddStoreComponent implements OnInit {
         }
       });
   }
+
+  /**
+   * Add new hiring manager
+   * @param $event
+   */
+  receiveUserMessage($event){
+    this.newUserHiringManagerData = $event;
+    console.log('user added', this.newUserHiringManagerData.email);
+    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+    console.log('adding new manager',this.newStore);
+  }
+  /**
+   *
+   * Add new or Existing Hiring Manager to newly created store
+   * @param userId
+   */
   addHiringManagerToStore(userId){
     // update hiring manager by assigning the store to id to their user object
     // if new user create User if existing just update user
-    if(this.addingNewUser === true){
-      this.newStore.storeHiringManager = this.newUserHiringManagerData.userId;
-    }
-    this.existingHiringManagerId = userId;
-    const storeId = this.newStore.storeId;
-    this.userService.updateUser(userId, { storeIds: storeId });
+      const storeId = this.newStore.storeId;
+      this.userService.updateUser(userId, { storeIds: storeId });
+      this.newStore.storeHiringManager = userId;
 
   }
   addStore(){
@@ -202,14 +217,14 @@ export class AddStoreComponent implements OnInit {
     this.newStore.addressId = this.addressAdded.addressId;
     this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
     this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-    this.newStore.storeHiringManager = this.existingHiringManagerId;
     this.storeService.createStore(this.newStore).then((resp: any) =>{
       this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
       this.newGeneratedStoreId.storeId = this.storeId;
       this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
       this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
-
+      this.onStoreAddedSub.next({
+        ...this.newStore
+      });
     });
-
   }
 }

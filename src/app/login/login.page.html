@@ -13,16 +13,14 @@
   <div class="container ion-margin-top">
   <span *ngIf="alreadyRegistered === true">
     <ion-card>
-      <ion-card-title class="text-center">
+      <ion-card-title class="text-center mt-4">
         Log in Happy Hiring
       </ion-card-title>
       <ion-grid>
       <ion-row>
         <ion-col text-center>
           <form>
-
-              <div class="col-md-3">
-              </div>
+              <div class="col-md-6 offset-md-3">
                 <ion-item lines="full">
                   <ion-label position="stacked" required>Email</ion-label>
                   <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
@@ -36,9 +34,7 @@
 
                 <ion-button (click)="login(email, password)" type="block" color="primary" fill="solid">Login
                 </ion-button>
-            <div class="col-md-3">
-            </div>
-
+              </div>
         </form>
         </ion-col>
       </ion-row>

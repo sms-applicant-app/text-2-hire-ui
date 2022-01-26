@@ -17,13 +17,19 @@ let AppComponent = class AppComponent {
     }
     ngOnInit() {
         this.userData = JSON.parse(localStorage.getItem('appUserData'));
-        if (this.userData.role === 'franchisee') {
-            // get all stores for the franchise
-            this.showStoresByFranchise = true;
+        if (this.userData) {
+            if (this.userData.role === 'franchisee') {
+                // get all stores for the franchise
+                this.showStoresByFranchise = true;
+            }
+            if (this.userData.role === 'hiringManager') {
+                // get stores for the hiring manager
+                this.showStoresByHiringManager = true;
+            }
         }
-        if (this.userData.role === 'hiringManager') {
-            // get stores for the hiring manager
-            this.showStoresByHiringManager = true;
+        else {
+            this.showStoresByFranchise = false;
+            this.showStoresByHiringManager = false;
         }
     }
     addFranchise() {

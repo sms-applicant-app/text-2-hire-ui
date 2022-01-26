@@ -11,6 +11,7 @@ import {AddJobReqComponent} from '../add-job-req/add-job-req.component';
 import {ModalController} from '@ionic/angular';
 import * as uuid from 'uuid';
 import {AddStoreComponent} from "../add-store/add-store.component";
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class StoreListByFranchiseComponent implements OnInit {
 
   testString: string;
   storeData: any = [];
-  store: any = [];
+  store: any[] = [];
   franchiseData: any;
   dataSource: MatTableDataSource<Store>;
   displayColumns = ['storeName'];
@@ -82,23 +83,17 @@ export class StoreListByFranchiseComponent implements OnInit {
         }
       });
   }*/
-  getListOfStoresBasedOnUser(){
-    this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
+  async getListOfStoresBasedOnUser(){
+   await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
-     // console.log('franchiseId in query', this.userData.franchiseId);
       this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
         .subscribe(stores =>{
           this.store = [];
           if (stores.docs.length === 0){
             console.log('no docs with that franchise', this.franchiseId);
           } else {
-            stores.forEach(data =>{
-              const s = data.data();
-              this.storeData = data.data();
-              this.store.push(s);
-              console.log(this.store, 'stores' );
-              this.dataSource = new MatTableDataSource<Store>(this.store);
-            });
+            this.store = stores.docs.map((data) => data.data());
+            this.dataSource = new MatTableDataSource<Store>(this.stores);
           }
         });
     });
@@ -112,33 +107,39 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
   async addStore(){
     const franchiseId = this.franchiseId;
-    console.log('display add store');
+    const onStoreAddedSub = new Subject<Store>();
     const addStoreModel = await this.modalController.create({
       component: AddStoreComponent,
       swipeToClose: true,
       componentProps: {
-        franchiseId
+        franchiseId,
+        onStoreAddedSub
       }
     });
+
+    onStoreAddedSub.subscribe((newStore: Store) => {
+      this.store.unshift(newStore);
+    });
+
+    addStoreModel.onDidDismiss().then(data => {
+      onStoreAddedSub.unsubscribe();
+    });
+
     return await addStoreModel.present();
   }
+
   getStoreDetails(id){
     console.log('store details', id);
     this.router.navigate([`franchise/store-details/${id}`]);
   }
-  async addJodOpening(id){
-    const franchiseId = this.franchiseId;
-    const storeId = id;
-    console.log('display add job model');
-    const addJobModel = await this.modalController.create({
-      component: AddJobReqComponent,
-      swipeToClose: true,
-      componentProps: {
-        // may need franchise id
-        franchiseId,
-        storeId
-      }
-    });
-    return await addJobModel.present();
+
+  /**
+   * Delete function not working TODO look at docs and figure out delete
+   * Get 3 digit store id from the storeId field and query the storeIds collection which has the firebase generated UID then pass that into doc.. Should work
+   * @param id
+   */
+  deleteStore(id){
+    this.firestore.collection('store').doc(`${id}`).delete();
   }
+
 }

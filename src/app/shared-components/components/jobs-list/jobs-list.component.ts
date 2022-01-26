@@ -23,6 +23,7 @@ import {Router} from "@angular/router";
 export class JobsListComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
+  @Input() storeName: string;
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
@@ -46,7 +47,6 @@ export class JobsListComponent implements OnInit {
   ngOnInit() {
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    console.log('this.storeId', this.storeId);
    // if user role is hiring manager get jobs by storeId
    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
@@ -74,7 +74,7 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsForFranchise(storeId){
-    this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+    this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
@@ -84,7 +84,6 @@ export class JobsListComponent implements OnInit {
             const j = job.data();
             const positionId = job.id;
             this.jobs.push({id: positionId, position:j});
-            console.log(this.jobs, 'id', positionId);
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }

@@ -28,10 +28,13 @@
     }
   }
 }
-
+.table-default {
+  height: 400px;
+  overflow: auto;
+}
 //app-add-on-board-packet
 
-app-add-on-board-packet {
+app-add-on-board-packet, app-jobs-list {
   --height: auto !important;
   justify-content: flex-start !important;
 }

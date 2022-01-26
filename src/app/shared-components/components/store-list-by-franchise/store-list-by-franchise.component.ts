@@ -51,7 +51,6 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('need to add when selecting franchise to bring up stores for that franchise on admin', this.franchiseId);
     this.store= [];
       this.getListOfStoresBasedOnUser();
 
@@ -59,13 +58,14 @@ export class StoreListByFranchiseComponent implements OnInit {
     this.seeApplicants = false;
     this.seePositions = false;
   }
-  async getPositionsForStore(storeId){
+  async getPositionsForStore(storeId, storeName){
     this.seePositions = true;
     const getPositionModal = await this.modalController.create({
       component: JobsListComponent,
       swipeToClose: true,
       componentProps: {
-        storeId
+        storeId,
+        storeName
       }
     });
     return await getPositionModal.present();

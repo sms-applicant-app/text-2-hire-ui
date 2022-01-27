@@ -16,12 +16,12 @@ let StorePage = class StorePage {
     ngOnInit() {
         this.userData = JSON.parse(localStorage.getItem('appUserData'));
         console.log('user', this.userData.franchiseId, this.userData.role);
+        this.franchiseId = this.userData.franchiseId;
         if (this.userData.role === 'hiringManager') {
             console.log('im a hiring manager');
             this.role = 'hiringManager';
         }
         if (this.userData.role === 'franchisee') {
-            this.franchiseId = this.userData.franchiseId;
             console.log('im a franchise owner', this.franchiseId);
             this.role = 'franchisee';
         }
@@ -29,8 +29,9 @@ let StorePage = class StorePage {
     }
     getAllFranchiseStoresById() {
         console.log('franchise id', this.franchiseId);
+        if (!this.franchiseId)
+            return;
         this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
-        console.log('retrieved stores', this.storesData);
     }
     addJobRec() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -2,13 +2,17 @@ import { __decorate } from "tslib";
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '../../../shared/models/user';
 import { DatePipe } from '@angular/common';
+import { Validators } from '@angular/forms';
 import { Role } from '../../../shared/models/role';
+import { toastMess } from '../../../shared/constants/messages';
+import { emailValidator, phoneValidator } from '../../../shared/utils/app-validators';
 let RegisterUserComponent = class RegisterUserComponent {
-    constructor(datePipe, fb, authService, dbHelper) {
+    constructor(datePipe, fb, authService, dbHelper, alertService) {
         this.datePipe = datePipe;
         this.fb = fb;
         this.authService = authService;
         this.dbHelper = dbHelper;
+        this.alertService = alertService;
         this.addedUserEvent = new EventEmitter();
         this.newUser = new User();
         this.eRole = Role;
@@ -18,12 +22,12 @@ let RegisterUserComponent = class RegisterUserComponent {
         this.userAdded = false;
         this.isRegisteringStoreManager = false;
         this.userForm = this.fb.group({
-            email: [''],
-            password: ['']
+            email: ['', Validators.compose([Validators.required, emailValidator])],
+            password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
         });
         this.registrationForm = this.fb.group({
-            fullName: [''],
-            phoneNumber: [''],
+            fullName: ['', Validators.required],
+            phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
             role: ['']
         });
         if (this.storeId !== undefined) {
@@ -41,7 +45,6 @@ let RegisterUserComponent = class RegisterUserComponent {
         const password = this.userForm.controls.password.value;
         this.userId = this.newUser.email;
         this.authService.RegisterUser(this.newUser.email, password).then(u => {
-            console.log('registered user', u, this.registrationForm.value);
             this.newUser.fullName = this.registrationForm.controls.fullName.value;
             this.newUser.email = this.userForm.controls.email.value;
             this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
@@ -49,11 +52,13 @@ let RegisterUserComponent = class RegisterUserComponent {
             this.newUser.dateCreated = this.latestDate;
             this.newUser.franchiseId = this.franchiseId;
             this.newUser.storeIds = this.isRegisteringStoreManager ? this.storeId : null;
-            console.log('can I make a store manger', this.newUser);
             this.dbHelper.set(`users/${this.userId}`, this.newUser);
+            this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
             this.authService.SendVerificationMail();
             this.userAdded = true;
             this.sendUserMessage();
+        }).catch((err) => {
+            this.alertService.showError(toastMess.CREATE_FAILED);
         });
     }
     registerFranchiseOwner() {

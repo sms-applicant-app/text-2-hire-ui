@@ -57,7 +57,7 @@ export class AddStoreComponent implements OnInit {
   lastGeneratedId: any;
   displayColumns= ['name', 'phoneNumber', 'actions'];
   onStoreAddedSub: Subject<Store>;
-  
+
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -73,7 +73,7 @@ export class AddStoreComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.addAddress = false;
     this.addingNewUser = false;
@@ -206,7 +206,7 @@ export class AddStoreComponent implements OnInit {
       const storeId = this.newStore.storeId;
       this.userService.updateUser(userId, { storeIds: storeId });
       this.newStore.storeHiringManager = userId;
-
+     //todo: add navigation to go to next Mat Step
   }
   addStore(){
     this.createDate();

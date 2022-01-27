@@ -21,8 +21,6 @@ let JobsListComponent = class JobsListComponent {
     ngOnInit() {
         this.viewApplicants = false;
         this.userData = JSON.parse(localStorage.getItem('appUserData'));
-        //this.storeId = JSON.parse(localStorage.getItem('selectedStore'));
-        console.log(' store Id from local storage', this.storeId);
         // if user role is hiring manager get jobs by storeId
         this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
         if (this.userRole === 'hiringManager') {
@@ -51,7 +49,7 @@ let JobsListComponent = class JobsListComponent {
         });
     }
     getJobsForFranchise(storeId) {
-        this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+        this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
             .subscribe(jobs => {
             this.jobs = [];
             if (jobs.docs.length === 0) {
@@ -62,7 +60,6 @@ let JobsListComponent = class JobsListComponent {
                     const j = job.data();
                     const positionId = job.id;
                     this.jobs.push({ id: positionId, position: j });
-                    console.log(this.jobs, 'id', positionId);
                     this.dataSource = new MatTableDataSource(this.jobs);
                 });
             }
@@ -72,6 +69,8 @@ let JobsListComponent = class JobsListComponent {
         this.jobService.currentData.subscribe(data => {
             console.log('data changed from local storage', data);
             const storeId = data;
+            if (typeof storeId !== 'string' || !storeId)
+                return;
             this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
                 .subscribe(jobs => {
                 this.jobs = [];
@@ -99,9 +98,8 @@ let JobsListComponent = class JobsListComponent {
     }
     addJobRec() {
         return __awaiter(this, void 0, void 0, function* () {
-            const franchiseId = this.franchiseId;
-            const storeId = localStorage.getItem('selectedStore');
-            console.log('display add Job Model', storeId, franchiseId);
+            const franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+            const storeId = this.storeId;
             const addJobRec = yield this.modalController.create({
                 component: AddJobReqComponent,
                 swipeToClose: true,
@@ -119,8 +117,7 @@ let JobsListComponent = class JobsListComponent {
     createOnboardingPacket() {
         return __awaiter(this, void 0, void 0, function* () {
             const franchiseId = this.franchiseId;
-            const storeId = localStorage.getItem('selectedStore');
-            console.log('display add Job Model', storeId, franchiseId);
+            const storeId = this.storeId;
             const createOnboardPackage = yield this.modalController.create({
                 component: AddOnBoardPacketComponent,
                 swipeToClose: true,
@@ -163,6 +160,9 @@ __decorate([
 __decorate([
     Input()
 ], JobsListComponent.prototype, "storeId", void 0);
+__decorate([
+    Input()
+], JobsListComponent.prototype, "storeName", void 0);
 __decorate([
     Output()
 ], JobsListComponent.prototype, "messageEvent", void 0);

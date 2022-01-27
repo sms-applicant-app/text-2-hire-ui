@@ -1,5 +1,5 @@
 import { __decorate } from "tslib";
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 let StoresByHiringManagerComponent = class StoresByHiringManagerComponent {
     constructor(firestore, jobService) {
@@ -10,7 +10,8 @@ let StoresByHiringManagerComponent = class StoresByHiringManagerComponent {
         this.displayColumns = ['storeName'];
     }
     ngOnInit() {
-        this.storeManagerId = JSON.parse(localStorage.getItem('user')).email;
+    }
+    ngOnChanges() {
         this.getStoresByHiringManger(this.storeManagerId);
     }
     getStoresByHiringManger(storeHiringManager) {
@@ -21,12 +22,8 @@ let StoresByHiringManagerComponent = class StoresByHiringManagerComponent {
                 console.log('no docs with that hiring manager', storeHiringManager);
             }
             else {
-                store.forEach(data => {
-                    const s = data.data();
-                    this.stores.push(s);
-                    this.dataSource = new MatTableDataSource(this.stores);
-                    console.log(this.stores, 'stores returned for hiring manager');
-                });
+                this.stores = store.docs.map((data) => data.data());
+                this.dataSource = new MatTableDataSource(this.stores);
             }
         });
     }
@@ -51,6 +48,9 @@ let StoresByHiringManagerComponent = class StoresByHiringManagerComponent {
         });
     }
 };
+__decorate([
+    Input('storeManagerId')
+], StoresByHiringManagerComponent.prototype, "storeManagerId", void 0);
 StoresByHiringManagerComponent = __decorate([
     Component({
         selector: 'app-stores-by-hiring-manager',

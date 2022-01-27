@@ -96,6 +96,14 @@ let StoreListByFranchiseComponent = class StoreListByFranchiseComponent {
         console.log('store details', id);
         this.router.navigate([`franchise/store-details/${id}`]);
     }
+    /**
+     * Delete function not working TODO look at docs and figure out delete
+     * Get 3 digit store id from the storeId field and query the storeIds collection which has the firebase generated UID then pass that into doc.. Should work
+     * @param id
+     */
+    deleteStore(id) {
+        this.firestore.collection('store').doc(`${id}`).delete();
+    }
 };
 __decorate([
     ViewChild(MatPaginator, { static: true })

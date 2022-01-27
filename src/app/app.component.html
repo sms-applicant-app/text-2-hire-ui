@@ -7,26 +7,24 @@
           <ion-list-header> - HIRENOW.US</ion-list-header><br>
           <ion-note>Software - Registered Trademark</ion-note>
 
-          <div *ngIf="authService.userData">
-            <p>{{userData?.role}}</p>
-          <span *ngIf="showStoresByHiringManager">
-            <app-stores-by-hiring-manager></app-stores-by-hiring-manager>
-          </span>
-          <span *ngIf="showStoresByFranchise">
-            <app-stores-list-by-franchise></app-stores-list-by-franchise>
-          </span>
-          </div>
-          <span >
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+          <div *ngIf="authService.appUserData">
+            <p>{{authService.appUserData?.role}}</p>
+            <span *ngIf="authService.appUserData?.role === 'hiringManager'">
+              <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
             </span>
+            <span *ngIf="authService.appUserData?.role === 'franchisee'">
+              <app-stores-list-by-franchise></app-stores-list-by-franchise>
+            </span>
+          </div>
+          <span *ngIf="authService.appUserData">
+            <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+              <ion-item routerDirection="root" (click) ="goToPage(p.url)" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </span>
         </ion-list>
-
-
       </ion-content>
     </ion-menu>
    <!-- <app-alert></app-alert>-->

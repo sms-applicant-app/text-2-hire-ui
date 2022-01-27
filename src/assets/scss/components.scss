@@ -4,3 +4,37 @@
 @import 'theme-colors/theme-colors';
 // core
 @import 'core/core';
+
+
+//modal 
+
+.modal-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  .modal-title {
+    font-size: 22px;
+    text-align: center;
+    margin: 0;
+  }
+  .close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    ion-icon {
+      font-size: 32px;
+    }
+  }
+}
+.table-default {
+  height: 400px;
+  overflow: auto;
+}
+//app-add-on-board-packet
+
+app-add-on-board-packet, app-jobs-list {
+  --height: auto !important;
+  justify-content: flex-start !important;
+}

@@ -20,4 +20,7 @@ export class JobPosting {
   specialNotes?: string;
   benefits?: string;
   createdAt: firebase.firestore.FieldValue;
+  onboardingPackageName?: string;
+  onboardingPackageId?: string;
+
 }

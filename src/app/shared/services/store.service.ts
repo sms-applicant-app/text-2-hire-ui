@@ -1,3 +1,4 @@
+import { AlertService } from './alert.service';
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
 import {Observable} from 'rxjs';
@@ -5,6 +6,7 @@ import {Store} from '../models/store';
 import {FranchiseService} from './franchise.service';
 import {GeneratedStoreId} from '../models/generatedStoreId';
 import {AngularFireObject} from "@angular/fire/database";
+import { toastMess } from '../constants/messages';
 
 
 
@@ -18,7 +20,7 @@ export class StoreService {
   lastGeneratedId: any;
   storeIdRef: AngularFireObject<any>;
   constructor(
-    public firestore: AngularFirestore, public franchiseService: FranchiseService
+    public firestore: AngularFirestore, public franchiseService: FranchiseService, public alertService: AlertService
   ) { }
   getStoresByFranchise(franchiseId){
     return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
@@ -48,11 +50,12 @@ export class StoreService {
   }
   async createStore(store: Store): Promise<any>{
     const storeObj = {...store};
-    console.log('adding store', store);
     return this.firestore.collection('store').add(storeObj).then(docRef =>{
       const storeId = docRef.id;
       localStorage.setItem('added-storeId', JSON.stringify(storeId));
-      console.log('add store id =', storeId);
+      this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+    }).catch((err) => {
+      this.alertService.showError(toastMess.CREATE_FAILED);
     });
   }
   async addGeneratedStoreId(storeId: GeneratedStoreId): Promise<any>{

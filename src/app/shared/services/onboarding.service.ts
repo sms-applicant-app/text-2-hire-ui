@@ -23,16 +23,7 @@ export class OnboardingService {
     });
   }
   getAllOnboardingPackagesByStoreId(storeId){
-    return this.firestore.collection('onboardPackages', ref => ref.where(`${storeId}`, '==', storeId)).get()
-      .subscribe(ss=>{
-        if(ss.docs.length === 0){
-          console.log('no onboarding packets');
-        } else {
-          ss.docs.forEach(doc =>{
-            this.onBoardingData = doc.data();
-          });
-        }
-      });
+    return this.firestore.collection('onboardPackages', ref => ref.where('storeId', '==', storeId)).get();
   }
   updateOnboardPacket(packetId, data) {
     this.firestore.doc(`onboardPackages/${packetId}`).update(data).then(resp => {

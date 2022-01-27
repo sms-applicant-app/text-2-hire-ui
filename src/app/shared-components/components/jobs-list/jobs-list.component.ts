@@ -23,8 +23,8 @@ import {Router} from "@angular/router";
 export class JobsListComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
+  @Input() storeName: string;
   @Output() messageEvent = new EventEmitter<any>();
-  //storeId: string;
   fileUploads?: any[];
   jobs: any = [];
   userData: any;
@@ -47,8 +47,6 @@ export class JobsListComponent implements OnInit {
   ngOnInit() {
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    //this.storeId = JSON.parse(localStorage.getItem('selectedStore'));
-    console.log(' store Id from local storage', this.storeId);
    // if user role is hiring manager get jobs by storeId
    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
@@ -76,7 +74,7 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsForFranchise(storeId){
-    this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+    this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
@@ -86,7 +84,6 @@ export class JobsListComponent implements OnInit {
             const j = job.data();
             const positionId = job.id;
             this.jobs.push({id: positionId, position:j});
-            console.log(this.jobs, 'id', positionId);
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }
@@ -96,6 +93,7 @@ export class JobsListComponent implements OnInit {
     this.jobService.currentData.subscribe(data =>{
       console.log('data changed from local storage', data);
       const storeId = data;
+      if(typeof storeId !== 'string' || !storeId) return;
       this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
         .subscribe(jobs =>{
           this.jobs = [];
@@ -122,9 +120,8 @@ export class JobsListComponent implements OnInit {
     this.messageEvent.emit(this.franchiseId);
   }
   async addJobRec(){
-    const franchiseId = this.franchiseId;
-    const storeId = localStorage.getItem('selectedStore');
-    console.log('display add Job Model',storeId, franchiseId);
+    const franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+    const storeId = this.storeId;
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
@@ -140,8 +137,7 @@ export class JobsListComponent implements OnInit {
   }
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;
-    const storeId = localStorage.getItem('selectedStore');
-    console.log('display add Job Model',storeId, franchiseId);
+    const storeId = this.storeId;
     const createOnboardPackage = await this.modalController.create({
       component: AddOnBoardPacketComponent,
       swipeToClose: true,

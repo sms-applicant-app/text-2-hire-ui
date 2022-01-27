@@ -6,11 +6,9 @@
           <span class="card-label fw-bolder fs-3 mb-1">Positions for {{storeName}}</span>
         </h3>
         <div class="d-flex flex-row">
-          <ion-button class="mr-4" fill="outline" size="default" color="secondary" (click)="addJobRec()">Add Position</ion-button>
-          <ion-button fill="outline" size="default" color="secondary" (click)="createOnboardingPacket()">Create Onboard Package</ion-button>
+          <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
+          <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
         </div>
-       
-
       </div>
       <div class="card-body">
         <div class="card mb-5 mb-xl-8">

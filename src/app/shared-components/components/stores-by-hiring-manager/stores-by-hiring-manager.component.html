@@ -8,12 +8,14 @@
        <button class="btn btn-light-primary" (click)="export()">Export</button>
      </div>-->
   </div>
-  <div class ="mat-elevation-z8 menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" *ngIf="stores.length > 0">
+  <div class ="list-store" *ngIf="stores.length > 0">
     <mat-table [dataSource]="dataSource">
       <ng-container  matColumnDef="storeName">
         <mat-header-cell *matHeaderCellDef>Locations</mat-header-cell>
         <i class="fas fa-map-marker-alt"></i>
-          <a class="text-hover-primary menu-title menu-accordion" *matCellDef="let element" (click)="getOpenPositionsByStore(element.storeId)"><mat-cell >{{element.storeName}}</mat-cell></a>
+          <div class="list-store-item" [ngClass]="{'active': selectedItem == element.storeId}" *matCellDef="let element" (click)="getOpenPositionsByStore(element.storeId)">
+            <mat-cell >{{element.storeName}}</mat-cell>
+          </div>
         <i class="fas fa-angle-right"></i>
       </ng-container>
 

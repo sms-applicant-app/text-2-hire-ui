@@ -8,3 +8,14 @@ export class FileUpload {
     this.file = file;
   }
 }
+
+export class FilesUpload {
+  key: string;
+  name: string;
+  url: string;
+  files: FileList;
+
+  constructor(files: FileList) {
+    this.files = files;
+  }
+}

@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {User} from '../../../shared/models/user';
 import {DatePipe} from '@angular/common';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {AuthService} from '../../../shared/services/auth.service';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 
 import {Role} from '../../../shared/models/role';
 import { AlertService } from './../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
+import { emailValidator, phoneValidator } from '../../../shared/utils/app-validators';
 
 @Component({
   selector: 'app-register-user',
@@ -42,13 +43,13 @@ export class RegisterUserComponent implements OnInit {
     this.userAdded = false;
     this.isRegisteringStoreManager = false;
     this.userForm = this.fb.group({
-      email: [''],
-      password: ['']
+      email: ['', Validators.compose([Validators.required, emailValidator])],
+      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 
     });
     this.registrationForm = this.fb.group({
-      fullName: [''],
-      phoneNumber: [''],
+      fullName: ['', Validators.required],
+      phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
       role: ['']
     });
     if(this.storeId !== undefined){

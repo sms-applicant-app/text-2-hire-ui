@@ -1,32 +1,31 @@
 
-<span *ngIf="viewApplicants !=true">
-  <p *ngIf="jobs.length <= 0">No Jobs for this Franchise Yet</p>
-    <div class ="mat-elevation-z8 container-fluid">
-      <div class="card card-header">
+<div *ngIf="viewApplicants !=true">
+    <div class ="container-fluid">
+      <div class="p-2">
         <h3 class="card-title align-items-start flex-column">
-          <span class="card-label fw-bolder fs-3 mb-1">Positions for (todo add store name)</span>
+          <span class="card-label fw-bolder fs-3 mb-1">Positions for {{storeName}}</span>
         </h3>
-        <ion-item>
-          <ion-button fill="outline" size="default" color="secondary" (click)="addJobRec()">Add Position</ion-button>
-        </ion-item>
-         <ion-item>
+        <div class="d-flex flex-row">
+          <ion-button class="mr-4" fill="outline" size="default" color="secondary" (click)="addJobRec()">Add Position</ion-button>
           <ion-button fill="outline" size="default" color="secondary" (click)="createOnboardingPacket()">Create Onboard Package</ion-button>
-        </ion-item>
+        </div>
+       
 
       </div>
       <div class="card-body">
         <div class="card mb-5 mb-xl-8">
-          <div class="card-body py3">
-            <div class="table-responsive">
-              <table class="table align-middle gs-0 gy-4">
+          <div>
+            <div class="table-responsive table-default">
+              <p *ngIf="jobs.length <= 0">No Jobs for this Franchise Yet</p>
+              <table *ngIf="jobs.length" class="table align-middle gs-0 gy-4">
                 <thead>
                 <tr class="fw-bolder text-muted bg-light">
                  <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
               <!-- <th class="ps-4 min-w-300px rounded-start">Store ID</th>-->
-                  <th class="ps-4 min-w-300px rounded-start">Job Title</th>
-                  <th class="ps-4 min-w-300px rounded-start">Location</th>
-                  <th class="ps-4 min-w-300px rounded-start">Position Active</th>
-                  <th class="ps-4 min-w-300px rounded-start">Actions</th>
+                  <th class="ps-4 rounded-start">Job Title</th>
+                  <th class="ps-4 rounded-start">Location</th>
+                  <th class="ps-4 rounded-start">Position Active</th>
+                  <th class="ps-4 rounded-start">Actions</th>
 
                 </tr>
                 </thead>
@@ -73,7 +72,7 @@
         </div>
       </div>
     </div>
-  </span>
+  </div>
   <span *ngIf="viewApplicants === true">
     <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId"></app-applicant-list>
   </span>

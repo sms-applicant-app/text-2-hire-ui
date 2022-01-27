@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {Store} from '../../../shared/models/store';
 import {AngularFirestore} from '@angular/fire/firestore';
@@ -10,19 +10,22 @@ import {JobPosting} from '../../../shared/models/job-posting';
   templateUrl: './stores-by-hiring-manager.component.html',
   styleUrls: ['./stores-by-hiring-manager.component.scss'],
 })
-export class StoresByHiringManagerComponent implements OnInit {
-  stores: any = [];
+export class StoresByHiringManagerComponent implements OnInit, OnChanges {
+  @Input('storeManagerId') storeManagerId;
+  stores: any[] = [];
   positions: any = [];
   dataSource: MatTableDataSource<Store>;
   positionsDataSource: MatTableDataSource<JobPosting>;
-  storeManagerId: string;
   displayColumns = ['storeName'];
   constructor(public firestore: AngularFirestore, public jobService: JobService) { }
 
-  ngOnInit() {
-    this.storeManagerId = JSON.parse(localStorage.getItem('user')).email;
+  ngOnInit(): void {
+  }
+
+  ngOnChanges(): void {
     this.getStoresByHiringManger(this.storeManagerId);
   }
+
   getStoresByHiringManger(storeHiringManager){
     this.firestore.collection('store', ref => ref.where('storeHiringManager', '==', `${storeHiringManager}`)).get()
       .subscribe(store =>{
@@ -30,12 +33,8 @@ export class StoresByHiringManagerComponent implements OnInit {
         if(store.docs.length === 0){
           console.log('no docs with that hiring manager', storeHiringManager);
         } else {
-          store.forEach(data =>{
-            const s = data.data();
-            this.stores.push(s);
-            this.dataSource = new MatTableDataSource<Store>(this.stores);
-            console.log(this.stores, 'stores returned for hiring manager');
-          });
+          this.stores = store.docs.map((data) => data.data());
+          this.dataSource = new MatTableDataSource<Store>(this.stores);
         }
       });
   }

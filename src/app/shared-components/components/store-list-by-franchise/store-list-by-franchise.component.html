@@ -1,6 +1,6 @@
 <div class="card card-custom">
   <div class="card-title">
-    <h3 class="card-label">Stores Listed By Franchise</h3>
+    <h3 class="card-label m-4">Stores Listed By Franchise</h3>
   </div>
 
   <div class ="mat-elevation-z8 container-fluid">
@@ -8,28 +8,24 @@
       <h3 class="card-title align-items-start flex-column">
       </h3>
       <ion-item>
-        <ion-button (click)="addStore()" fill="outline" size="default" color="secondary" >Add Store</ion-button>
+        <button class="btn-large" mat-raised-button color="primary" (click)="addStore()">Add Store</button>
       </ion-item>
       <!--<ion-item>
         <ion-button fill="outline" size="default" color="secondary">Add Hiring Manager</ion-button>
       </ion-item>-->
     </div>
-    <span *ngIf="seeStores === true">
-    <div class="card-body">
-      <div class="card mb-5 mb-xl-8">
+    <div *ngIf="seeStores === true">
+      <div class="mb-5 mb-xl-8" *ngIf="store && store.length">
         <div class="card-body py3">
           <div class="table-responsive">
             <table class="table align-middle gs-0 gy-4">
               <thead>
               <tr class="fw-bolder text-muted bg-light">
-                <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
-                <!-- <th class="ps-4 min-w-300px rounded-start">Store ID</th>-->
                 <th class="ps-4 min-w-300px rounded-start">Store Title</th>
                 <th class="ps-4 rounded-start">Phone Number</th>
                 <th class="ps-4 min-w-300px rounded-start">Hiring Manager</th>
-                <th class="ps-4 min-w-300px rounded-start">Number of Positions</th>
-                <th class="ps-4 min-w-300px rounded-start">Actions</th>
-
+                <th class="ps-4 rounded-start">Number of Positions</th>
+                <th class="ps-4 rounded-start">Actions</th>
               </tr>
               </thead>
               <tbody>
@@ -52,19 +48,16 @@
                 <td>
                   <div class="d-flex flex-shrink-0">
                     <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId, store.storeName)"  >
-                      <i class="fa fa-eye"></i><br><p>Get Positions By Store</p>
+                      <ion-icon class="font-24" name="eye-outline"></ion-icon>
+                      <p>Get Positions By Store</p>
                     </span>
-                    <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
-                     <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
                   </div>
                 </td>
-                 <td>
+                  <td>
                   <div class="d-flex flex-shrink-0">
-                    <span class="text-center cursor-pointer" (click)="deleteStore(store.uid)" >
-                      <i class="fa fa-xing-square"></i><br><span>Delete Store</span>
-                    </span>
-                    <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
-                     <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
+                    <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deleteStore(store.uid)" >
+                      <ion-icon class="font-24" name="eye-outline"></ion-icon>
+                    </button>
                   </div>
                 </td>
 
@@ -75,7 +68,6 @@
         </div>
       </div>
     </div>
-</span>
     <!-- <span *ngIf="seePositions === true">
       <app-jobs-list [storeId]="storeId"></app-jobs-list>
     </span> -->

@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
     { title: 'Stores', url: '/store', icon: 'storefront' },
     { title: 'Add A Franchise', url: '/folder/Favorites', icon: 'heart' },
     { title: 'Metrics', url: '/folder/Archived', icon: 'archive' },*/
-    { title: 'Log out', url: '/logout', icon: 'logout' },
+    { title: 'Log out', url: '/logout', icon: 'log-out-outline' },
 
   ];
     userData: any;

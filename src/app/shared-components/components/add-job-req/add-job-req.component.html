@@ -74,11 +74,13 @@
                 </select>
               </ion-item>
             </div>
-              <div>
-                <button mat-stroked-button matStepperPrevious>Back</button>
-                <button mat-stroked-button color="primary" matStepperNext>Next</button>
+            <div class="col-md-12">
+              <div class="d-flex flex-row justify-content-end">
+                <button mat-stroked-button matStepperPrevious class="mr-4">Back</button>
+                <button mat-raised-button color="primary" matStepperNext>Next</button>
               </div>
             </div>
+          </div>
         </form>
       </mat-step>
 
@@ -101,14 +103,18 @@
             <textarea class="form-control" auto-grow formControlName="specialNotes" placeholder="Extra Notes ie: Remote, Drug Screen"></textarea>
           </div>
         </form>
-        <div>
-          <button mat-stroked-button matStepperPrevious type="button">Back</button>
-          <button (click)="addJobListing(stepper)" mat-stroked-button color="primary" type="button">Add Job Listing</button>
+        <div class="d-flex flex-row justify-content-end">
+          <button mat-stroked-button matStepperPrevious class="mr-4">Back</button>
+          <button (click)="addJobListing(stepper)" mat-raised-button color="primary" type="button">Add Job Listing</button>
         </div>
       </mat-step>
       <mat-step label="Add Another Position" class="mb-4" [editable]="false">
-        <ion-button (click)="stepper.reset()" color="success" >Add Another Listing</ion-button>
-        <ion-button (click)="closeModal()">Done</ion-button>
+        <div class="col-md-12">
+          <div class="d-flex flex-row justify-content-end">
+            <button (click)="stepper.reset()" mat-raised-button color="primary" class="mr-4">Add Another Listing</button>
+            <button (click)="closeModal()" mat-stroked-button color="primary">Done</button>
+          </div>
+        </div>
       </mat-step>
     </mat-stepper>
   </mat-horizontal-stepper>

@@ -1,4 +1,5 @@
 import { __decorate } from "tslib";
+import { take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 let UserService = class UserService {
     constructor(dbHelper, firestore) {
@@ -7,7 +8,7 @@ let UserService = class UserService {
     }
     getUserById(id) {
         console.log(id);
-        return this.firestore.doc(`users/${id}`).valueChanges();
+        return this.firestore.doc(`users/${id}`).valueChanges().pipe(take(1));
     }
     getUsersByFranchise(franchiseId) {
         return this.firestore.collection('user', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()

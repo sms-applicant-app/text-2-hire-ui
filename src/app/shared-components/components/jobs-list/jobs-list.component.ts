@@ -44,7 +44,7 @@ export class JobsListComponent implements OnInit {
               public route: Router) {
   }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
    // if user role is hiring manager get jobs by storeId

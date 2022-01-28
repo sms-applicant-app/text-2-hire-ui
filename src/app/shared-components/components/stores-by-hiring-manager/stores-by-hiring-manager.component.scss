@@ -3,6 +3,9 @@
     cursor: pointer;
     width: 100%;
     padding: 8px 8px;
+    &:hover {
+      background-color: #ececec;
+    }
     &.active {
       background-color: #17a2b8;
       mat-cell {

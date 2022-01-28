@@ -1,71 +1,57 @@
 <div class="card card-custom">
-  <div class="card-title">
-    <h3 class="card-label m-4">Stores Listed By Franchise</h3>
+  <div class="table-heading p-4">
+    <h3 class="card-label">Stores Listed By Franchise</h3>
+    <button class="btn-large" mat-raised-button color="primary" (click)="addStore()">Add Store</button>
   </div>
+  <div  *ngIf="seeStores === true" class="container-fluid">
+    <div *ngIf="store && store.length" class="table-container">
+      <div class="table-responsive">
+        <table class="table align-middle gs-0 gy-4">
+          <thead>
+          <tr class="fw-bolder text-muted bg-light">
+            <th class="ps-4 min-w-300px rounded-start">Store Title</th>
+            <th class="ps-4 rounded-start">Phone Number</th>
+            <th class="ps-4 min-w-300px rounded-start">Hiring Manager</th>
+            <th class="ps-4 rounded-start">Number of Positions</th>
+            <th class="ps-4 rounded-start">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let store of store">
+            <td>
+              <div class="d-flex align-items-center">
+                <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeName}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storePhoneNumber}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeHiringManager}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex flex-shrink-0">
+                <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId, store.storeName)"  >
+                  <ion-icon class="font-24" name="eye-outline"></ion-icon>
+                  <p>Get Positions By Store</p>
+                </span>
+              </div>
+            </td>
+              <td>
+              <div class="d-flex flex-shrink-0">
+                <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deleteStore(store.uid)" >
+                  <ion-icon class="font-24" name="trash-outline"></ion-icon>
+                </button>
+              </div>
+            </td>
 
-  <div class ="mat-elevation-z8 container-fluid">
-    <div class="card card-header">
-      <h3 class="card-title align-items-start flex-column">
-      </h3>
-      <div>
-        <button class="btn-large" mat-raised-button color="primary" (click)="addStore()">Add Store</button>
-      </div>
-      <!--<ion-item>
-        <ion-button fill="outline" size="default" color="secondary">Add Hiring Manager</ion-button>
-      </ion-item>-->
-    </div>
-    <div *ngIf="seeStores === true">
-      <div class="mb-5 mb-xl-8" *ngIf="store && store.length">
-        <div class="card-body py3">
-          <div class="table-responsive">
-            <table class="table align-middle gs-0 gy-4">
-              <thead>
-              <tr class="fw-bolder text-muted bg-light">
-                <th class="ps-4 min-w-300px rounded-start">Store Title</th>
-                <th class="ps-4 rounded-start">Phone Number</th>
-                <th class="ps-4 min-w-300px rounded-start">Hiring Manager</th>
-                <th class="ps-4 rounded-start">Number of Positions</th>
-                <th class="ps-4 rounded-start">Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let store of store">
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeName}}</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storePhoneNumber}}</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeHiringManager}}</span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex flex-shrink-0">
-                    <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId, store.storeName)"  >
-                      <ion-icon class="font-24" name="eye-outline"></ion-icon>
-                      <p>Get Positions By Store</p>
-                    </span>
-                  </div>
-                </td>
-                  <td>
-                  <div class="d-flex flex-shrink-0">
-                    <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deleteStore(store.uid)" >
-                      <ion-icon class="font-24" name="trash-outline"></ion-icon>
-                    </button>
-                  </div>
-                </td>
-
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <!-- <span *ngIf="seePositions === true">

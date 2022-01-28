@@ -34,7 +34,7 @@
               </ion-item>
               <ion-item lines="full">
                 <ion-label position="stacked" required>Job Type</ion-label>
-                <select class="form-select text-center " id="state" formControlName="jobType"  type="select">
+                <select class="form-select pl-0" id="state" formControlName="jobType"  type="select">
                   <option value="fullTime">Full-Time</option>
                   <option value="partTime">Part-Time</option>
                 </select>
@@ -66,7 +66,7 @@
               </ion-item>
               <ion-item appearance="fill">
                 <ion-label position="stacked" >Select Onboarding Package</ion-label>
-                <select class="form-select" formControlName="onboardingPackage" type="select">
+                <select class="form-select pl-0" formControlName="onboardingPackage" type="select">
                   <option value="" *ngIf="onboardingPackagesData.length === 0">No onboarding package</option>
                   <option [value]="package.name" *ngFor="let package of onboardingPackagesData">
                     {{package.name}}

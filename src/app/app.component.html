@@ -8,7 +8,7 @@
           <ion-note>Software - Registered Trademark</ion-note>
 
           <div *ngIf="authService.appUserData">
-            <p>{{authService.appUserData?.role}}</p>
+            <p class="role-name">{{authService.appUserData?.role}}</p>
             <span *ngIf="authService.appUserData?.role === 'hiringManager'">
               <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
             </span>

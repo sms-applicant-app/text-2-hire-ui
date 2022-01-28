@@ -13,7 +13,7 @@
       <div class="card-body">
         <div class="card mb-5 mb-xl-8">
           <div>
-            <div class="table-responsive table-default">
+            <div class="table-responsive" [ngClass]="{'table-default': userRole !== 'hiringManager'}">
               <p *ngIf="jobs.length <= 0">No Jobs for this Franchise Yet</p>
               <table *ngIf="jobs.length" class="table align-middle gs-0 gy-4">
                 <thead>

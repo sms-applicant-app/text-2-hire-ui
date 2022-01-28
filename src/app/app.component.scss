@@ -120,4 +120,14 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
-
+.role-name {
+  padding-left: 16px;
+  padding-right: 16px;
+  color: #3f51b5;
+  font-size: 18px;
+}
+ion-menu-toggle {
+  ion-item {
+    cursor: pointer;
+  }
+}

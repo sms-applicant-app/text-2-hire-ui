@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Subject } from 'rxjs';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 import {DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
@@ -15,7 +16,8 @@ import {GeneratedStoreId} from '../../../shared/models/generatedStoreId';
 import {MatTableDataSource} from '@angular/material/table';
 import {User} from '../../../shared/models/user';
 import {JobService} from '../../../shared/services/job.service';
-import { Subject } from 'rxjs';
+import { AlertService } from '../../../shared/services/alert.service';
+import { toastMess } from '../../../shared/constants/messages';
 
 
 
@@ -57,7 +59,7 @@ export class AddStoreComponent implements OnInit {
   lastGeneratedId: any;
   displayColumns= ['name', 'phoneNumber', 'actions'];
   onStoreAddedSub: Subject<Store>;
-  
+
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -67,13 +69,14 @@ export class AddStoreComponent implements OnInit {
     public storeService: StoreService,
     public firestore: AngularFirestore,
     public userService: UserService,
-    public jobService: JobService
+    public jobService: JobService,
+    public alertService: AlertService
 
 
   ) { }
 
   ngOnInit() {
-    
+
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.addAddress = false;
     this.addingNewUser = false;
@@ -206,15 +209,20 @@ export class AddStoreComponent implements OnInit {
       const storeId = this.newStore.storeId;
       this.userService.updateUser(userId, { storeIds: storeId });
       this.newStore.storeHiringManager = userId;
-
+     //todo: add navigation to go to next Mat Step
   }
-  addStore(){
+  addStore(stepper: MatStepper){
     this.createDate();
    // this.createStoreUniqueId();
     this.newStore.franchiseId = this.franchiseId;
     this.newStore.storeName = this.addStoreForm.controls.storeName.value;
     this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
-    this.newStore.addressId = this.addressAdded.addressId;
+    if (this.addressAdded && this.addressAdded.addressId) {
+      this.newStore.addressId = this.addressAdded.addressId;
+    } else {
+      this.alertService.showError(toastMess.CREATE_FAILED);
+      return;
+    }
     this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
     this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
     this.storeService.createStore(this.newStore).then((resp: any) =>{
@@ -225,6 +233,7 @@ export class AddStoreComponent implements OnInit {
       this.onStoreAddedSub.next({
         ...this.newStore
       });
+      stepper.next();
     });
   }
 }

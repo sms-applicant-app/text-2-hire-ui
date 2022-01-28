@@ -144,7 +144,11 @@ export class StoreListByFranchiseComponent implements OnInit {
    * @param id
    */
   deleteStore(id){
-    this.firestore.collection('store').doc(`${id}`).delete();
+    this.firestore.collection('store').doc(`${id}`).delete().then(s =>{
+      console.log('deleting ', id);
+      }
+
+    );
   }
 
 }

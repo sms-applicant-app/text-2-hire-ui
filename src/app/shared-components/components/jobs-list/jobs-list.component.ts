@@ -91,9 +91,9 @@ export class JobsListComponent implements OnInit {
   }
   getJobsByStoreId(){
     this.jobService.currentData.subscribe(data =>{
-      console.log('data changed from local storage', data);
       const storeId = data;
-      if(typeof storeId !== 'string' || !storeId) return;
+      if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId) return;
+      this.storeId = data;
       this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
         .subscribe(jobs =>{
           this.jobs = [];
@@ -109,11 +109,10 @@ export class JobsListComponent implements OnInit {
             });
           }
         });
-    });
+      });
   }
 
   receiveNavigationMessage($event){
-    console.log('goBack', $event);
     this.viewApplicants = $event;
   }
   sendJobsFranchiseIdMessage(){

@@ -5,6 +5,7 @@ import {ModalController} from '@ionic/angular';
 import {AddFranchiseComponent} from './shared-components/components/add-franchise/add-franchise.component';
 import {AngularFireAuth} from "@angular/fire/auth";
 import { Router } from '@angular/router';
+import { roles } from './shared/constants/role';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -17,21 +18,22 @@ export class AppComponent implements OnInit{
     { title: 'Stores', url: '/store', icon: 'storefront' },
     { title: 'Add A Franchise', url: '/folder/Favorites', icon: 'heart' },
     { title: 'Metrics', url: '/folder/Archived', icon: 'archive' },*/
-    { title: 'Log out', url: '/logout', icon: 'logout' },
+    { title: 'Log out', url: '/logout', icon: 'log-out-outline' },
 
   ];
     userData: any;
     isLoggedIn: boolean;
+    roleName: string;
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public ngFireAuth: AngularFireAuth,
-              public router: Router) {}
+              public router: Router,) {}
   ngOnInit() {
-      this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    this.roleName = roles[`${this.authService.appUserData.role}`];
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;
-    console.log('display add franchise');
     const addFranchise = await this.modalController.create({
       component: AddFranchiseComponent,
       swipeToClose: true,

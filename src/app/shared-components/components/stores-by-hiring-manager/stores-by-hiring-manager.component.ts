@@ -14,6 +14,7 @@ export class StoresByHiringManagerComponent implements OnInit, OnChanges {
   @Input('storeManagerId') storeManagerId;
   stores: any[] = [];
   positions: any = [];
+  selectedItem: any;
   dataSource: MatTableDataSource<Store>;
   positionsDataSource: MatTableDataSource<JobPosting>;
   displayColumns = ['storeName'];
@@ -40,7 +41,7 @@ export class StoresByHiringManagerComponent implements OnInit, OnChanges {
   }
   getOpenPositionsByStore(id){
     // todo add get only open positions
-    console.log('selected store to get positions for', id);
+    this.selectedItem = id;
     localStorage.setItem('selectedStore', JSON.stringify(id));
     this.jobService.storeSelection(id);
     this.firestore.collection('jobs', ref => ref.where('storeId', '==', id)).get()

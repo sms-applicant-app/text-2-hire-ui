@@ -7,7 +7,7 @@ import {Alert, AlertType} from '../models/alert.model';
 import { ToastController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
-const TIME_SHOW_ALERT = 3000;
+const TIME_SHOW_ALERT = 4000;
 @Injectable({
   providedIn: 'root'
 })

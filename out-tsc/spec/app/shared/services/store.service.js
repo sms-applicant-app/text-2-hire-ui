@@ -1,9 +1,11 @@
 import { __awaiter, __decorate } from "tslib";
 import { Injectable } from '@angular/core';
+import { toastMess } from '../constants/messages';
 let StoreService = class StoreService {
-    constructor(firestore, franchiseService) {
+    constructor(firestore, franchiseService, alertService) {
         this.firestore = firestore;
         this.franchiseService = franchiseService;
+        this.alertService = alertService;
     }
     getStoresByFranchise(franchiseId) {
         return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
@@ -36,11 +38,12 @@ let StoreService = class StoreService {
     createStore(store) {
         return __awaiter(this, void 0, void 0, function* () {
             const storeObj = Object.assign({}, store);
-            console.log('adding store', store);
             return this.firestore.collection('store').add(storeObj).then(docRef => {
                 const storeId = docRef.id;
                 localStorage.setItem('added-storeId', JSON.stringify(storeId));
-                console.log('add store id =', storeId);
+                this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+            }).catch((err) => {
+                this.alertService.showError(toastMess.CREATE_FAILED);
             });
         });
     }

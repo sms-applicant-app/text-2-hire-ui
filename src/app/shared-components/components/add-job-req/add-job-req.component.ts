@@ -94,6 +94,14 @@ export class AddJobReqComponent implements OnInit {
 
   }
   addJobListing(stepper: MatStepper){
+    const storeId = this.storeId;
+    if (storeId) {
+      this.newJobListing.storeId = this.storeId;
+    } else {
+      const selectedStore = localStorage.getItem('selectedStore');
+      this.newJobListing.storeId = selectedStore;
+    }
+    this.newJobListing.franchiseId = this.franchiseId;
     this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
     this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
     this.newJobListing.jobTitle = this.addJoblistingFrom.controls.jobTitle.value;
@@ -109,8 +117,6 @@ export class AddJobReqComponent implements OnInit {
     this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
     this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
     this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
-    this.newJobListing.storeId = this.storeId;
-    this.newJobListing.franchiseId = this.franchiseId;
     this.newJobListing.onboardingPackageName = this.addJoblistingFrom.controls.onboardingPackage.value;
     if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
       this.jobService.addJobRec(this.newJobListing);

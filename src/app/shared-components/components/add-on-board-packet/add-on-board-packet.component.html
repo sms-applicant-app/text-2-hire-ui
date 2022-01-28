@@ -7,17 +7,17 @@
 <div class="card shadow-sm" style="overflow: auto">
   <div class="card-header d-flex flex-row justify-content-end align-items-center">
     <div *ngIf="!addCustomForm">
-      <button (click)="addCustomFormButton()" type="button" class="btn btn-sm btn-primary mr-3">
+      <button (click)="addCustomFormButton()" mat-stroked-button color="primary" class="mr-4">
         Add Custom Form
       </button>
     </div>
     <div>
-      <button (click)="submitCustomForms()" type="button" class="btn btn-sm btn-success">
+      <button (click)="submitCustomForms()" mat-raised-button color="primary">
         Save Onboarding Package
       </button>
     </div>
   </div>
-  <div class="card-body">
+  <div class="p-4">
     <form [formGroup]="federalForms">
       <div class="mb-10">
         <label class="required form-label">Onboard Package Name</label>

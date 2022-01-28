@@ -5,7 +5,7 @@ import {ModalController} from '@ionic/angular';
 import {AddFranchiseComponent} from './shared-components/components/add-franchise/add-franchise.component';
 import {AngularFireAuth} from "@angular/fire/auth";
 import { Router } from '@angular/router';
-import { roleName } from './shared/constants/role';
+import { roles } from './shared/constants/role';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -30,21 +30,7 @@ export class AppComponent implements OnInit{
               public router: Router,) {}
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
-    setTimeout(() => {
-      switch (this.authService.appUserData.role) {
-        case roleName.FRANCHISEE:
-          this.roleName = 'Franchisee';
-          break;
-        case roleName.ADMIN:
-          this.roleName = 'Admin';
-          break;
-        case roleName.HIRING_MANAGER:
-          this.roleName = 'Hiring Manager';
-          break;
-        default:
-          break;
-      }
-    }, 2000);
+    this.roleName = roles[`${this.authService.appUserData.role}`];
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;

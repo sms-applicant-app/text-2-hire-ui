@@ -1,6 +1,6 @@
-const roleName = {
-  HIRING_MANAGER: 'hiringManager',
-  ADMIN: 'admin',
-  FRANCHISEE: 'franchisee',
+const roles = {
+  hiringManager: 'Hiring Manager',
+  admin: 'Admin',
+  franchisee: 'Franchisee'
 };
-export { roleName };
+export { roles }

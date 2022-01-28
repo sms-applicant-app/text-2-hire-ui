@@ -39,10 +39,9 @@ export class StoresByHiringManagerComponent implements OnInit, OnChanges {
         }
       });
   }
-  getOpenPositionsByStore(id, storeName){
+  getOpenPositionsByStore(id){
     // todo add get only open positions
     this.selectedItem = id;
-    localStorage.setItem('selectedStoreName', JSON.stringify(storeName));
     localStorage.setItem('selectedStore', JSON.stringify(id));
     this.jobService.storeSelection(id);
     this.firestore.collection('jobs', ref => ref.where('storeId', '==', id)).get()

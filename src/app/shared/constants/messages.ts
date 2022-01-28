@@ -9,13 +9,6 @@ const toastMess = {
   CREATE_ONBOARD_SUCCESS: 'Create onboard package success',
   CREATE_ONBOARD_FAILED: 'Create onboard package failed',
   UPLOAD_FILE_FAILED: 'Upload file failed',
-
- 
-
-
-
-
-
 }
 
 export { toastMess };

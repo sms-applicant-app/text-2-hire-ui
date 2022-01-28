@@ -5,6 +5,7 @@ import {ModalController} from '@ionic/angular';
 import {AddFranchiseComponent} from './shared-components/components/add-franchise/add-franchise.component';
 import {AngularFireAuth} from "@angular/fire/auth";
 import { Router } from '@angular/router';
+import { roleName } from './shared/constants/role';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -22,16 +23,31 @@ export class AppComponent implements OnInit{
   ];
     userData: any;
     isLoggedIn: boolean;
+    roleName: string;
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public ngFireAuth: AngularFireAuth,
-              public router: Router) {}
+              public router: Router,) {}
   ngOnInit() {
-      this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    setTimeout(() => {
+      switch (this.authService.appUserData.role) {
+        case roleName.FRANCHISEE:
+          this.roleName = 'Franchisee';
+          break;
+        case roleName.ADMIN:
+          this.roleName = 'Admin';
+          break;
+        case roleName.HIRING_MANAGER:
+          this.roleName = 'Hiring Manager';
+          break;
+        default:
+          break;
+      }
+    }, 2000);
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;
-    console.log('display add franchise');
     const addFranchise = await this.modalController.create({
       component: AddFranchiseComponent,
       swipeToClose: true,

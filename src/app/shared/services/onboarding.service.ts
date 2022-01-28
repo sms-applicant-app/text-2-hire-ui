@@ -3,6 +3,7 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import { toastMess } from '../constants/messages';
 import {OnBoardPacket} from '../models/onBoardPacket';
 import { AlertService } from './alert.service';
+import {Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +23,7 @@ export class OnboardingService {
       this.alertService.showError(toastMess.CREATE_ONBOARD_FAILED);
     });
   }
-  getAllOnboardingPackagesByStoreId(storeId){
+  getAllOnboardingPackagesByStoreId(storeId): Observable<any>{
     return this.firestore.collection('onboardPackages', ref => ref.where('storeId', '==', storeId)).get();
   }
   updateOnboardPacket(packetId, data) {

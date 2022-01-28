@@ -2,13 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 
-import {JobPosting} from "../../../shared/models/job-posting";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
-import {JobService} from "../../../shared/services/job.service";
-import {ModalController} from "@ionic/angular";
+import {JobPosting} from '../../../shared/models/job-posting';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
+import {JobService} from '../../../shared/services/job.service';
+import {ModalController} from '@ionic/angular';
 import { AlertService } from '../../../shared/services/alert.service';
-import { OnboardingService } from './../../../shared/services/onboarding.service';
+import { OnboardingService } from '../../../shared/services/onboarding.service';
 @Component({
   selector: 'app-add-job-req',
   templateUrl: './add-job-req.component.html',

@@ -93,6 +93,7 @@ export class JobsListComponent implements OnInit {
     this.jobService.currentData.subscribe(data =>{
       const storeId = data;
       console.log('storeId from service', storeId);
+      // TODO @Powergate re verify this function. For some reason the brackets around storeId causing firebase error but commented this out for testing
     /*  if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId){
         return 'missing store id';
       }*/

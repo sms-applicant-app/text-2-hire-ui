@@ -24,13 +24,14 @@ export class JobService {
     console.log('store selection in service', newStore);
     return this.getJobsByStore(newStore);
   }
-  getPositionsForSelectedStore(): Observable<any>{
+  //TODO verify safe delete
+ /* getPositionsForSelectedStore(): Observable<any>{
     let storeId = localStorage.getItem('selectedStore');
     storeId = (storeId);
     this.dataSub.next(storeId);
     this.jobsData = this.getJobsByStore(storeId);
     return this.jobsData;
-  }
+  }*/
   getJobsByStore(storeId){
     return this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
       .subscribe(ss => {

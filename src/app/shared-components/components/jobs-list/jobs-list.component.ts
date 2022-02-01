@@ -92,9 +92,12 @@ export class JobsListComponent implements OnInit {
   getJobsByStoreId(){
     this.jobService.currentData.subscribe(data =>{
       const storeId = data;
-      if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId) return;
+      console.log('storeId from service', storeId);
+    /*  if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId){
+        return 'missing store id';
+      }*/
       this.storeId = data;
-      this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+      this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
         .subscribe(jobs =>{
           this.jobs = [];
           if(jobs.docs.length === 0){

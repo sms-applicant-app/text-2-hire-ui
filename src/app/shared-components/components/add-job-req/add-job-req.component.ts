@@ -9,6 +9,8 @@ import {JobService} from '../../../shared/services/job.service';
 import {ModalController} from '@ionic/angular';
 import { AlertService } from '../../../shared/services/alert.service';
 import { OnboardingService } from '../../../shared/services/onboarding.service';
+import {Subject} from "rxjs";
+import {Store} from "../../../shared/models/store";
 @Component({
   selector: 'app-add-job-req',
   templateUrl: './add-job-req.component.html',
@@ -24,6 +26,7 @@ export class AddJobReqComponent implements OnInit {
   onboardingPackagesData: any = [];
   onboardingPackageId: string;
   hiringManagerId: string;
+  onPositionAddedSub: Subject<JobPosting>;
   private userData: any;
   private userId: string;
   constructor(
@@ -120,6 +123,9 @@ export class AddJobReqComponent implements OnInit {
     this.newJobListing.onboardingPackageName = this.addJoblistingFrom.controls.onboardingPackage.value;
     if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
       this.jobService.addJobRec(this.newJobListing);
+      this.onPositionAddedSub.next({
+        ...this.newJobListing
+      });
       stepper.next();
     } else if (this.addJoblistingFrom.invalid || this.jobDetailsFrom.invalid) {
       this.alertService.showError('Please enter field is required');

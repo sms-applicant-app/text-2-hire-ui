@@ -1,13 +1,17 @@
 
 <div *ngIf="viewApplicants !=true">
     <div class ="container-fluid">
-      <div class="p-2">
-        <h3 class="card-title align-items-start flex-column">
-          <span class="card-label fw-bolder fs-3 mb-1">Positions for {{storeName}}</span>
+      <div class="p-2 row">
+        <h3 class="card-title justify-content-evenly flex-column">
+          <span class="card-label fw-bolder fs-3 mb-1">Positions for:</span> {{storeName}}
+        </h3>
+        <h3 class="card-title justify-content-evenly flex-column">
+          <span class="card-label fw-bolder fs-3 mb-1">Store Id to Text:</span> {{selectedStoreId}}
         </h3>
         <div class="d-flex flex-row">
           <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
           <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
+
         </div>
       </div>
       <div class="card-body">

@@ -6,7 +6,7 @@ import {DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
 import {Store} from '../../../shared/models/store';
 import { v4 as uuidv4 } from 'uuid';
-import {NavController} from '@ionic/angular';
+import {ModalController, NavController} from '@ionic/angular';
 import {MatStepper} from '@angular/material/stepper';
 import {StoreService} from '../../../shared/services/store.service';
 import {AngularFirestore} from '@angular/fire/firestore';
@@ -70,7 +70,8 @@ export class AddStoreComponent implements OnInit {
     public firestore: AngularFirestore,
     public userService: UserService,
     public jobService: JobService,
-    public alertService: AlertService
+    public alertService: AlertService,
+    public modalController: ModalController,
 
 
   ) { }
@@ -202,14 +203,16 @@ export class AddStoreComponent implements OnInit {
    *
    * Add new or Existing Hiring Manager to newly created store
    * @param userId
+   * @param stepper
    */
-  addHiringManagerToStore(userId){
+  addHiringManagerToStore(userId, stepper: MatStepper){
     // update hiring manager by assigning the store to id to their user object
     // if new user create User if existing just update user
       const storeId = this.newStore.storeId;
-      this.userService.updateUser(userId, { storeIds: storeId });
       this.newStore.storeHiringManager = userId;
      //todo: add navigation to go to next Mat Step
+    this.alertService.showSuccess('Hiring manager added ', this.newStore.storeHiringManager);
+    stepper.next();
   }
   addStore(stepper: MatStepper){
     this.createDate();
@@ -233,7 +236,12 @@ export class AddStoreComponent implements OnInit {
       this.onStoreAddedSub.next({
         ...this.newStore
       });
-      stepper.next();
+      this.closeModal();
     });
+  }
+  closeModal() {
+    this.modalController
+      .dismiss()
+      .then();
   }
 }

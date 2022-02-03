@@ -48,7 +48,7 @@
                 <ng-container  matColumnDef="actions">
           <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <button mat-icon-button color="primary" (click)="addHiringManagerToStore(element.email)">
+            <button mat-icon-button color="primary" (click)="addHiringManagerToStore(element.email, stepper)">
               <ion-icon name="person-add-outline"></ion-icon>
               <span class="pl-2">Add Hiring manager </span>
             </button>
@@ -65,14 +65,15 @@
     </div>
     <div class="d-flex flex-row justify-content-end mt-4">
       <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
-      <button mat-raised-button color="primary" (click)="addStore(stepper)">Add Store</button>
+      <button mat-raised-button color="primary" matStepperNext type="button">Next</button>
     </div>
   </mat-step>
 
   <mat-step label="Store Added" style="padding-bottom: 10px;">
-    <h4>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h4><br>
+    <h2>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h2><br>
     <h4>Swipe or click off this window if finished</h4>
-    <!--<ion-button (click)="goBack(stepper)">Add Another Store</ion-button>-->
+    <button mat-raised-button color="primary" (click)="addStore(stepper)">Add Store</button>
+    <!--<ion-button (click)="closeModal()">Finished</ion-button>-->
   </mat-step>
 </mat-stepper>
   </mat-horizontal-stepper>

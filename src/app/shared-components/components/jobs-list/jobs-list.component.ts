@@ -14,6 +14,7 @@ import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
 import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
 import {Router} from "@angular/router";
+import {StoreService} from "../../../shared/services/store.service";
 
 @Component({
   selector: 'app-jobs-list',
@@ -23,7 +24,6 @@ import {Router} from "@angular/router";
 export class JobsListComponent implements OnInit {
   @Input() franchiseId: string;
   @Input() storeId: string;
-  @Input() storeName: string;
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
@@ -32,7 +32,10 @@ export class JobsListComponent implements OnInit {
   subscription: any;
   positionId: string;
   applicants: any = [];
+  storeName: string;
+  selectedStoreId: string;
   viewApplicants: boolean;
+  storeData: any;
   dataSource: MatTableDataSource<JobListing>;
   displayColumns = ['jobId', 'title','status', 'location', 'actions'];
   //todo action see applicant status update position, schedule interview
@@ -41,6 +44,7 @@ export class JobsListComponent implements OnInit {
               public modalController: ModalController,
               public applicantService: ApplicantService,
               public dbHelper: FirestoreHelperService,
+              public storeService: StoreService,
               public route: Router) {
   }
 
@@ -90,8 +94,18 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsByStoreId(){
+
     this.jobService.currentData.subscribe(data =>{
       const storeId = data;
+      if (storeId){
+        this.storeService.getStoreByGeneratedStoreId(storeId).subscribe((store: any) =>{
+          this.storeName = store[0].storeName;
+          this.selectedStoreId = store[0].storeId;
+          this.storeData = store[0];
+          console.log('Store selected',store[0]);
+        });
+      }
+
       console.log('storeId from service', storeId);
       // TODO @Powergate re verify this function. For some reason the brackets around storeId causing firebase error but commented this out for testing
     /*  if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId){

@@ -64,6 +64,9 @@ export class StoreService {
       const returnId = docRef.id;
     });
   }
+  getStoreByGeneratedStoreId(storeId){
+    return this.firestore.collection('store', ref => ref.where('storeId', '==', storeId)).valueChanges();
+  }
 
   getStores(){
     return this.firestore.collection('store').snapshotChanges();

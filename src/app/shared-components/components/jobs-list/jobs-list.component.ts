@@ -102,11 +102,8 @@ export class JobsListComponent implements OnInit {
           this.storeName = store[0].storeName;
           this.selectedStoreId = store[0].storeId;
           this.storeData = store[0];
-          console.log('Store selected',store[0]);
         });
       }
-
-      console.log('storeId from service', storeId);
       // TODO @Powergate re verify this function. For some reason the brackets around storeId causing firebase error but commented this out for testing
     /*  if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId){
         return 'missing store id';
@@ -122,7 +119,6 @@ export class JobsListComponent implements OnInit {
               const j = job.data();
               const positionId = job.id;
               this.jobs.push({id: positionId, position:j});
-              console.log(this.jobs, 'id', positionId);
               this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
             });
           }

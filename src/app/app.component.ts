@@ -51,4 +51,9 @@ export class AppComponent implements OnInit{
       this.router.navigate([url]);
     }
   }
+
+  getUserRole(){
+    const appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    return appUserData?.role;
+  }
 }

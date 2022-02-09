@@ -174,4 +174,10 @@ export class ApplicantListComponent implements OnInit {
     // todo send message from Lambda
     this.applicantService.updateApplicant(id, status);
   }
+    closeModal() {
+        this.modalController
+            .dismiss()
+            .then();
+    }
+
 }

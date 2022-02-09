@@ -35,7 +35,7 @@
       <button mat-stroked-button color="primary" (click)="addNewUserToStore()" class="mb-4">Add New Hiring Manager</button>
         <div class="card card-custom">
         <h3 *ngIf="hiringManagers.length <= 0">No Users for this store</h3>
-       <div class="mat-elevation-z8 hiring-manager-table" *ngIf="hiringManagers.length > 0">
+       <div class="hiring-manager-table" *ngIf="hiringManagers.length > 0">
           <mat-table [dataSource]="dataSource">
             <ng-container  matColumnDef="name">
               <mat-header-cell *matHeaderCellDef>Hiring Manger's Name</mat-header-cell>

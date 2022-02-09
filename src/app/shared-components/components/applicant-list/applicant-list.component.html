@@ -1,98 +1,71 @@
 
 
-  <p *ngIf="applicants.length <= 0">No Applicants for this position</p>
-  <div class ="mat-elevation-z8 container-fluid">
-    <div class="card card-header">
-      <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Applicants for (position name)</span>
-      </h3>
-      <p>Using the drop downs, select actions to be performed for each applicant. The applicants selected with the checkbox will perform the actions when submit is pressed</p>
-      <ion-item>
-      <ion-button fill="outline" size="default" color="secondary"  (click)="sendMessageGoBackToJobsList()">BACK</ion-button>
-        <!--<ion-button fill="outline" size="default" color="primary"  (click)="sendMessageGoBackToJobsList()">Submit</ion-button>-->
-      </ion-item>
-    </div>
-    <div class="card-body">
-      <div class="card mb-5 mb-xl-8">
-        <div class="card-body py3">
-          <div class="table-responsive">
+<div class="container-fluid">
+  <div class="modal-header">
+    <p class="modal-title">Applicants for (position name)</p>
+    <button class="btn btn-clear close-modal" (click)="sendMessageGoBackToJobsList()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+  <div class="">
+    <p class="mb-4 mt-4">Using the drop downs, select actions to be performed for each applicant. The applicants selected with the checkbox will perform the actions when submit is pressed</p>
+  </div>
 
-            <table class="table align-middle gs-0 gy-4">
-              <thead>
-              <tr class="fw-bolder text-muted bg-light">
-                <!--<th class="ps-4 min-w-300px rounded-start">Select</th>-->
-                <th class="ps-4 min-w-300px rounded-start">Name</th>
-                <th class="ps-4 min-w-300px rounded-start">Schedule Status</th>
-                <!--<th class="ps-4 min-w-300px rounded-start">Add Feed Back</th>-->
-                <th class="ps-4 min-w-300px rounded-start">Phone Number</th>
-                <th class="ps-4 min-w-300px rounded-start">Select Action</th>
-               <!-- <th class="ps-4 min-w-300px rounded-start">Actions</th>-->
-                <th class="ps-4 min-w-300px rounded-start">Submit</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let a of applicants">
-                <td>
-                  <div class="d-flex align-items-center">
-
-                    <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.name}}</p>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.status}}</p>
-                  </div>
-                </td>
-                <!-- <td>
-                   <div class="d-flex align-items-center">
-                     <input class="input-group">
-                   </div>
-                 </td>-->
-                <td>
-                  <div class="d-flex align-items-center">
-                    <!--<input class="form-control" value="{{a.id}}" formControlName="applicantId" type="text" placeholder="{{a.id}}" readonly>-->
-                    <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</p>
-                  </div>
-                </td>
-                <td class="row">
-                  <form [formGroup]="actionsFrom">
-                    <select formControlName="actions" class="form-select form-select-lg text-center">
-                      <option selected>Applicant Next Steps</option>
-                      <option value="scheduleInterview">Schedule Interview</option>
-                      <option value="interviewApplicant">Interview Applicant</option>
-                      <option value="hireApplicant">Hire Applicant</option>
-                      <option value="onBoardComplete">OnBoard Complete</option>
-                      <option value="applicantDeclined">Decline Applicant</option>
-                    </select>
-                  </form>
-                </td>
-                <!--<td>
-                  <i class="fa fa-chevron-circle-down"></i>
-                  <br><p>Move Applicant</p>
-                 <select class="text-center">
-                   <option>Send SMS</option>
-                   <option>Reschedule</option>
-                   <option>Add Notes</option>
-                   <option>Decline</option>
-                 </select>
-                </td>-->
-                <td>
-
-                  <ion-item>
-                    <div class="action-container">
-                      <!-- <button mat-raised-button type="submit" (click)="addRow()">Add row</button>-->
-                      <button mat-raised-button type="submit" (click)="submitForm(a)">Update Applicant</button>
-                    </div>
-                    <ion-button class="float-left" fill="outline" size="default" color="primary">Notes</ion-button>
-                  </ion-item>
-
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+  <p *ngIf="applicants.length <= 0" class="text-center text-warning bold">No Applicants for this position</p>
+  <div></div>
+  <div *ngIf="applicants.length" class="card-body">
+    <div class="table-responsive">
+      <table class="table align-middle gs-0 gy-4">
+        <thead>
+        <tr class="fw-bolder text-muted bg-light">
+          <th class="ps-4 min-w-300px rounded-start">Name</th>
+          <th class="ps-4 rounded-start">Schedule Status</th>
+          <th class="ps-4 rounded-start">Phone Number</th>
+          <th class="ps-4 rounded-start">Select Action</th>
+          <th class="ps-4 rounded-start">Submit</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let a of applicants">
+          <td>
+            <div class="d-flex align-items-center">
+              <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.name}}</p>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.status}}</p>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</p>
+            </div>
+          </td>
+          <td class="row">
+            <form [formGroup]="actionsFrom">
+              <select formControlName="actions" class="form-select form-select-lg text-center">
+                <option selected>Applicant Next Steps</option>
+                <option value="scheduleInterview">Schedule Interview</option>
+                <option value="interviewApplicant">Interview Applicant</option>
+                <option value="hireApplicant">Hire Applicant</option>
+                <option value="onBoardComplete">OnBoard Complete</option>
+                <option value="applicantDeclined">Decline Applicant</option>
+              </select>
+            </form>
+          </td>
+          <td>
+            <ion-item>
+              <div class="action-container">
+                <button mat-raised-button type="submit" (click)="submitForm(a)">Update Applicant</button>
+              </div>
+              <ion-button class="float-left" fill="outline" size="default" color="primary">Notes</ion-button>
+            </ion-item>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
+</div>
 

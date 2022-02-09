@@ -8,6 +8,7 @@ export class Store {
   storeName: string;
   storePhoneNumber: string;
   storeHiringManager: number;
+  hiringManagersName: string;
   addressId: string;
   franchiseId: string;
   address: Address;

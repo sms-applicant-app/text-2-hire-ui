@@ -53,7 +53,7 @@ export class ApplicantListComponent implements OnInit {
       tableRows: this.fb.array([])
     });
     this.storeData = this.store;
-    console.log('incoming positionId', this.positionId);
+    console.log('incoming positionId', this.positionId, 'and store', this.store);
     this.getApplicantsByJobId(this.positionId);
     this.getPositionDetail();
     this.isSubmitted = false;
@@ -79,7 +79,7 @@ export class ApplicantListComponent implements OnInit {
       const action = this.actionsFrom.controls.actions.value;
       console.log(applicant, action);
       if (action === 'scheduleInterview'){
-          this.getApplicantAndSendCalendarLink(applicant, action);
+          this.getApplicantAndSendCalendarLink(applicant, this.store, action);
         }
       if(action === 'interviewApplicant'){
         // route to a notes/ applicant details
@@ -109,14 +109,26 @@ export class ApplicantListComponent implements OnInit {
       });
 
   }
-    getApplicantAndSendCalendarLink(applicant, action){
+    getApplicantAndSendCalendarLink(applicant, store, action){
       console.log('applicant data ', applicant);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
+      const jobTitle = this.positionDetails.jobTitle;
+      const hiringManagerName = store.hiringManagerName;
+      const storeName = store.name;
+      //TODO get franchise name from userAppData
+      const franchiseName = 'ACME';
       const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
-      this.smsService.requestInterview(applicantName, positionId, phoneNumber, calendarLink).subscribe((data: any) =>{
+
+      //    applicantName,
+      //       storeName,
+      //       franchiseName,
+      //       hiringManagerName,
+      //       jobTitle,
+      //       calendarLink
+      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,phoneNumber, jobTitle, calendarLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {

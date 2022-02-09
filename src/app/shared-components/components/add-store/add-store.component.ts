@@ -197,19 +197,22 @@ export class AddStoreComponent implements OnInit {
     this.newUserHiringManagerData = $event;
     console.log('user added', this.newUserHiringManagerData.email);
     this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+    this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
     console.log('adding new manager',this.newStore);
   }
   /**
    *
    * Add new or Existing Hiring Manager to newly created store
    * @param userId
+   * @param hiringManagerName
    * @param stepper
    */
-  addHiringManagerToStore(userId, stepper: MatStepper){
+  addHiringManagerToStore(userId,hiringManagerName, stepper: MatStepper){
     // update hiring manager by assigning the store to id to their user object
     // if new user create User if existing just update user
       const storeId = this.newStore.storeId;
       this.newStore.storeHiringManager = userId;
+      this.newStore.hiringManagersName = hiringManagerName;
      //todo: add navigation to go to next Mat Step
     this.alertService.showSuccess('Hiring manager added ', this.newStore.storeHiringManager);
     stepper.next();

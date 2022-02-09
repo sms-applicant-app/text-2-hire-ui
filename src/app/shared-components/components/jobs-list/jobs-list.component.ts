@@ -78,7 +78,7 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsForFranchise(storeId){
-    this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
+    this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
@@ -94,7 +94,6 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsByStoreId(){
-
     this.jobService.currentData.subscribe(data =>{
       const storeId = data;
       if (storeId){
@@ -109,7 +108,7 @@ export class JobsListComponent implements OnInit {
         return 'missing store id';
       }*/
       this.storeId = data;
-      this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
+      this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
         .subscribe(jobs =>{
           this.jobs = [];
           if(jobs.docs.length === 0){
@@ -164,7 +163,7 @@ export class JobsListComponent implements OnInit {
   getApplicants(positionId){
     this.viewApplicants = true;
     this.positionId = positionId;
-  /*  this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
+    this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
       .subscribe(ss =>{
         this.applicants = [];
         if (ss.docs.length === 0){
@@ -177,7 +176,7 @@ export class JobsListComponent implements OnInit {
            console.log('applicants applied', this.applicants);
          });
         }
-      });*/
+      });
   }
 
   updatePosition(id){

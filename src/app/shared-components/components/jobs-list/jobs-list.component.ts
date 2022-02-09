@@ -94,35 +94,30 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsByStoreId(){
-    this.jobService.currentData.subscribe(data =>{
-      const storeId = data;
-      if (storeId){
+    this.jobService.currentData.subscribe(storeId => {
+      if (storeId) {
+        this.storeId = storeId;
         this.storeService.getStoreByGeneratedStoreId(storeId).subscribe((store: any) =>{
-          this.storeName = store[0].storeName;
-          this.selectedStoreId = store[0].storeId;
-          this.storeData = store[0];
+            this.storeName = store[0].storeName;
+            this.selectedStoreId = store[0].storeId;
+            this.storeData = store[0];
         });
-      }
-      // TODO @Powergate re verify this function. For some reason the brackets around storeId causing firebase error but commented this out for testing
-    /*  if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId){
-        return 'missing store id';
-      }*/
-      this.storeId = data;
-      this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
-        .subscribe(jobs =>{
-          this.jobs = [];
-          if(jobs.docs.length === 0){
-            console.log('no jobs with that store', this.storeId);
-          } else {
-            jobs.forEach(job =>{
-              const j = job.data();
-              const positionId = job.id;
-              this.jobs.push({id: positionId, position:j});
-              this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
-            });
-          }
-        });
-      });
+        this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
+          .subscribe(jobs =>{
+            this.jobs = [];
+            if(jobs.docs.length === 0){
+              console.log('no jobs with that store', this.storeId);
+            } else {
+              jobs.forEach(job =>{
+                const j = job.data();
+                const positionId = job.id;
+                this.jobs.push({id: positionId, position:j});
+                this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
+              });
+            }
+          });
+        }
+    });
   }
 
   receiveNavigationMessage($event){
@@ -177,6 +172,12 @@ export class JobsListComponent implements OnInit {
          });
         }
       });
+  }
+
+  closeModal() {
+    this.modalController
+        .dismiss()
+        .then();
   }
 
   updatePosition(id){

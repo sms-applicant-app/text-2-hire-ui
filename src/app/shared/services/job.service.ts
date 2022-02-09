@@ -13,8 +13,7 @@ export class JobService {
   message: string;
   storeData: any;
   jobsData: any;
-  stores: any = {};
-  dataSub = new BehaviorSubject<any>(this.stores);
+  dataSub = new BehaviorSubject<string>(null);
   currentData = this.dataSub.asObservable();
   constructor(public firestore: AngularFirestore, public alertService: AlertService) {
     this.currentData.subscribe(data => localStorage.setItem('selectedStore', data));

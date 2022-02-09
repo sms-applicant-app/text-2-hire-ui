@@ -52,6 +52,7 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
+    //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
     this.storeData = this.store;
     console.log('incoming positionId', this.positionId, 'and store', this.store);
     this.getApplicantsByJobId(this.positionId);
@@ -118,7 +119,7 @@ export class ApplicantListComponent implements OnInit {
       const jobTitle = this.positionDetails.jobTitle;
       const hiringManagerName = store.hiringManagerName;
       const storeName = store.name;
-      //TODO get franchise name from userAppData
+      //TODO get franchise name from userAppData @powergate delete this todo when completed
       const franchiseName = 'ACME';
       const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
 

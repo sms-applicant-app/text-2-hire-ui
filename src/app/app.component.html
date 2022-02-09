@@ -9,10 +9,10 @@
 
           <div *ngIf="authService.appUserData">
             <p class="role-name">{{roleName}}</p>
-            <span *ngIf="authService.appUserData?.role === 'hiringManager'">
+            <span *ngIf="getUserRole() === 'hiringManager'">
               <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
             </span>
-            <span *ngIf="authService.appUserData?.role === 'franchisee'">
+            <span *ngIf="getUserRole() === 'franchisee'">
               <app-stores-list-by-franchise></app-stores-list-by-franchise>
             </span>
           </div>

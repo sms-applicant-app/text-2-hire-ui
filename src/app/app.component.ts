@@ -30,7 +30,7 @@ export class AppComponent implements OnInit{
               public router: Router,) {}
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
-    this.roleName = roles[`${this.authService.appUserData.role}`];
+    this.roleName = roles[`${this.authService.appUserData?.role}`];
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;

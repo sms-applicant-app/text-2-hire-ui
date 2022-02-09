@@ -4,7 +4,8 @@
     padding-bottom: 0
 }
 .mat-dialog-content {
-  height: auto;
+  height: 100%;
+  overflow: auto;
 }
 .mat-stepper-vertical {
   margin-top: 8px;

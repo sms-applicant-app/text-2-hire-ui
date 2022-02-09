@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { take } from 'rxjs/operators';
 import {FirestoreHelperService} from "../firestore-helper.service";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {JobPosting} from "../models/job-posting";
@@ -53,5 +54,8 @@ export class JobService {
     }).catch((err) => {
       this.alertService.showError(toastMess.CREATE_FAILED);
     });
+  }
+  getJobDetails(positionId){
+    return this.firestore.doc(`jobs/${positionId}`).valueChanges().pipe(take(1));
   }
 }

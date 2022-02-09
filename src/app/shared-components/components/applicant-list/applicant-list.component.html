@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <div class="modal-header">
-    <p class="modal-title">Applicants for (position name)</p>
+    <p class="modal-title">Applicants for <span *ngIf="positionDetails">{{positionDetails.jobTitle}}</span></p>
     <button class="btn btn-clear close-modal" (click)="sendMessageGoBackToJobsList()">
       <ion-icon name="close-outline"></ion-icon>
     </button>
@@ -18,7 +18,7 @@
       <table class="table align-middle gs-0 gy-4">
         <thead>
         <tr class="fw-bolder text-muted bg-light">
-          <th class="ps-4 min-w-300px rounded-start">Name</th>
+          <th class="ps-4 rounded-start">Name</th>
           <th class="ps-4 rounded-start">Schedule Status</th>
           <th class="ps-4 rounded-start">Phone Number</th>
           <th class="ps-4 rounded-start">Select Action</th>
@@ -42,10 +42,10 @@
               <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</p>
             </div>
           </td>
-          <td class="row">
+          <td>
             <form [formGroup]="actionsFrom">
-              <select formControlName="actions" class="form-select form-select-lg text-center">
-                <option selected>Applicant Next Steps</option>
+              <select formControlName="actions" class="form-select">
+                <option value="" selected>Applicant Next Steps</option>
                 <option value="scheduleInterview">Schedule Interview</option>
                 <option value="interviewApplicant">Interview Applicant</option>
                 <option value="hireApplicant">Hire Applicant</option>
@@ -55,12 +55,10 @@
             </form>
           </td>
           <td>
-            <ion-item>
-              <div class="action-container">
-                <button mat-raised-button type="submit" (click)="submitForm(a)">Update Applicant</button>
-              </div>
-              <ion-button class="float-left" fill="outline" size="default" color="primary">Notes</ion-button>
-            </ion-item>
+            <div>
+              <button mat-raised-button color="primary" class="mr-3" (click)="submitForm(a)">Update Applicant</button>
+              <button mat-raised-button>Notes</button>
+            </div>
           </td>
         </tr>
         </tbody>

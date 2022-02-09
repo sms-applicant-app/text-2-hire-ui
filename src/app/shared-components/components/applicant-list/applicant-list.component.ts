@@ -5,13 +5,13 @@ import {ApplicantService} from '../../../shared/services/applicant.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {ApplicantStatus} from '../../../shared/models/applicant-status';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {SmsService} from '../../../shared/services/sms.service';
 import {ModalController} from '@ionic/angular';
 import {AddNewHireComponent} from '../../../store/add-new-hire/add-new-hire.component';
 import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
 import {AlertService} from '../../../shared/services/alert.service';
-
+import { JobService } from './../../../shared/services/job.service';
 
 
 @Component({
@@ -34,6 +34,7 @@ export class ApplicantListComponent implements OnInit {
   touchedRows: any;
   applicantId: string;
   applicantRetrieved: boolean;
+  positionDetails: any;
   control: FormArray;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
   constructor(public fb: FormBuilder,
@@ -42,7 +43,8 @@ export class ApplicantListComponent implements OnInit {
               public dbHelper: FirestoreHelperService,
               public smsService: SmsService,
               public modalController: ModalController,
-              public alertService: AlertService
+              public alertService: AlertService,
+              public jobService: JobService
   ) { }
 
   ngOnInit() {
@@ -53,9 +55,10 @@ export class ApplicantListComponent implements OnInit {
     this.storeData = this.store;
     console.log('incoming positionId', this.positionId);
     this.getApplicantsByJobId(this.positionId);
+    this.getPositionDetail();
     this.isSubmitted = false;
     this.actionsFrom = this.fb.group({
-      actions: [''],
+      actions: ['', [Validators.required]],
     });
     this.applicantRetrieved = false;
   }
@@ -63,25 +66,32 @@ export class ApplicantListComponent implements OnInit {
     this.control = this.actionsFrom.get('tableRows') as FormArray;
   }
 
+  getPositionDetail() {
+    this.jobService.getJobDetails(this.positionId).subscribe((data: any) => {
+      if (data) {
+        this.positionDetails = data;
+      }
+    });
+  }
 
   submitForm(applicant) {
-    const action = this.actionsFrom.controls.actions.value;
-    console.log(action);
-    console.log(applicant, action);
-     if (action === 'scheduleInterview'){
-        this.getApplicantAndSendCalendarLink(applicant, action);
+    if (this.actionsFrom.valid) {
+      const action = this.actionsFrom.controls.actions.value;
+      console.log(applicant, action);
+      if (action === 'scheduleInterview'){
+          this.getApplicantAndSendCalendarLink(applicant, action);
+        }
+      if(action === 'interviewApplicant'){
+        // route to a notes/ applicant details
+        console.log('Interviewing applicant', applicant);
+        this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
+        }
+      if(action === 'hireApplicant') {
+        this.getApplicantAndSendOnboardingLinks(applicant, this.storeData);
       }
-    if(action === 'interviewApplicant'){
-      // route to a notes/ applicant details
-      console.log('Interviewing applicant', applicant);
-      this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
-      }
-    if(action === 'hireApplicant') {
-      this.getApplicantAndSendOnboardingLinks(applicant, this.storeData);
+    } else {
+      this.alertService.showError('Please choose Action');
     }
-
-   // this.submitActionsToApplicants(this.touchedRows)*/
-    //this.applicantService.updateApplicant(applicantId, {status: action} );
   }
 
   getApplicantAndSendOnboardingLinks(applicant, storeData){

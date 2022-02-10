@@ -47,16 +47,6 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let job of jobs">
-                  <!--  <td>
-                      <div class="form-check form-check-sm form-check-custom form-check-solid">
-                        <input type="checkbox" value="{{job.id}}" class="form-check-input widget-9-check">
-                      </div>
-                    </td>-->
-                  <!--  <td>
-                      <div class="d-flex align-items-center">
-                       <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.storeId}}</a>
-                      </div>
-                    </td>-->
                     <td>
                       <div class="d-flex align-items-center">
                         <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.jobTitle}}</a>
@@ -74,15 +64,14 @@
                     </td>
                     <td>
                       <div class="d-flex flex-shrink-0">
-                        <span class="text-center cursor-pointer" (click)="getApplicants(job.id)" >
+                        <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id)" >
                           <ion-icon class="font-24" name="eye-outline"></ion-icon>
-                          <p>View Applicants</p>
-                        </span>
-                       <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
-                        <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
+                        </button>
+                        <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)" >
+                          <ion-icon class="font-24" name="trash-outline"></ion-icon>
+                        </button>
                       </div>
                     </td>
-
                   </tr>
                 </tbody>
               </table>
@@ -93,7 +82,7 @@
     </div>
 </div>
 <div *ngIf="viewApplicants === true">
-  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId"></app-applicant-list>
+  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>
 </div>
 
 

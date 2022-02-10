@@ -101,8 +101,8 @@ export class StoreService {
     this.lastGeneratedId = this.getLastGeneratedStoreId();
     return this.lastGeneratedId;
   }
-  deleteStore(franchiseId){
-    this.firestore.doc(`store/${franchiseId}`).delete().then(resp =>{
+  deleteStore(id){
+    return this.firestore.doc(`store/${id}`).delete().then(resp =>{
       console.log('deleting store', resp);
     });
   }

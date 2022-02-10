@@ -195,7 +195,7 @@ export class AddStoreComponent implements OnInit {
    */
   receiveUserMessage($event){
     this.newUserHiringManagerData = $event;
-    console.log('user added', this.newUserHiringManagerData.email);
+    console.log('user added', this.newUserHiringManagerData);
     this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
     this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
     console.log('adding new manager',this.newStore);

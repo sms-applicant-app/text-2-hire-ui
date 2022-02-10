@@ -1,3 +1,4 @@
+import { StoreService } from './../../../shared/services/store.service';
 import { JobsListComponent } from './../jobs-list/jobs-list.component';
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
@@ -13,6 +14,7 @@ import {ModalController} from '@ionic/angular';
 import * as uuid from 'uuid';
 import {AddStoreComponent} from "../add-store/add-store.component";
 import { Subject } from 'rxjs';
+import { AlertService } from './../../../shared/services/alert.service';
 
 
 @Component({
@@ -29,7 +31,7 @@ export class StoreListByFranchiseComponent implements OnInit {
 
   testString: string;
   storeData: any = [];
-  store: any[] = [];
+  listStore: any[] = [];
   franchiseData: any;
   dataSource: MatTableDataSource<Store>;
   displayColumns = ['storeName'];
@@ -43,7 +45,10 @@ export class StoreListByFranchiseComponent implements OnInit {
               public firestore: AngularFirestore,
               public userService: UserService,
               public router: Router,
-              public modalController: ModalController
+              public modalController: ModalController,
+              public storeService: StoreService,
+              public alertService: AlertService
+
   ) {
 
     this.userId = JSON.parse(localStorage.getItem('user')).email;
@@ -51,7 +56,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store= [];
+    this.listStore= [];
       this.getListOfStoresBasedOnUser();
 
     this.seeStores = true;
@@ -93,12 +98,19 @@ export class StoreListByFranchiseComponent implements OnInit {
       this.userData = doc.data();
       this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
         .subscribe(stores =>{
-          this.store = [];
+          this.listStore = [];
           if (stores.docs.length === 0){
             console.log('no docs with that franchise', this.franchiseId);
           } else {
-            this.store = stores.docs.map((data) => data.data());
-            this.dataSource = new MatTableDataSource<Store>(this.stores);
+            this.listStore = stores.docs.map((store) =>
+            {
+              const data = store.data() as any;
+              return {
+                id: store.id,
+                ...data
+              };
+            });
+            this.dataSource = new MatTableDataSource<Store>(this.listStore);
           }
         });
     });
@@ -123,7 +135,7 @@ export class StoreListByFranchiseComponent implements OnInit {
     });
 
     onStoreAddedSub.subscribe((newStore: Store) => {
-      this.store.unshift(newStore);
+      this.listStore.unshift(newStore);
     });
 
     addStoreModel.onDidDismiss().then(data => {
@@ -143,12 +155,19 @@ export class StoreListByFranchiseComponent implements OnInit {
    * Get 3 digit store id from the storeId field and query the storeIds collection which has the firebase generated UID then pass that into doc.. Should work
    * @param id
    */
-  deleteStore(id){
-    this.firestore.collection('store').doc(`${id}`).delete().then(s =>{
-      console.log('deleting ', id);
+  deleteStore(storeDelete){
+    this.alertService.alertConfirm('store').then((data) => {
+      if (data) {
+        this.storeService.deleteStore(storeDelete.id).then(() => {
+          const index = this.listStore.findIndex(store => store.storeId === storeDelete.storeId);
+          this.listStore.splice(index, 1);
+          this.alertService.showSuccess(`Delete Success ${storeDelete.storeName}`);
+        })
+        .catch((err) => {
+          this.alertService.showError('Delete Failed');
+        });
       }
+    });
 
-    );
   }
-
 }

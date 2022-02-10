@@ -8,7 +8,7 @@ import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 import {Role} from '../../../shared/models/role';
 import { AlertService } from './../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
-import { emailValidator, phoneValidator } from '../../../shared/utils/app-validators';
+import { emailValidator, phoneValidator, validatedURL } from '../../../shared/utils/app-validators';
 
 @Component({
   selector: 'app-register-user',
@@ -50,6 +50,7 @@ export class RegisterUserComponent implements OnInit {
     this.registrationForm = this.fb.group({
       fullName: ['', Validators.required],
       phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
+      calendarLink: ['', Validators.compose([Validators.required, validatedURL])],
       role: ['']
     });
     if(this.storeId !== undefined){
@@ -63,26 +64,33 @@ export class RegisterUserComponent implements OnInit {
     return this.latestDate;
   }
   registerStoreManagerUser(){
-    this.createDate();
-    this.newUser.email = this.userForm.controls.email.value;
-    const password = this.userForm.controls.password.value;
-    this.userId = this.newUser.email;
-    this.authService.RegisterUser(this.newUser.email, password).then(u=>{
-      this.newUser.fullName = this.registrationForm.controls.fullName.value;
+    if (this.userForm.valid && this.registrationForm.valid) {
+      this.createDate();
       this.newUser.email = this.userForm.controls.email.value;
-      this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
-      this.newUser.role = this.registrationForm.controls.role.value;
-      this.newUser.dateCreated = this.latestDate;
-      this.newUser.franchiseId = this.franchiseId;
-      this.newUser.storeIds = this.isRegisteringStoreManager? this.storeId: null;
-      this.dbHelper.set(`users/${this.userId}`, this.newUser);
-      this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
-      this.authService.SendVerificationMail();
-      this.userAdded = true;
-      this.sendUserMessage();
-    }).catch((err) => {
-      this.alertService.showError(toastMess.CREATE_FAILED);
-    });
+      const password = this.userForm.controls.password.value;
+      this.userId = this.newUser.email;
+      this.authService.RegisterUser(this.newUser.email, password).then(u=>{
+        this.newUser.fullName = this.registrationForm.controls.fullName.value;
+        this.newUser.email = this.userForm.controls.email.value;
+        this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
+        this.newUser.role = this.registrationForm.controls.role.value;
+        if (this.newUser.role === 'hiringManager') {
+          this.newUser.calendlyLink = this.registrationForm.controls.calendlyLink.value;
+        }
+        this.newUser.dateCreated = this.latestDate;
+        this.newUser.franchiseId = this.franchiseId;
+        this.newUser.storeIds = this.isRegisteringStoreManager? this.storeId: null;
+        this.dbHelper.set(`users/${this.userId}`, this.newUser);
+        this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+        this.authService.SendVerificationMail();
+        this.userAdded = true;
+        this.sendUserMessage();
+      }).catch((err) => {
+        this.alertService.showError(toastMess.CREATE_FAILED);
+      });
+    } else {
+      this.alertService.showError('Please enter field');
+    }
   }
   registerFranchiseOwner(){
     this.createDate();

@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Router} from "@angular/router";
 import {FileUploadService} from "../../../shared/services/file-upload.service";
 import {map, take} from "rxjs/operators";
 import {JobService} from "../../../shared/services/job.service";
@@ -13,8 +14,8 @@ import {ApplicantService} from "../../../shared/services/applicant.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
 import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
-import {Router} from "@angular/router";
 import {StoreService} from "../../../shared/services/store.service";
+import { AlertService } from './../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-jobs-list',
@@ -27,6 +28,7 @@ export class JobsListComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
+  jobData: any;
   userData: any;
   userRole: string;
   subscription: any;
@@ -45,7 +47,9 @@ export class JobsListComponent implements OnInit {
               public applicantService: ApplicantService,
               public dbHelper: FirestoreHelperService,
               public storeService: StoreService,
-              public route: Router) {
+              public route: Router,
+              public alertService: AlertService
+              ) {
   }
 
   ngOnInit() {
@@ -78,56 +82,46 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsForFranchise(storeId){
-    this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
+    this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
           console.log('no jobs with that store', this.storeId);
         } else {
           jobs.forEach(job =>{
-            const j = job.data();
+            this.jobData = job.data();
             const positionId = job.id;
-            this.jobs.push({id: positionId, position:j});
+            this.jobs.push({id: positionId, position: this.jobData});
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }
       });
   }
   getJobsByStoreId(){
-
-    this.jobService.currentData.subscribe(data =>{
-      const storeId = data;
-      if (storeId){
+    this.jobService.currentData.subscribe(storeId => {
+      if (storeId) {
+        this.storeId = storeId;
         this.storeService.getStoreByGeneratedStoreId(storeId).subscribe((store: any) =>{
-          this.storeName = store[0].storeName;
-          this.selectedStoreId = store[0].storeId;
-          this.storeData = store[0];
-          console.log('Store selected',store[0]);
+            this.storeName = store[0].storeName;
+            this.selectedStoreId = store[0].storeId;
+            this.storeData = store[0];
         });
-      }
-
-      console.log('storeId from service', storeId);
-      // TODO @Powergate re verify this function. For some reason the brackets around storeId causing firebase error but commented this out for testing
-    /*  if((typeof storeId !== 'string' && typeof storeId !== 'number') || !storeId){
-        return 'missing store id';
-      }*/
-      this.storeId = data;
-      this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
-        .subscribe(jobs =>{
-          this.jobs = [];
-          if(jobs.docs.length === 0){
-            console.log('no jobs with that store', this.storeId);
-          } else {
-            jobs.forEach(job =>{
-              const j = job.data();
-              const positionId = job.id;
-              this.jobs.push({id: positionId, position:j});
-              console.log(this.jobs, 'id', positionId);
-              this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
-            });
-          }
-        });
-      });
+        this.firestore.collection('jobs', ref => ref.where('storeId', '==', storeId)).get()
+          .subscribe(jobs =>{
+            this.jobs = [];
+            if(jobs.docs.length === 0){
+              console.log('no jobs with that store', this.storeId);
+            } else {
+              jobs.forEach(job =>{
+                const j = job.data();
+                const positionId = job.id;
+                this.jobs.push({id: positionId, position:j});
+                this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
+              });
+            }
+          });
+        }
+    });
   }
 
   receiveNavigationMessage($event){
@@ -168,11 +162,11 @@ export class JobsListComponent implements OnInit {
   getApplicants(positionId){
     this.viewApplicants = true;
     this.positionId = positionId;
-  /*  this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
+    this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
       .subscribe(ss =>{
         this.applicants = [];
         if (ss.docs.length === 0){
-          console.log('no applicants for position');
+          console.log('no applicants for position', this.positionId);
         } else {
          ss.forEach( applicant =>{
            const a = applicant.data();
@@ -181,7 +175,28 @@ export class JobsListComponent implements OnInit {
            console.log('applicants applied', this.applicants);
          });
         }
-      });*/
+      });
+  }
+
+  deletePosition(jobDelete){
+    this.alertService.alertConfirm('position').then((data) => {
+      if (data) {
+        this.jobService.deleteJob(jobDelete.id).then(() => {
+          const index = this.jobs.findIndex(store => store.storeId === jobDelete.storeId);
+          this.jobs.splice(index, 1);
+          this.alertService.showSuccess(`Delete Success ${jobDelete.position.jobTitle}`);
+        })
+        .catch((err) => {
+          this.alertService.showError('Delete Failed');
+        });
+      }
+    });
+  }
+
+  closeModal() {
+    this.modalController
+        .dismiss()
+        .then();
   }
 
   updatePosition(id){

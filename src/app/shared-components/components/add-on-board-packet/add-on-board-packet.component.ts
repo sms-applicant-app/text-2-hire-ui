@@ -52,7 +52,6 @@ export class AddOnBoardPacketComponent implements OnInit {
     this.addFormRowToPackage();
   }
   ngAfterOnInit() {
-    console.log('after init');
     this.formsControl = this.customForms.get('onBoardingPackageName') as FormArray;
   }
   initiateOnboardPackage(): FormGroup {
@@ -91,7 +90,7 @@ export class AddOnBoardPacketComponent implements OnInit {
       this.newOnboardPacket.i9 =  this.federalForms.controls.i9.value ? formInclude.I9 : '';
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
-      this.newOnboardPacket.storeId = this.storeId;
+      this.newOnboardPacket.storeId = this.storeId.toString();
       if (this.fileUpload && this.fileUpload.file && this.fileUpload.file.name !== '') {
         this.newOnboardPacket.customForms = this.fileUpload.file.name;
       }

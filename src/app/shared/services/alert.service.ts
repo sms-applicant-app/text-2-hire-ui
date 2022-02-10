@@ -4,7 +4,7 @@ import {Observable, Subject} from 'rxjs';
 import {AlertInfo} from '../models/alert-info';
 import {filter} from 'rxjs/operators';
 import {Alert, AlertType} from '../models/alert.model';
-import { ToastController } from '@ionic/angular';
+import { AlertController  } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 const TIME_SHOW_ALERT = 4000;
@@ -16,7 +16,8 @@ export class AlertService {
   private defaultId = 'default-alert';
   constructor(
     public router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public alertController: AlertController
     ) {}
   // new alert service
   showSuccess(message: string, title?: any) {
@@ -73,5 +74,32 @@ export class AlertService {
   // clear alerts
   clear(id = this.defaultId) {
     this.subject.next(new Alert({ id }));
+  }
+
+  async alertConfirm(alertTitle) {
+    return new Promise(async (resolve, reject) => {
+      const alert = await this.alertController.create({
+        header: 'Confirm',
+        message: `Do you want to delete this <strong>${alertTitle}</strong>!!!`,
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: '',
+            handler: (e) => {
+              resolve(false);
+            }
+          }, {
+            text: 'Ok',
+            cssClass: 'btn btn-danger',
+            handler: () => {
+              resolve(true);
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    });
   }
 }

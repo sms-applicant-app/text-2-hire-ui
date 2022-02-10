@@ -42,8 +42,10 @@ export class StorePage implements OnInit {
   }
 
   ngOnInit() {
+
+  }
+  ionViewWillEnter(){
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    console.log('user', this.userData.franchiseId, this.userData.role);
     this.franchiseId = this.userData.franchiseId;
     if(this.userData.role === 'hiringManager'){
       console.log('im a hiring manager');
@@ -54,28 +56,27 @@ export class StorePage implements OnInit {
       this.role = 'franchisee';
     }
     this.getAllFranchiseStoresById();
-
   }
-
   getAllFranchiseStoresById(){
   console.log('franchise id', this.franchiseId);
   if(!this.franchiseId) return;
    this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
   }
 
-    async addJobRec(){
-      const franchiseId = this.franchiseId;
-      const storeId = this.storeId;
-      console.log('display add Job Model');
-      const addJobRec = await this.modelController.create({
-        component: AddJobReqComponent,
-        swipeToClose: true,
-        componentProps: {
-          franchiseId,
-          storeId
-        }
-      });
-      return await addJobRec.present();
-    }
-
+  async addJobRec(){
+    const franchiseId = this.franchiseId;
+    const storeId = this.storeId;
+    console.log('display add Job Model');
+    const addJobRec = await this.modelController.create({
+      component: AddJobReqComponent,
+      swipeToClose: true,
+      componentProps: {
+        franchiseId,
+        storeId
+      }
+    });
+    return await addJobRec.present();
+  }
+  
+  
 }

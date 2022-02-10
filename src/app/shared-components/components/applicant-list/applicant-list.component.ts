@@ -5,13 +5,14 @@ import {ApplicantService} from '../../../shared/services/applicant.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {ApplicantStatus} from '../../../shared/models/applicant-status';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {SmsService} from '../../../shared/services/sms.service';
 import {ModalController} from '@ionic/angular';
 import {AddNewHireComponent} from '../../../store/add-new-hire/add-new-hire.component';
 import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
 import {AlertService} from '../../../shared/services/alert.service';
-
+import { JobService } from './../../../shared/services/job.service';
+import { UserService } from './../../../shared/services/user.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ import {AlertService} from '../../../shared/services/alert.service';
 })
 export class ApplicantListComponent implements OnInit {
   @Input() positionId: string;
+  @Input() positionData: any;
   @Output() messageEvent = new EventEmitter<any>();
   @Input() store: any;
   applicantStatus: ApplicantStatus;
@@ -34,7 +36,10 @@ export class ApplicantListComponent implements OnInit {
   touchedRows: any;
   applicantId: string;
   applicantRetrieved: boolean;
+  positionDetails: any;
   control: FormArray;
+  hiringMangerData: any;
+  selectedStore: any;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
   constructor(public fb: FormBuilder,
               public applicantService: ApplicantService,
@@ -42,7 +47,9 @@ export class ApplicantListComponent implements OnInit {
               public dbHelper: FirestoreHelperService,
               public smsService: SmsService,
               public modalController: ModalController,
-              public alertService: AlertService
+              public alertService: AlertService,
+              public jobService: JobService,
+              public useService: UserService
   ) { }
 
   ngOnInit() {
@@ -50,12 +57,15 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
+    //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
     this.storeData = this.store;
-    console.log('incoming positionId', this.positionId);
+    this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
+    this.getHiringManager();
     this.getApplicantsByJobId(this.positionId);
+    this.getPositionDetail();
     this.isSubmitted = false;
     this.actionsFrom = this.fb.group({
-      actions: [''],
+      actions: ['', [Validators.required]],
     });
     this.applicantRetrieved = false;
   }
@@ -63,25 +73,32 @@ export class ApplicantListComponent implements OnInit {
     this.control = this.actionsFrom.get('tableRows') as FormArray;
   }
 
+  getPositionDetail() {
+    this.jobService.getJobDetails(this.positionId).subscribe((data: any) => {
+      if (data) {
+        this.positionDetails = data;
+      }
+    });
+  }
 
   submitForm(applicant) {
-    const action = this.actionsFrom.controls.actions.value;
-    console.log(action);
-    console.log(applicant, action);
-     if (action === 'scheduleInterview'){
-        this.getApplicantAndSendCalendarLink(applicant, action);
+    if (this.actionsFrom.valid) {
+      const action = this.actionsFrom.controls.actions.value;
+      console.log(applicant, action);
+      if (action === 'scheduleInterview'){
+          this.getApplicantAndSendCalendarLink(applicant, this.selectedStore, action);
+        }
+      if(action === 'interviewApplicant'){
+        // route to a notes/ applicant details
+        console.log('Interviewing applicant', applicant);
+        this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
+        }
+      if(action === 'hireApplicant') {
+        this.getApplicantAndSendOnboardingLinks(applicant, this.selectedStore);
       }
-    if(action === 'interviewApplicant'){
-      // route to a notes/ applicant details
-      console.log('Interviewing applicant', applicant);
-      this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
-      }
-    if(action === 'hireApplicant') {
-      this.getApplicantAndSendOnboardingLinks(applicant, this.storeData);
+    } else {
+      this.alertService.showError('Please choose Action');
     }
-
-   // this.submitActionsToApplicants(this.touchedRows)*/
-    //this.applicantService.updateApplicant(applicantId, {status: action} );
   }
 
   getApplicantAndSendOnboardingLinks(applicant, storeData){
@@ -99,14 +116,42 @@ export class ApplicantListComponent implements OnInit {
       });
 
   }
-    getApplicantAndSendCalendarLink(applicant, action){
-      console.log('applicant data ', applicant);
+
+  getHiringManager(){
+    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          console.log('Document not found! Try again!');
+        } else {
+          ss.docs.forEach(doc => {
+            this.hiringMangerData = doc.data();
+            console.log('retrieved hiring manager',this.hiringMangerData);
+          });
+        }
+      });
+  }
+    getApplicantAndSendCalendarLink(applicant, store, action){
+      console.log('applicant data ', applicant, 'store data',store);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
-      const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
-      this.smsService.requestInterview(applicantName, positionId, phoneNumber, calendarLink).subscribe((data: any) =>{
+      const jobTitle = this.positionDetails.jobTitle;
+      const hiringManagerName = this.hiringMangerData.fullName;
+      console.log('hiringManagerName', hiringManagerName);
+      const storeName = store.storeName;
+      console.log('storeName', store.storeName);
+      //TODO get franchise name from userAppData @powergate delete this todo when completed
+      const franchiseName = 'ACME';
+      const calendarLink = this.hiringMangerData.calendarLink;
+
+      //    applicantName,
+      //       storeName,
+      //       franchiseName,
+      //       hiringManagerName,
+      //       jobTitle,
+      //       calendarLink
+      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
@@ -174,4 +219,15 @@ export class ApplicantListComponent implements OnInit {
     // todo send message from Lambda
     this.applicantService.updateApplicant(id, status);
   }
+  closeModal() {
+      this.modalController
+          .dismiss()
+          .then();
+  }
+  // deleteApplicant(applicantDelete) {
+  //   this.alertService.alertConfirm('store').then((data) => {
+
+  //   });
+  // }
+
 }

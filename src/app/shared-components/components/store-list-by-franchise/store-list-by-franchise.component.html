@@ -4,13 +4,13 @@
     <button class="btn-large" mat-raised-button color="primary" (click)="addStore()">Add Store</button>
   </div>
   <div  *ngIf="seeStores === true" class="container-fluid">
-    <div *ngIf="store && store.length" class="table-container">
+    <div *ngIf="listStore && listStore.length" class="table-container">
       <div class="table-responsive">
         <table class="table align-middle gs-0 gy-4">
           <thead>
           <tr class="fw-bolder text-muted bg-light">
-            <th class="ps-4 min-w-300px rounded-start">Store Title</th>
-            <th class="ps-4 min-w-300px rounded-start">Store ID to Text</th>
+            <th class="ps-4 rounded-start">Store Title</th>
+            <th class="ps-4 rounded-start">Store ID to Text</th>
             <th class="ps-4 rounded-start">Phone Number</th>
             <th class="ps-4 min-w-300px rounded-start">Hiring Manager</th>
             <th class="ps-4 rounded-start">Number of Positions</th>
@@ -18,7 +18,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let store of store">
+          <tr *ngFor="let store of listStore">
             <td>
               <div class="d-flex align-items-center">
                 <span class="text-dark fw-bolder text-hover-primary fs-6">{{store.storeName}}</span>
@@ -41,7 +41,7 @@
             </td>
             <td>
               <div class="d-flex flex-shrink-0">
-                <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId, store.storeName)"  >
+                <span class="text-center cursor-pointer" (click)="getPositionsForStore(store.storeId, store.storeName, store)"  >
                   <ion-icon class="font-24" name="eye-outline"></ion-icon>
                   <p>Get Positions By Store</p>
                 </span>

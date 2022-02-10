@@ -14,10 +14,13 @@ export class SmsService {
   sendOnboardingLinksEndPoint = 'https://m0dwmc1b67.execute-api.us-east-1.amazonaws.com/dev/api/sendOnboardingForms';
   constructor(private http: HttpClient) { }
 
-  requestInterview(name, positionId, clientPhoneNumber, calendarLink){
+  requestInterview(applicantName,storeName,franchiseName, hiringManagerName, jobTitle, clientPhoneNumber, calendarLink){
     const data ={
-      name,
-      positionId,
+      applicantName,
+      storeName,
+      franchiseName,
+      hiringManagerName,
+      jobTitle,
       clientPhoneNumber,
       calendarLink
     };

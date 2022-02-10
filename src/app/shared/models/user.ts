@@ -10,4 +10,5 @@ export class User {
   franchiseId: string;
   storeIds?: [];
   role: string;
+  calendlyLink?: string;
 }

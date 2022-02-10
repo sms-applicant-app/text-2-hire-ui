@@ -1,13 +1,27 @@
 
 <div *ngIf="viewApplicants !=true">
-    <div class ="container-fluid">
+  <div class ="container-fluid">
+    <div class="modal-header" *ngIf="userRole === 'franchisee'">
+      <p class="modal-title">Get Positions By Store</p>
+      <button class="btn btn-clear close-modal" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
       <div class="p-2 row">
-        <h3 class="card-title justify-content-evenly flex-column">
-          <span class="card-label fw-bolder fs-3 mb-1">Positions for:</span> {{storeName}}
-        </h3>
-        <h3 class="card-title justify-content-evenly flex-column">
-          <span class="card-label fw-bolder fs-3 mb-1">Store Id to Text:</span> {{selectedStoreId}}
-        </h3>
+        <div *ngIf="(!storeId || !selectedStoreId) && userRole === 'hiringManager'">
+          <h3 class="card-title justify-content-evenly flex-column">
+            <span class="card-label fw-bolder fs-3 mb-1">Please choose store</span>
+          </h3>
+        </div>
+        <div *ngIf="storeId || selectedStoreId">
+          <h3 class="card-title justify-content-evenly flex-column">
+            <span class="card-label fw-bolder fs-3 mb-1">Positions for:</span> {{storeName}}
+          </h3>
+          <h3 class="card-title justify-content-evenly flex-column">
+            <span class="card-label fw-bolder fs-3 mb-1">Store Id to Text:</span>
+            <span>{{storeId ? storeId : selectedStoreId}}</span>
+          </h3>
+        </div>
         <div class="d-flex flex-row">
           <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
           <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
@@ -33,16 +47,6 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let job of jobs">
-                  <!--  <td>
-                      <div class="form-check form-check-sm form-check-custom form-check-solid">
-                        <input type="checkbox" value="{{job.id}}" class="form-check-input widget-9-check">
-                      </div>
-                    </td>-->
-                  <!--  <td>
-                      <div class="d-flex align-items-center">
-                       <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.storeId}}</a>
-                      </div>
-                    </td>-->
                     <td>
                       <div class="d-flex align-items-center">
                         <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.jobTitle}}</a>
@@ -60,12 +64,14 @@
                     </td>
                     <td>
                       <div class="d-flex flex-shrink-0">
-                        <a class="text-center" (click)="getApplicants(job.id)" ><i class="fa fa-eye"></i><br><p>View Applicants</p></a>
-                       <!-- <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>
-                        <a (click)="seeApplicants(job.id)" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"><i class="fa fa-eye"></i> </a>-->
+                        <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id)" >
+                          <ion-icon class="font-24" name="eye-outline"></ion-icon>
+                        </button>
+                        <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)" >
+                          <ion-icon class="font-24" name="trash-outline"></ion-icon>
+                        </button>
                       </div>
                     </td>
-
                   </tr>
                 </tbody>
               </table>
@@ -74,10 +80,10 @@
         </div>
       </div>
     </div>
-  </div>
-  <span *ngIf="viewApplicants === true">
-    <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId"></app-applicant-list>
-  </span>
+</div>
+<div *ngIf="viewApplicants === true">
+  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>
+</div>
 
 
 

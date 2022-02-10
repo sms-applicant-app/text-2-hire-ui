@@ -30,7 +30,6 @@ export class StoreListByFranchiseComponent implements OnInit {
   @Input() stores: Store[];
 
   testString: string;
-  storeData: any = [];
   listStore: any[] = [];
   franchiseData: any;
   dataSource: MatTableDataSource<Store>;
@@ -63,36 +62,19 @@ export class StoreListByFranchiseComponent implements OnInit {
     this.seeApplicants = false;
     this.seePositions = false;
   }
-  async getPositionsForStore(storeId, storeName){
+  async getPositionsForStore(storeId, storeName, storeData){
     this.seePositions = true;
+    localStorage.setItem('selectedStoreData', JSON.stringify(storeData));
     const getPositionModal = await this.modalController.create({
       component: JobsListComponent,
       swipeToClose: true,
       componentProps: {
         storeId,
-        storeName
+        storeName,
       }
     });
     return await getPositionModal.present();
   }
- /* getListOfStoresByFranchise(){
-    this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.franchiseIdFromList)).get()
-      .subscribe(stores =>{
-        this.store = [];
-        if (stores.docs.length === 0){
-          console.log('no docs with that franchise', this.franchiseId);
-        } else {
-          stores.forEach(data =>{
-            const s = data.data();
-            this.storeData = data.data();
-            this.store.push(s);
-            console.log(this.store, 'stores' );
-            this.dataSource = new MatTableDataSource<Store>(this.store);
-            console.log(this.store.length, 'length', this.store);
-          });
-        }
-      });
-  }*/
   async getListOfStoresBasedOnUser(){
    await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();

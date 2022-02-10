@@ -28,6 +28,7 @@ export class JobsListComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
+  jobData: any;
   userData: any;
   userRole: string;
   subscription: any;
@@ -88,9 +89,9 @@ export class JobsListComponent implements OnInit {
           console.log('no jobs with that store', this.storeId);
         } else {
           jobs.forEach(job =>{
-            const j = job.data();
+            this.jobData = job.data();
             const positionId = job.id;
-            this.jobs.push({id: positionId, position:j});
+            this.jobs.push({id: positionId, position: this.jobData});
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }

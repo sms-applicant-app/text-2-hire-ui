@@ -82,7 +82,7 @@
     </div>
 </div>
 <div *ngIf="viewApplicants === true">
-  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId"></app-applicant-list>
+  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>
 </div>
 
 

@@ -58,4 +58,9 @@ export class JobService {
   getJobDetails(positionId){
     return this.firestore.doc(`jobs/${positionId}`).valueChanges().pipe(take(1));
   }
+  deleteJob(id){
+    return this.firestore.doc(`jobs/${id}`).delete().then(resp =>{
+      console.log('deleting jobs', resp);
+    });
+  }
 }

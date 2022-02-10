@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Router} from "@angular/router";
 import {FileUploadService} from "../../../shared/services/file-upload.service";
 import {map, take} from "rxjs/operators";
 import {JobService} from "../../../shared/services/job.service";
@@ -13,8 +14,8 @@ import {ApplicantService} from "../../../shared/services/applicant.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
 import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
-import {Router} from "@angular/router";
 import {StoreService} from "../../../shared/services/store.service";
+import { AlertService } from './../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-jobs-list',
@@ -45,7 +46,9 @@ export class JobsListComponent implements OnInit {
               public applicantService: ApplicantService,
               public dbHelper: FirestoreHelperService,
               public storeService: StoreService,
-              public route: Router) {
+              public route: Router,
+              public alertService: AlertService
+              ) {
   }
 
   ngOnInit() {
@@ -172,6 +175,21 @@ export class JobsListComponent implements OnInit {
          });
         }
       });
+  }
+
+  deletePosition(jobDelete){
+    this.alertService.alertConfirm('position').then((data) => {
+      if (data) {
+        this.jobService.deleteJob(jobDelete.id).then(() => {
+          const index = this.jobs.findIndex(store => store.storeId === jobDelete.storeId);
+          this.jobs.splice(index, 1);
+          this.alertService.showSuccess(`Delete Success ${jobDelete.position.jobTitle}`);
+        })
+        .catch((err) => {
+          this.alertService.showError('Delete Failed');
+        });
+      }
+    });
   }
 
   closeModal() {

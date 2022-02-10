@@ -168,6 +168,5 @@ export class StoreListByFranchiseComponent implements OnInit {
         });
       }
     });
-
   }
 }

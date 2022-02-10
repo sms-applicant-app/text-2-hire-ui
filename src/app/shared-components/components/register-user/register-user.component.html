@@ -49,8 +49,8 @@
       <div *ngIf="registrationForm.controls.role.value === 'hiringManager'" class="col-6">
         <ion-item lines="full" class="mb-3">
           <ion-label position="stacked" required>Calendly link</ion-label>
-          <ion-input clearInput type="url" formControlName="calendlyLink" required placeholder="Enter Calendly Link"></ion-input>
-          <span class="field-err" *ngIf="registrationForm.controls.calendlyLink.errors?.required && (registrationForm.controls.calendlyLink.dirty || registrationForm.controls.calendlyLink.touched)">Calendly Link required</span>
+          <ion-input clearInput type="url" formControlName="calendarLink" required placeholder="Enter Calendly Link"></ion-input>
+          <span class="field-err" *ngIf="registrationForm.controls.calendarLink.errors?.required && (registrationForm.controls.calendarLink.dirty || registrationForm.controls.calendarLink.touched)">Calendly Link required</span>
         </ion-item>
       </div>
   </div>

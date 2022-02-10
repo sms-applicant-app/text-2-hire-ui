@@ -50,7 +50,7 @@ export class RegisterUserComponent implements OnInit {
     this.registrationForm = this.fb.group({
       fullName: ['', Validators.required],
       phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
-      calendlyLink: ['', Validators.compose([Validators.required, validatedURL])],
+      calendarLink: ['', Validators.compose([Validators.required, validatedURL])],
       role: ['']
     });
     if(this.storeId !== undefined){

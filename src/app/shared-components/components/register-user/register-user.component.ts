@@ -75,7 +75,7 @@ export class RegisterUserComponent implements OnInit {
         this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
         this.newUser.role = this.registrationForm.controls.role.value;
         if (this.newUser.role === 'hiringManager') {
-          this.newUser.calendlyLink = this.registrationForm.controls.calendlyLink.value;
+          this.newUser.calendlyLink = this.registrationForm.controls.calendarLink.value;
         }
         this.newUser.dateCreated = this.latestDate;
         this.newUser.franchiseId = this.franchiseId;

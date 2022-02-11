@@ -18,6 +18,7 @@ import {User} from '../../../shared/models/user';
 import {JobService} from '../../../shared/services/job.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
+import { phoneValidator } from '../../../shared/utils/app-validators';
 
 
 
@@ -81,14 +82,7 @@ export class AddStoreComponent implements OnInit {
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.addAddress = false;
     this.addingNewUser = false;
-   // console.log('franchiseId in query', this.franchiseId, this.storeIsAddedByAdmin);
     this.userService.getUsersByFranchise(this.franchiseId);
-   /* this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
-      this.userData = doc.data();
-
-      this.franchiseId = this.storeIsAddedByAdmin? this.userData.franchiseId : this.franchiseIdFromList;
-    });*/
-
     this.createStoreForm();
     console.log('incoming franchise Id', this.franchiseId);
     this.addStoreAddress();
@@ -104,8 +98,8 @@ export class AddStoreComponent implements OnInit {
   }
   createStoreForm(){
     this.addStoreForm = this.fb.group({
-      storePhoneNumber: [''],
-      storeName: ['']
+      storePhoneNumber: ['', [Validators.required, phoneValidator]],
+      storeName: ['', Validators.required]
     });
   }
 
@@ -119,11 +113,9 @@ export class AddStoreComponent implements OnInit {
   }
 
   receiveAddressMessage($event){
-    console.log('address added', $event);
     this.addressAdded = $event;
     if($event){
       this.getLastGeneratedStoreId();
-    console.log('go to next step', this.addressAdded);
     }
   }
 
@@ -162,14 +154,10 @@ export class AddStoreComponent implements OnInit {
   }
   createStoreUniqueId(lastId){
     // change state to HN for hirenow later we can make better unique ID
-
-    console.log('last used generated store Id from DB',lastId);
     let increment = 0;
     increment = 1;
     this.newStore.storeId = +increment + lastId;
     this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId;
-    console.log('new store id plus 1 =', this.newStore.storeId);
-
   }
 
   getHiringManagersPerFranchise(){
@@ -183,7 +171,6 @@ export class AddStoreComponent implements OnInit {
             const u = data.data();
             this.hiringManagers.push(u);
             this.dataSource = new MatTableDataSource<User>(this.hiringManagers);
-            console.log(this.hiringManagers.length, ' hiring managers', this.hiringManagers);
           });
         }
       });
@@ -218,29 +205,33 @@ export class AddStoreComponent implements OnInit {
     stepper.next();
   }
   addStore(stepper: MatStepper){
-    this.createDate();
-   // this.createStoreUniqueId();
-    this.newStore.franchiseId = this.franchiseId;
-    this.newStore.storeName = this.addStoreForm.controls.storeName.value;
-    this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
-    if (this.addressAdded && this.addressAdded.addressId) {
-      this.newStore.addressId = this.addressAdded.addressId;
-    } else {
-      this.alertService.showError(toastMess.CREATE_FAILED);
-      return;
-    }
-    this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
-    this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-    this.storeService.createStore(this.newStore).then((resp: any) =>{
-      this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
-      this.newGeneratedStoreId.storeId = this.storeId;
-      this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
-      this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
-      this.onStoreAddedSub.next({
-        ...this.newStore
+    if (this.addStoreForm.valid) {
+      this.createDate();
+    // this.createStoreUniqueId();
+      this.newStore.franchiseId = this.franchiseId;
+      this.newStore.storeName = this.addStoreForm.controls.storeName.value;
+      this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
+      if (this.addressAdded && this.addressAdded.addressId) {
+        this.newStore.addressId = this.addressAdded.addressId;
+      } else {
+        this.alertService.showError('Please add Store address');
+        return;
+      }
+      this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
+      this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
+      this.storeService.createStore(this.newStore).then((resp: any) =>{
+        this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
+        this.newGeneratedStoreId.storeId = this.storeId;
+        this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
+        this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
+        this.onStoreAddedSub.next({
+          ...this.newStore
+        });
+        this.closeModal();
       });
-      this.closeModal();
-    });
+    } else {
+      this.alertService.showError('Please add Name or Phone Store');
+    }
   }
   closeModal() {
     this.modalController

@@ -166,7 +166,7 @@ export class JobsListComponent implements OnInit {
       .subscribe(ss =>{
         this.applicants = [];
         if (ss.docs.length === 0){
-          console.log('no applicants for position');
+          console.log('no applicants for position', this.positionId);
         } else {
          ss.forEach( applicant =>{
            const a = applicant.data();

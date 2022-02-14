@@ -50,7 +50,7 @@ export class RegisterUserComponent implements OnInit {
     this.registrationForm = this.fb.group({
       fullName: ['', Validators.required],
       phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
-      calendlyLink: ['', Validators.compose([Validators.required, validatedURL])],
+      calendarLink: ['', Validators.compose([Validators.required, validatedURL])],
       role: ['']
     });
     if(this.storeId !== undefined){
@@ -75,7 +75,7 @@ export class RegisterUserComponent implements OnInit {
         this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
         this.newUser.role = this.registrationForm.controls.role.value;
         if (this.newUser.role === 'hiringManager') {
-          this.newUser.calendlyLink = this.registrationForm.controls.calendlyLink.value;
+          this.newUser.calendlyLink = this.registrationForm.controls.calendarLink.value;
         }
         this.newUser.dateCreated = this.latestDate;
         this.newUser.franchiseId = this.franchiseId;

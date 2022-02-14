@@ -118,19 +118,20 @@ export class ApplicantListComponent implements OnInit {
   }
 
   getHiringManager(){
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId )).get()
+    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           console.log('Document not found! Try again!');
         } else {
           ss.docs.forEach(doc => {
             this.hiringMangerData = doc.data();
+            console.log('retrieved hiring manager',this.hiringMangerData);
           });
         }
       });
   }
     getApplicantAndSendCalendarLink(applicant, store, action){
-      console.log('applicant data ', applicant);
+      console.log('applicant data ', applicant, 'store data',store);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
@@ -142,7 +143,7 @@ export class ApplicantListComponent implements OnInit {
       console.log('storeName', store.storeName);
       //TODO get franchise name from userAppData @powergate delete this todo when completed
       const franchiseName = 'ACME';
-      const calendarLink = JSON.parse(localStorage.getItem('appUserData')).calendarLink;
+      const calendarLink = this.hiringMangerData.calendarLink;
 
       //    applicantName,
       //       storeName,
@@ -150,7 +151,7 @@ export class ApplicantListComponent implements OnInit {
       //       hiringManagerName,
       //       jobTitle,
       //       calendarLink
-      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,phoneNumber, jobTitle, calendarLink).subscribe((data: any) =>{
+      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
@@ -225,7 +226,7 @@ export class ApplicantListComponent implements OnInit {
   }
   // deleteApplicant(applicantDelete) {
   //   this.alertService.alertConfirm('store').then((data) => {
-      
+
   //   });
   // }
 

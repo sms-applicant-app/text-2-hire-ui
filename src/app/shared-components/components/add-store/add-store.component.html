@@ -9,11 +9,13 @@
             <ion-item lines="full" class="mb-3">
               <ion-label position="stacked" required>Name of Store</ion-label>
               <ion-input clearInput type="text" formControlName="storeName" required></ion-input>
+              <span class="field-err" *ngIf="addStoreForm.controls.storeName.errors?.required && (addStoreForm.controls.storeName.dirty || addStoreForm.controls.storeName.touched)">Name of Store required</span>
             </ion-item>
 
             <ion-item  lines="full" class="mb-3">
               <ion-label position="stacked" required>Store Phone Number</ion-label>
               <ion-input clearInput type="text" formControlName="storePhoneNumber"></ion-input>
+              <span class="field-err" *ngIf="addStoreForm.controls.storePhoneNumber.errors?.required && (addStoreForm.controls.storePhoneNumber.dirty || addStoreForm.controls.storePhoneNumber.touched)">Store phone number required</span>
             </ion-item>
             <div class="d-flex flex-row justify-content-end mt-4">
               <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>

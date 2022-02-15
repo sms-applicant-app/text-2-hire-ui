@@ -32,9 +32,7 @@ export class FranchiseService {
      });
   }
   getFranchiseById(id){
-    return this.dbHelper.doc$(`franchisee/${id}`).subscribe(data =>{
-      console.log('returned from franchise', data);
-    });
+    return this.dbHelper.doc$(`franchisee/${id}`);
   }
  async createFranchise(franchise: Franchisee): Promise<any>{
     const franchiseObj = {...franchise};

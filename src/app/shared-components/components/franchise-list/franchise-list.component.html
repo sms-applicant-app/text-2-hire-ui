@@ -34,22 +34,22 @@
         <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <ion-item>
-            <a class="btn btn-sm btn-clean btn-icon" (click)="addUserToFranchise(element.id)">
-            <ion-icon name="add-circle">
-            </ion-icon>
-              User </a>
+            <button class="btn btn-sm btn-clean btn-icon" (click)="addUserToFranchise(element.id)">
+            <ion-icon name="add-circle"></ion-icon>
+              User 
+            </button>
           </ion-item>
           <ion-item>
-            <a class="btn btn-sm btn-clean btn-icon" (click)="addStoreToFranchise(element.id)">
-              <ion-icon name="add-circle-outline">
-              </ion-icon>
-              Store</a>
+            <button class="btn btn-sm btn-clean btn-icon" (click)="addStoreToFranchise(element.id)">
+              <ion-icon name="add-circle-outline"></ion-icon>
+              Store
+            </button>
           </ion-item>
           <ion-item>
-            <a class="btn btn-sm btn-clean btn-icon" (click)="getFranchiseDetails(element.id)">
-              <ion-icon name="open-outline">
-              </ion-icon>
-             Details </a>
+            <button class="btn btn-sm btn-clean btn-icon" (click)="getFranchiseDetails(element.id)">
+              <ion-icon name="open-outline"></ion-icon>
+              Details 
+            </button>
           </ion-item>
           <!--<ion-button (click)="addStoreToFranchise(element.id)">Add Store</ion-button></mat-cell>-->
         </mat-cell>

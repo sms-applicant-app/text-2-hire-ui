@@ -9,7 +9,7 @@ import {Store} from "../../../shared/models/store";
 import {JobListing} from "../../../shared/models/job-listing";
 import {AddJobReqComponent} from "../add-job-req/add-job-req.component";
 import {ModalController} from "@ionic/angular";
-import {BehaviorSubject, Observable, pipe} from "rxjs";
+import {BehaviorSubject, Observable, pipe, Subject} from "rxjs";
 import {ApplicantService} from "../../../shared/services/applicant.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
@@ -133,14 +133,24 @@ export class JobsListComponent implements OnInit {
   async addJobRec(){
     const franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
     const storeId = this.storeId;
+    const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeId
+        storeId,
+        onJobAddedSub
       }
     });
+    onJobAddedSub.subscribe((newJob: any) => {
+      this.jobs.unshift({id: newJob.id, position: newJob});
+    });
+
+    addJobRec.onDidDismiss().then(data => {
+      onJobAddedSub.unsubscribe();
+    });
+
     return await addJobRec.present();
   }
   newOnboardPage(){

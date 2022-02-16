@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {User} from '../../../shared/models/user';
 import {DatePipe} from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import {AuthService} from '../../../shared/services/auth.service';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 
@@ -39,7 +39,6 @@ export class RegisterUserComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    console.log('incoming franchise Id and or storeId', this.franchiseId, this.storeId);
     this.userAdded = false;
     this.isRegisteringStoreManager = false;
     this.userForm = this.fb.group({
@@ -50,12 +49,32 @@ export class RegisterUserComponent implements OnInit {
     this.registrationForm = this.fb.group({
       fullName: ['', Validators.required],
       phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
-      calendarLink: ['', Validators.compose([Validators.required, validatedURL])],
-      role: ['']
+      calendarLink: ['', Validators.compose([ validatedURL])],
+      role: ['', Validators.required]
     });
     if(this.storeId !== undefined){
       this.isRegisteringStoreManager = true;
     }
+  }
+
+  validatedURL(control: FormControl): { [key: string]: any } {
+    const role = this.registrationForm.controls.role.value;
+    if (role === Role.hiringManager) {
+      if (!control.value) {
+        return null;
+      }
+      const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        if (control.value.match(pattern)) {
+          return null;
+        } else {
+          return { pattern: true };
+        }
+      }
   }
   createDate() {
     this.date = new Date();

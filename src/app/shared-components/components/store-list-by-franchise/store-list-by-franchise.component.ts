@@ -1,6 +1,7 @@
-import { StoreService } from './../../../shared/services/store.service';
-import { JobsListComponent } from './../jobs-list/jobs-list.component';
+
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 import {Store} from '../../../shared/models/store';
 import {MatPaginator} from '@angular/material/paginator';
@@ -8,15 +9,15 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {UserService} from '../../../shared/services/user.service';
-import {Router} from '@angular/router';
 import {AddJobReqComponent} from '../add-job-req/add-job-req.component';
 import {ModalController} from '@ionic/angular';
 import * as uuid from 'uuid';
 import {AddStoreComponent} from "../add-store/add-store.component";
-import { Subject } from 'rxjs';
 import { AlertService } from './../../../shared/services/alert.service';
-
-
+import { Role } from './../../../shared/models/role';
+import { FranchiseService } from './../../../shared/services/franchise.service';
+import { StoreService } from './../../../shared/services/store.service';
+import { JobsListComponent } from './../jobs-list/jobs-list.component';
 @Component({
   selector: 'app-store-list-by-franchise',
   templateUrl: './store-list-by-franchise.component.html',
@@ -30,7 +31,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   @Input() stores: Store[];
 
   testString: string;
-  listStore: any[] = [];
+  listStore: any = [];
   franchiseData: any;
   dataSource: MatTableDataSource<Store>;
   displayColumns = ['storeName'];
@@ -40,13 +41,15 @@ export class StoreListByFranchiseComponent implements OnInit {
   seeStores: boolean;
   seePositions: boolean;
   seeApplicants: boolean;
+  appUserData: any;
   constructor(public dbHelper: FirestoreHelperService,
               public firestore: AngularFirestore,
               public userService: UserService,
               public router: Router,
               public modalController: ModalController,
               public storeService: StoreService,
-              public alertService: AlertService
+              public alertService: AlertService,
+              public franchiseService: FranchiseService
 
   ) {
 
@@ -55,12 +58,35 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.listStore= [];
+    this.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    if(this.appUserData.role === Role.admin){
+      this.getStoresByFranchise();
+    } else {
       this.getListOfStoresBasedOnUser();
-
+    }
     this.seeStores = true;
     this.seeApplicants = false;
     this.seePositions = false;
+  }
+  getStoresByFranchise() {
+   this.listStore = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
+    this.franchiseService.getStoreByFranchiseId(this.franchiseId).subscribe((res) => {
+      if (res) {
+        this.listStore = [];
+        if (res.docs.length) {
+          this.listStore = res.docs.map((store) => {
+            const data = store.data() as any;
+            console.log('store', store.data());
+            return {
+              id: store.id,
+              ...data
+            };
+          });
+        } else {
+          console.log('no docs with that franchise', this.franchiseId);
+        }
+      }
+    });
   }
   async getPositionsForStore(storeId, storeName, storeData){
     this.seePositions = true;
@@ -150,5 +176,9 @@ export class StoreListByFranchiseComponent implements OnInit {
         });
       }
     });
+  }
+
+  goBack() {
+    this.router.navigate(['admin']);
   }
 }

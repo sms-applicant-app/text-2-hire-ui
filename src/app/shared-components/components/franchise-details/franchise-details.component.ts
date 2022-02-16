@@ -32,7 +32,6 @@ export class FranchiseDetailsComponent implements OnInit, OnChanges {
     this.franchiseData = this.franchiseService.getFranchiseById(this.franchiseId).subscribe((res) => {
       if (res) {
         this.franchiseData = res;
-        console.log('franchiseData', res);
       }
     }) ;
   }

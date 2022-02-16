@@ -76,7 +76,6 @@ export class StoreListByFranchiseComponent implements OnInit {
         if (res.docs.length) {
           this.listStore = res.docs.map((store) => {
             const data = store.data() as any;
-            console.log('store', store.data());
             return {
               id: store.id,
               ...data
@@ -125,7 +124,6 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
   getFranchisee(franchiseId){
     this.dbHelper.collectionWithIds$(`franchisee/${franchiseId}`).subscribe((data: []) => {
-      console.log('franchise',data);
       this.franchiseData = data;
     });
 
@@ -154,7 +152,6 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   getStoreDetails(id){
-    console.log('store details', id);
     this.router.navigate([`franchise/store-details/${id}`]);
   }
 

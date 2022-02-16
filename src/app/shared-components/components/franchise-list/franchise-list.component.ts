@@ -51,7 +51,6 @@ export class FranchiseListComponent implements OnInit {
   ) {
     this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
       this.franchiseData = data;
-      console.log(this.franchiseData);
       this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
       setTimeout(() =>{
         this.dataSource.paginator = this.paginator;
@@ -70,14 +69,12 @@ export class FranchiseListComponent implements OnInit {
     getFranchisee(){
     this.franchisees = [];
       this.dbHelper.collectionWithIds$('franchisee').subscribe((data: []) => {
-        console.log(data);
         this.franchisees = data;
       });
     }
     async addUserToFranchise(franchiseId){
     // show email password and role to register
       this.displayRegistrationForm = true;
-      console.log(franchiseId);
      const userModal = await this.modalController.create({
        component: RegisterUserComponent,
        swipeToClose: true,

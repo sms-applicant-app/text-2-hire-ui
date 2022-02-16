@@ -61,7 +61,7 @@ export class RegisterUserComponent implements OnInit {
     const role = this.registrationForm.controls.role.value;
     if (role === Role.hiringManager) {
       if (!control.value) {
-        return null;
+        return { required: true };
       }
       const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name

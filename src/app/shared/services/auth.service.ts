@@ -46,6 +46,11 @@ export class AuthService {
       }
     });
   }
+
+  getRole() {
+    const appUserData = JSON.parse(localStorage.getItem('appUserData')).role;
+    return appUserData;
+  }
   adminSignIn(email, password){
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
 

@@ -1,3 +1,4 @@
+import { Role } from './../../../shared/models/role';
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -19,6 +20,7 @@ import {JobService} from '../../../shared/services/job.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
 import { phoneValidator } from '../../../shared/utils/app-validators';
+import { AuthService } from '../../../shared/services/auth.service';
 
 
 
@@ -32,6 +34,7 @@ export class AddStoreComponent implements OnInit {
   @Input() storeIsAddedByAdmin: boolean;
   @Input() franchiseIdFromList: string;
   @Input() franchiseId: string;
+  @Input() isAdminDashBoard: boolean;
   @Output() storeAddedEvent = new EventEmitter<boolean>();
   businessLegalName: string;
   addStoreForm: FormGroup;
@@ -60,6 +63,7 @@ export class AddStoreComponent implements OnInit {
   lastGeneratedId: any;
   displayColumns= ['name', 'phoneNumber', 'actions'];
   onStoreAddedSub: Subject<Store>;
+  role: string;
 
   constructor(
     public dbHelper: FirestoreHelperService,
@@ -73,18 +77,18 @@ export class AddStoreComponent implements OnInit {
     public jobService: JobService,
     public alertService: AlertService,
     public modalController: ModalController,
-
+    public authService: AuthService,
 
   ) { }
 
   ngOnInit() {
 
     this.userId = JSON.parse(localStorage.getItem('user')).email;
+    this.role = this.authService.getRole();
     this.addAddress = false;
     this.addingNewUser = false;
     this.userService.getUsersByFranchise(this.franchiseId);
     this.createStoreForm();
-    console.log('incoming franchise Id', this.franchiseId);
     this.addStoreAddress();
     this.initialStoreId = '005';
     this.getHiringManagersPerFranchise();
@@ -223,9 +227,11 @@ export class AddStoreComponent implements OnInit {
         this.newGeneratedStoreId.storeId = this.storeId;
         this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
         this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
-        this.onStoreAddedSub.next({
-          ...this.newStore
-        });
+        if ( this.isAdminDashBoard === false) {
+          this.onStoreAddedSub.next({
+            ...this.newStore
+          });
+        }
         this.closeModal();
       });
     } else {

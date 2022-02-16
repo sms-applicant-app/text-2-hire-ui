@@ -81,7 +81,7 @@ export class StoreListByFranchiseComponent implements OnInit {
               id: store.id,
               ...data
             };
-          });
+          }).sort((a, b) => b.createdDate - a.createdDate);
         } else {
           console.log('no docs with that franchise', this.franchiseId);
         }
@@ -138,7 +138,7 @@ export class StoreListByFranchiseComponent implements OnInit {
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        onStoreAddedSub
+        onStoreAddedSub,
       }
     });
 

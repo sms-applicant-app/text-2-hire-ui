@@ -97,14 +97,15 @@ export class FranchiseListComponent implements OnInit {
 
   }
    async addStoreToFranchise(franchiseId){
-    console.log('display add store', franchiseId);
     const storeIsAddedByAdmin = true;
+    const isAdminDashBoard = true;
       const addStoreModel = await this.modalController.create({
         component: AddStoreComponent,
         swipeToClose: true,
         componentProps: {
           franchiseId,
-          storeIsAddedByAdmin
+          storeIsAddedByAdmin,
+          isAdminDashBoard
         }
       });
       return await addStoreModel.present();

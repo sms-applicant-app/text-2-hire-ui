@@ -131,12 +131,14 @@ export class StoreListByFranchiseComponent implements OnInit {
   async addStore(){
     const franchiseId = this.franchiseId;
     const onStoreAddedSub = new Subject<Store>();
+    const isAdminDashBoard = false;
     const addStoreModel = await this.modalController.create({
       component: AddStoreComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
         onStoreAddedSub,
+        isAdminDashBoard
       }
     });
 

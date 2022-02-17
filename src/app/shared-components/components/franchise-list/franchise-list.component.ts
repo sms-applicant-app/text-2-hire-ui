@@ -51,6 +51,9 @@ export class FranchiseListComponent implements OnInit {
   ) {
     this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
       this.franchiseData = data;
+      console.log('====================================');
+      console.log(data);
+      console.log('====================================');
       this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
       setTimeout(() =>{
         this.dataSource.paginator = this.paginator;
@@ -61,7 +64,7 @@ export class FranchiseListComponent implements OnInit {
   ngOnInit()
    {
     this.getFranchisee();
-     this.displayRegistrationForm = false;
+    this.displayRegistrationForm = false;
 
    }
 

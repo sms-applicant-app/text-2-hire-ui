@@ -90,7 +90,7 @@ export class AuthService {
           });
         });
   }).catch((err) => {
-    this.alertService.showError(toastMess.LOGIN_FAILED);
+    this.alertService.showError(err.message);
     });
   }
   routeUserBasedOnRole(userRole) {

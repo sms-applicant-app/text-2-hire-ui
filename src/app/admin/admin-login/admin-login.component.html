@@ -3,19 +3,22 @@
 </ion-header>
 <ion-content>
   <div class="container">
-  <form class="mt-4"> 
+  <form class="mt-4" [formGroup]="adminLoginForm"> 
     <div class="form-row">
       <div class="col-md-6 offset-md-3">
         <ion-item lines="full" class="mb-3">
           <ion-label position="stacked" required>Email *</ion-label>
-          <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
+          <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
+          <span class="field-err" *ngIf="adminLoginForm.controls.email.errors?.required && (adminLoginForm.controls.email.dirty || adminLoginForm.controls.email.touched)">Email is required</span>
+          <span class="field-err" *ngIf="adminLoginForm.controls.email.hasError('invalidEmail')">Invalid email address</span>
         </ion-item>
         <ion-item lines="full" class="mb-3">
           <ion-label position="stacked" required>Password *</ion-label>
-          <ion-input clearInput type="password" #password required placeholder="Enter password..."></ion-input>
+          <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
+          <span class="field-err" *ngIf="adminLoginForm.controls.password.errors?.required && (adminLoginForm.controls.password.dirty || adminLoginForm.controls.password.touched)">Password is required</span>
         </ion-item>
         <div class="d-flex flex-row align-item-center justify-content-center mt-4 mb-4">
-          <button class="btn-large" mat-raised-button color="primary" (click)="adminLogin(email, password)">Login</button>
+          <button class="btn-large" mat-raised-button color="primary" (click)="adminLogin()">Login</button>
         </div>
         <a routerLink="/login" expand="block" size="small" fill="clear" >I am not administrator go back to login</a>
       </div>

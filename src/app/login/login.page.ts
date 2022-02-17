@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../shared/services/auth.service';
 import firebase from 'firebase';
 import {User} from '../shared/models/user';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NavigationExtras, Router} from '@angular/router';
 import {FirestoreHelperService} from '../shared/firestore-helper.service';
 import {DatePipe} from '@angular/common';
 import {UserService} from '../shared/services/user.service';
 import * as uuid from 'uuid';
+import { emailValidator, matchingPasswords, passwordValidator, phoneValidator } from '../shared/utils/app-validators';
+import { AlertService } from '../shared/services/alert.service';
+import { toastMess } from '../shared/constants/messages';
 
 
 @Component({
@@ -21,6 +24,7 @@ export class LoginPage implements OnInit {
   newUser: User = new User();
   alreadyRegistered: boolean;
   registrationForm: FormGroup;
+  formLogin: FormGroup;
   userId: string;
   date: Date;
   latestDate: string;
@@ -53,7 +57,8 @@ export class LoginPage implements OnInit {
     public router: Router,
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
-    public userService: UserService
+    public userService: UserService,
+    public alertService: AlertService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation.extras.state;
@@ -64,18 +69,29 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('registering franchise', this.isRegisteringFranchiseUser);
-    console.log('registering store', this.isRegisteringStore);
     this.acceptTerms = false;
     this.alreadyRegistered = false;
-    this.registrationForm = this.fb.group({
-      firstName: [''],
-      lastName: [''],
-      email: [''],
-      password: [''],
-      phoneNumber: ['']
-    });
     this.firstTimeLogin = false;
+    this.createRegisterForm();
+    this.createLoginForm();
+  }
+  createLoginForm(){
+    this.formLogin = this.fb.group({
+      email: ['', [Validators.required, emailValidator]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+  createRegisterForm() {
+    this.registrationForm = this.fb.group(
+      {
+        firstName: ['', Validators.required],
+        email: ['', [Validators.required, emailValidator]],
+        phoneNumber: ['', [Validators.required, phoneValidator]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required]
+      },
+      { validator: matchingPasswords('password', 'confirmPassword') }
+    );
   }
 
   createDate() {
@@ -89,39 +105,50 @@ export class LoginPage implements OnInit {
     console.log('go terms and conditions');
   }
 
-  async login(email, password) {
-     await this.authService.SignIn(email.value, password.value);
+  async login() {
+    if (this.formLogin.valid) {
+      const formValue = this.formLogin.value;
+      const email = formValue.email;
+      const password = formValue.password;
+      console.log(email, password);
+     await this.authService.SignIn(email, password);
+    } else {
+      this.alertService.showError('Please enter field required');
+    }
   }
 
   goToLogin() {
     this.alreadyRegistered = true;
   }
-
-  registerUser(password) {
-    console.log('password', password.value);
-    this.createDate();
-    this.newUser.email = this.registrationForm.controls.email.value;
-    this.authService.RegisterUser(this.newUser.email, password.value).then(u => {
-      console.log('registered user', u);
-      this.userId = this.registrationForm.controls.email.value;
-      const user = {
-        firstName: this.registrationForm.controls.firstName.value,
-        lastName: 'testing',
-        email: this.registrationForm.controls.email.value,
-        role: 'franchisee',
-        phoneNumber: this.registrationForm.controls.phoneNumber.value,
-        dateCreated: this.latestDate,
-        updatedAt: this.latestDate,
-        franchiseId: uuid.v4()
-      };
-      this.firstTimeLogin = true;
-      this.authService.SendVerificationMail();
-      this.dbHelper.set(`users/${this.userId}`, user);
-      this.authService.SignIn(this.newUser.email, password.value).then(resp => {
-      //  this.routeUserBasedOnRole(this.userId);
-      });
-    });
+  goBack() {
+    this.alreadyRegistered = false;
   }
 
-
+  registerUser(password) {
+    if (this.registrationForm.valid) {
+      this.createDate();
+      this.newUser.email = this.registrationForm.controls.email.value;
+      this.authService.RegisterUser(this.newUser.email, password.value).then(u => {
+        this.userId = this.registrationForm.controls.email.value;
+        const user = {
+          firstName: this.registrationForm.controls.firstName.value,
+          email: this.registrationForm.controls.email.value,
+          role: 'franchisee',
+          phoneNumber: this.registrationForm.controls.phoneNumber.value,
+          dateCreated: this.latestDate,
+          updatedAt: this.latestDate,
+          franchiseId: uuid.v4()
+        };
+        this.firstTimeLogin = true;
+        this.authService.SendVerificationMail();
+        this.dbHelper.set(`users/${this.userId}`, user);
+        this.authService.SignIn(this.newUser.email, password.value);
+        this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+      }).catch((err) => {
+        this.alertService.showError(err.message);
+      });
+    } else {
+      this.alertService.showError('Please enter field required');
+    }
+  }
 }

@@ -192,7 +192,7 @@ export class JobsListComponent implements OnInit {
     this.alertService.alertConfirm('position').then((data) => {
       if (data) {
         this.jobService.deleteJob(jobDelete.id).then(() => {
-          const index = this.jobs.findIndex(store => store.storeId === jobDelete.storeId);
+          const index = this.jobs.findIndex(store => store.id === jobDelete.id);
           this.jobs.splice(index, 1);
           this.alertService.showSuccess(`Delete Success ${jobDelete.position.jobTitle}`);
         })

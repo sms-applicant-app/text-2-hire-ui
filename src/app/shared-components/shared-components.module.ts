@@ -26,10 +26,7 @@ import {AddFranchiseComponent} from "./components/add-franchise/add-franchise.co
 import {ApplicantDetailsComponent} from "./components/applicant-details/applicant-details.component";
 import {ApplicantTableRowComponent} from "./components/applicant-table-row/applicant-table-row.component";
 import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on-board-packet.component";
-
-
-
-
+import { UploadListFormComponent } from './components/upload-list-file/upload-list-form.component';
 
 @NgModule({
   declarations:
@@ -54,7 +51,8 @@ import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on
       StoresByHiringManagerComponent,
       AddFranchiseComponent,
       ApplicantTableRowComponent,
-      AddOnBoardPacketComponent
+      AddOnBoardPacketComponent,
+      UploadListFormComponent
     ],
   imports: [
     CommonModule,
@@ -82,7 +80,7 @@ import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on
         AddStoreComponent,
         StoresByHiringManagerComponent,
         AddFranchiseComponent,
-      ApplicantTableRowComponent
+        ApplicantTableRowComponent
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

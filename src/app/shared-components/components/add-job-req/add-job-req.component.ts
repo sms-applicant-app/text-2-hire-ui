@@ -26,7 +26,7 @@ export class AddJobReqComponent implements OnInit {
   onboardingPackagesData: any = [];
   onboardingPackageId: string;
   hiringManagerId: string;
-  onPositionAddedSub: Subject<JobPosting>;
+  onJobAddedSub: Subject<JobPosting>;
   private userData: any;
   private userId: string;
   constructor(
@@ -57,10 +57,10 @@ export class AddJobReqComponent implements OnInit {
       jobType: [''],
       onboardingPackage: [''],
       numberOfOpenSlots: ['', Validators.required],
-      shortDescription: [''],
+      shortDescription: ['', Validators.required],
       positionExpiration: ['', Validators.required],
       companyWebsite: [''],
-      salary: ['', Validators.required]
+      salary: ['']
     });
   }
   initJobsDetailsForm(){
@@ -97,44 +97,49 @@ export class AddJobReqComponent implements OnInit {
 
   }
   addJobListing(stepper: MatStepper){
-    const storeId = this.storeId;
-    if (storeId) {
-      this.newJobListing.storeId = this.storeId.toString();
-    } else {
-      const selectedStore = localStorage.getItem('selectedStore');
-      this.newJobListing.storeId = selectedStore;
-    }
-    this.newJobListing.franchiseId = this.franchiseId;
-    this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
-    this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
-    this.newJobListing.jobTitle = this.addJoblistingFrom.controls.jobTitle.value;
-    this.newJobListing.addressId = this.addJoblistingFrom.controls.location.value;
-    this.newJobListing.companyWebsite = this.addJoblistingFrom.controls.companyWebsite.value;
-    this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
-    this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
-    this.newJobListing.positionOpen = true;
-    this.newJobListing.hiringManagerId = JSON.parse(localStorage.getItem('user')).email;
-    this.newJobListing.benefits = this.jobDetailsFrom.controls.benefits.value;
-    this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
-    this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;
-    this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
-    this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
-    this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
-    this.newJobListing.onboardingPackageName = this.addJoblistingFrom.controls.onboardingPackage.value;
     if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
-      this.jobService.addJobRec(this.newJobListing);
-    /*  this.onPositionAddedSub.next({
-        ...this.newJobListing
-      });*/
-      stepper.next();
-    } else if (this.addJoblistingFrom.invalid || this.jobDetailsFrom.invalid) {
+      const storeId = this.storeId;
+      if (storeId) {
+        this.newJobListing.storeId = this.storeId.toString();
+      } else {
+        const selectedStore = localStorage.getItem('selectedStore');
+        this.newJobListing.storeId = selectedStore;
+      }
+      this.newJobListing.franchiseId = this.franchiseId;
+      this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
+      this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
+      this.newJobListing.jobTitle = this.addJoblistingFrom.controls.jobTitle.value;
+      this.newJobListing.addressId = this.addJoblistingFrom.controls.location.value;
+      this.newJobListing.companyWebsite = this.addJoblistingFrom.controls.companyWebsite.value;
+      this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
+      this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
+      this.newJobListing.positionOpen = true;
+      this.newJobListing.hiringManagerId = JSON.parse(localStorage.getItem('user')).email;
+      this.newJobListing.benefits = this.jobDetailsFrom.controls.benefits.value;
+      this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
+      this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;
+      this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
+      this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
+      this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
+      this.newJobListing.onboardingPackageName = this.addJoblistingFrom.controls.onboardingPackage.value;
+      this.jobService.addJobRec(this.newJobListing).then((res) => {
+        if(res){
+          const data = {
+            id: res,
+            ...this.newJobListing
+          };
+          this.onJobAddedSub.next({
+            ...data
+          });
+        }
+        stepper.next();
+      });
+    } else {
       this.alertService.showError('Please enter field is required');
     }
   }
   closeModal() {
-    this.modalController
-      .dismiss()
-      .then();
+    this.modalController.dismiss().then();
   }
   selectionChange(event){
 

@@ -17,20 +17,23 @@ export class FranchiseDetailsComponent implements OnInit, OnChanges {
   franchiseData: any;
 
 
-  constructor(public franchiseService: FranchiseService, public storeService: StoreService, public userService: UserService, public activatedRoute: ActivatedRoute) { }
+  constructor(
+    public franchiseService: FranchiseService,
+    public storeService: StoreService,
+    public userService: UserService,
+    public activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.franchiseData = '';
     this.franchiseId = this.activatedRoute.snapshot.paramMap.get('id');
-    console.log('franchise ID =', this.franchiseId);
+    this.getFranchiseDetail();
+  }
 
-      this.franchiseData = this.franchiseService.getFranchiseById(this.franchiseId);
-      console.log('franchise in component ', this.franchiseData);
-
-
-
-
-
+  getFranchiseDetail() {
+    this.franchiseData = this.franchiseService.getFranchiseById(this.franchiseId).subscribe((res) => {
+      if (res) {
+        this.franchiseData = res;
+      }
+    }) ;
   }
   ngOnChanges(): void {
     this.currentFranchise = { ...this.franchisee };

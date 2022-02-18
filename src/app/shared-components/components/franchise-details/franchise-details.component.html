@@ -1,23 +1,18 @@
-<div class="card">
-  <div class="card-title">
-    <h3><span style="font-weight: bold">Legal Name: </span> {{franchiseData.businessLegalName}} <span style="font-weight: bold">Contact Email:</span> {{franchiseData.corporateEmail}}, <span style="font-weight: bold">Contact Phone Number</span>: {{franchiseData.phoneNumber}}</h3>
+<div class="container-fluid">
+  <div class="d-flex flex-row justify-content-between mt-4" *ngIf="franchiseData.length !==0">
+    <p>Legal Name: <span class="text-bol bold">{{franchiseData.businessLegalName}}</span></p>
+    <p>Contact Email: <span class="text-bol bold">{{franchiseData.corporateEmail}}</span></p>
+    <p>Contact Phone Number: <span class="text-bol bold">{{franchiseData.phoneNumber}}</span></p>
   </div>
   <div class="row">
-    <div class="col-md-12">
-      <div class="card-body">
-        <app-store-list-by-franchise [franchiseId]="franchiseId"></app-store-list-by-franchise>
-      </div>
+    <div class="col-12">
+      <app-store-list-by-franchise [franchiseId]="franchiseId"></app-store-list-by-franchise>
     </div>
     <div class="row">
-      <div class="col-md-12">
-        <div class="card-body">
-          <app-users-for-franchise></app-users-for-franchise>
-        </div>
+      <div class="col-12">
+        <app-users-for-franchise></app-users-for-franchise>
       </div>
     </div>
-
-
-
   </div>
 </div>
 

@@ -31,10 +31,11 @@ export class FranchiseService {
        }
      });
   }
+  getStoreByFranchiseId(id) {
+   return this.firestore.collection('store', ref => ref.where('franchiseId', '==', id)).get();
+  }
   getFranchiseById(id){
-    return this.dbHelper.doc$(`franchisee/${id}`).subscribe(data =>{
-      console.log('returned from franchise', data);
-    });
+    return this.dbHelper.doc$(`franchisee/${id}`);
   }
  async createFranchise(franchise: Franchisee): Promise<any>{
     const franchiseObj = {...franchise};

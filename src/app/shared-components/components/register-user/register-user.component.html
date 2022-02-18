@@ -51,6 +51,7 @@
           <ion-label position="stacked" required>Calendly link</ion-label>
           <ion-input clearInput type="url" formControlName="calendarLink" required placeholder="Enter Calendly Link"></ion-input>
           <span class="field-err" *ngIf="registrationForm.controls.calendarLink.errors?.required && (registrationForm.controls.calendarLink.dirty || registrationForm.controls.calendarLink.touched)">Calendly Link required</span>
+          <span class="field-err" *ngIf="registrationForm.controls.calendarLink.errors?.pattern && (registrationForm.controls.calendarLink.dirty || registrationForm.controls.calendarLink.touched)">Calendly Link Invalid</span>
         </ion-item>
       </div>
   </div>

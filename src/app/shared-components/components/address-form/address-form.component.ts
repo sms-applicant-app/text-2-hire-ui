@@ -23,8 +23,6 @@ export class AddressFormComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    console.log('address id =', this.addressId);
-    console.log('address type = ', this.addressType);
     this.initAddressForm();
     this.addressAdded = false;
     //TODO get user id on init from or after registration

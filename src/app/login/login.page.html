@@ -11,93 +11,105 @@
 
 <ion-content>
   <div class="container ion-margin-top">
-  <span *ngIf="alreadyRegistered === true">
-    <ion-card>
-      <ion-card-title class="text-center mt-4 mb-4">
-        Log in Happy Hiring
-      </ion-card-title>
-      <ion-grid>
-      <ion-row>
-        <ion-col text-center>
-          <form>
-            <div class="col-md-6 offset-md-3">
-              <ion-item lines="full" class="mb-3">
-                <ion-label position="stacked" required>Email *</ion-label>
-                <ion-input clearInput type="text" #email required placeholder="Your email..."></ion-input>
-              </ion-item>
+    <div *ngIf="alreadyRegistered === true">
+      <button mat-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        Back
+      </button>
+      <ion-card>
+        <ion-card-title class="text-center mt-4 mb-4">
+          Log in Happy Hiring
+        </ion-card-title>
+        <ion-grid>
+        <ion-row>
+          <ion-col text-center>
+            <form [formGroup]="formLogin">
+              <div class="col-md-6 offset-md-3">
+                <ion-item lines="full" class="mb-3">
+                  <ion-label position="stacked" required>Email *</ion-label>
+                  <ion-input clearInput type="text" formControlName="email" required placeholder="Your email..."></ion-input>
+                  <span class="field-err" *ngIf="formLogin.controls.email.errors?.required && (formLogin.controls.email.dirty || formLogin.controls.email.touched)">Email is required</span>
+                  <span class="field-err" *ngIf="formLogin.controls.email.hasError('invalidEmail')">Invalid email address</span>
+                </ion-item>
 
-              <ion-item lines="full" class="mb-3">
-                <ion-label position="stacked" required>Password *</ion-label>
-                <ion-input clearInput type="password" #password required placeholder="Enter password...">
-                </ion-input>
-              </ion-item>
-              <div class="d-flex flex-row align-item-center justify-content-center mt-4 mb-4">
-                <button class="btn-large" mat-raised-button color="primary" (click)="login(email, password)">Login</button>
+                <ion-item lines="full" class="mb-3">
+                  <ion-label position="stacked" required>Password *</ion-label>
+                  <ion-input clearInput type="password" formControlName="password" required placeholder="Enter password..."></ion-input>
+                  <span class="field-err" *ngIf="formLogin.controls.password.errors?.required && (formLogin.controls.password.dirty || formLogin.controls.password.touched)">Password is required</span>
+                </ion-item>
+                <div class="d-flex flex-row align-item-center justify-content-center mt-4 mb-4">
+                  <button class="btn-large" mat-raised-button color="primary" (click)="login()">Login</button>
+                </div>
               </div>
-            </div>
-          </form>
-        </ion-col>
-      </ion-row>
-      </ion-grid>
-    </ion-card>
+            </form>
+          </ion-col>
+        </ion-row>
+        </ion-grid>
+      </ion-card>
+    </div>
+    <div *ngIf="!alreadyRegistered">
+      <ion-card>
+        <div class="container">
+        <ion-card-header >
+          <ion-card-title class="ion-text-center">
+          Create a free employer account
+          </ion-card-title>
+        </ion-card-header>
 
-    </span>
-  <span *ngIf="!alreadyRegistered">
-<ion-card>
-  <div class="container">
-  <ion-card-header >
-    <ion-card-title class="ion-text-center">
-    Create a free employer account
-    </ion-card-title>
-  </ion-card-header>
+        <p class="ion-text-center mb-1">Post new jobs and manage your posting statistics inside.</p>
+        <p class="ion-text-center">If searching for positions please click here to job search</p>
+          <ion-grid>
+            <ion-row>
+              <ion-col text-center>
+                <form [formGroup]="registrationForm" class="ion-text-center">
+                  <div class="form-row">
+                    <div class="col-md-3">
 
-  <p class="ion-text-center mb-1">Post new jobs and manage your posting statistics inside.</p>
-  <p class="ion-text-center">If searching for positions please click here to job search</p>
-    <ion-grid>
-      <ion-row>
-        <ion-col text-center>
-          <form [formGroup]="registrationForm" class="ion-text-center">
-            <div class="form-row">
-              <div class="col-md-3">
-
-              </div>
-              <div class="form-group col-lg-6 col-sm-12">
-                  <ion-item lines="full" class="mb-3">
-                    <ion-label position="stacked" required>Full Name</ion-label>
-                    <ion-input clearInput type="text" formControlName="firstName" required></ion-input>
-                  </ion-item>
-                  <ion-item lines="full" class="mb-3">
-                    <ion-label position="stacked" required>Email</ion-label>
-                    <ion-input clearInput type="text" formControlName="email"></ion-input>
-                  </ion-item>
-                  <ion-item lines="full" class="mb-3">
-                    <ion-label position="stacked" required>Password</ion-label>
-                    <ion-input clearInput type="password" #password formControlName="password"  ></ion-input>
-                  </ion-item>
-                  <ion-item lines="full" class="mb-3">
-                      <ion-label position="stacked" required>Confirm Password</ion-label>
-                      <ion-input clearInput type="password" ></ion-input>
-                  </ion-item>
-                  <ion-item lines="full" class="mb-3">
-                      <ion-label position="stacked" required>Phone Number</ion-label>
-                      <ion-input clearInput type="phoneNumber" formControlName="phoneNumber"></ion-input>
-                  </ion-item>
-                  <div class="d-flex flex-column align-items-center">
-                    <button class="mt-3 btn-large" (click)="registerUser(password)" mat-raised-button color="primary">Register</button>
-                    <button class="mt-3 btn-large" mat-stroked-button color="primary" (click)="goToLogin()">Log in</button>
-                    <a class="mt-3 btn-large" mat-button color="accent" routerLinkActive="active" routerLink="/admin/admin-login">Admin Login</a>
+                    </div>
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <ion-item lines="full" class="mb-3">
+                          <ion-label position="stacked" required>Full Name</ion-label>
+                          <ion-input clearInput type="text" formControlName="firstName" required></ion-input>
+                          <span class="field-err" *ngIf="registrationForm.controls.firstName.errors?.required && (registrationForm.controls.firstName.dirty || registrationForm.controls.firstName.touched)">Full name is required</span>
+                        </ion-item>
+                        <ion-item lines="full" class="mb-3">
+                          <ion-label position="stacked" required>Email</ion-label>
+                          <ion-input clearInput type="text" formControlName="email"></ion-input>
+                          <span class="field-err" *ngIf="registrationForm.controls.email.errors?.required && (registrationForm.controls.email.dirty || registrationForm.controls.email.touched)">Email is required</span>
+                          <span class="field-err" *ngIf="registrationForm.controls.email.hasError('invalidEmail')">Invalid email address</span>
+                        </ion-item>
+                        <ion-item lines="full" class="mb-3">
+                          <ion-label position="stacked" required>Phone Number</ion-label>
+                          <ion-input clearInput type="phoneNumber" formControlName="phoneNumber"></ion-input>
+                        <span class="field-err" *ngIf="registrationForm.controls.phoneNumber.errors?.required && (registrationForm.controls.phoneNumber.dirty || registrationForm.controls.phoneNumber.touched)">Phone is required</span>
+                      </ion-item>
+                        <ion-item lines="full" class="mb-3">
+                          <ion-label position="stacked" required>Password</ion-label>
+                          <ion-input clearInput type="password" #password formControlName="password"  ></ion-input>
+                          <span class="field-err" *ngIf="registrationForm.controls.password.errors?.required && (registrationForm.controls.password.dirty || registrationForm.controls.password.touched)">Password is required</span>
+                        </ion-item>
+                        <ion-item lines="full" class="mb-3">
+                            <ion-label position="stacked" required> Confirm Password</ion-label>
+                            <ion-input clearInput type="password" formControlName="confirmPassword"></ion-input>
+                            <span class="field-err" *ngIf="registrationForm.controls.confirmPassword.errors?.required && (registrationForm.controls.confirmPassword.dirty || registrationForm.controls.confirmPassword.touched)">Confirm Password is required</span>
+                            <span class="field-err" *ngIf="registrationForm.controls.confirmPassword.hasError('mismatchedPasswords')">Passwords do not match</span>
+                        </ion-item>
+                        <div class="d-flex flex-column align-items-center">
+                          <button class="mt-3 btn-large" (click)="registerUser(password)" mat-raised-button color="primary">Register</button>
+                          <button class="mt-3 btn-large" mat-stroked-button color="primary" (click)="goToLogin()">Log in</button>
+                          <a class="mt-3 btn-large" mat-button color="accent" routerLinkActive="active" routerLink="/admin/admin-login">Admin Login</a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
                   </div>
-              </div>
-              <div class="col-md-3">
-              </div>
-            </div>
-        </form>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+              </form>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
 
-</div>
-</ion-card>
-  </span>
+      </div>
+      </ion-card>
+    </div>
   </div>
 </ion-content>

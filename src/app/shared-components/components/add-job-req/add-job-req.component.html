@@ -41,6 +41,7 @@
               </ion-item>
               <ion-item lines="full">
                 <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
+                <span class="field-err" *ngIf="addJoblistingFrom.controls.shortDescription.errors?.required && (addJoblistingFrom.controls.shortDescription.dirty || addJoblistingFrom.controls.shortDescription.touched)">Short Description required</span>
               </ion-item>
             </div>
             <div class="col-lg-6">
@@ -88,19 +89,20 @@
         <form [formGroup]="jobDetailsFrom">
           <div class="form-group">
             <label class="form-label">Full Description</label>
-            <textarea class="form-control" auto-grow formControlName="fullDescription" placeholder="Enter Full Job Description..."></textarea>
+            <ion-textarea required formControlName="fullDescription" placeholder="Enter Full Job Description..."></ion-textarea>
+            <span class="field-err" *ngIf="jobDetailsFrom.controls.fullDescription.errors?.required && (jobDetailsFrom.controls.fullDescription.dirty || jobDetailsFrom.controls.fullDescription.touched)">Full Description required</span>
           </div>
           <div class="form-group">
             <label class="form-label">Benefits</label>
-            <textarea class="form-control" auto-grow formControlName="benefits" placeholder="If Available"></textarea>
+            <ion-textarea formControlName="benefits" placeholder="If Available"></ion-textarea>
           </div>
           <div class="form-group">
             <label class="form-label">Qualifications</label>
-            <textarea class="form-control" auto-grow formControlName="qualifications" placeholder="Any Extra Qualifications?"></textarea>
+            <ion-textarea formControlName="qualifications" placeholder="Any Extra Qualifications?"></ion-textarea>
           </div>
           <div class="form-group">
             <label class="form-label">Notes</label>
-            <textarea class="form-control" auto-grow formControlName="specialNotes" placeholder="Extra Notes ie: Remote, Drug Screen"></textarea>
+            <ion-textarea auto-grow formControlName="specialNotes" placeholder="Extra Notes ie: Remote, Drug Screen"></ion-textarea>
           </div>
         </form>
         <div class="d-flex flex-row justify-content-end">
@@ -111,7 +113,7 @@
       <mat-step label="Add Another Position" class="mb-4" [editable]="false">
         <div class="col-md-12">
           <div class="d-flex flex-row justify-content-end">
-            <button (click)="stepper.reset()" mat-raised-button color="primary" class="mr-4">Add Another Listing</button>
+            <button (click)="stepper.reset()" mat-raised-button color="primary" class="mr-4">Add Another Position</button>
             <button (click)="closeModal()" mat-stroked-button color="primary">Done</button>
           </div>
         </div>

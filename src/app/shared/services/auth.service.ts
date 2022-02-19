@@ -46,6 +46,11 @@ export class AuthService {
       }
     });
   }
+
+  getRole() {
+    const appUserData = JSON.parse(localStorage.getItem('appUserData')).role;
+    return appUserData;
+  }
   adminSignIn(email, password){
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
 
@@ -85,7 +90,7 @@ export class AuthService {
           });
         });
   }).catch((err) => {
-    this.alertService.showError(toastMess.LOGIN_FAILED);
+    this.alertService.showError(err.message);
     });
   }
   routeUserBasedOnRole(userRole) {

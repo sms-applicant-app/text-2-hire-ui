@@ -46,13 +46,16 @@ export class JobService {
       });
   }
   async addJobRec(job: JobPosting): Promise<any>{
-    const jobObj = {...job};
-    return this.firestore.collection('jobs').add(jobObj).then(docRef =>{
-      const jobId = docRef.id;
-      console.log('job added', jobId);
-      this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
-    }).catch((err) => {
-      this.alertService.showError(toastMess.CREATE_FAILED);
+    return new Promise(async (resolve, reject) => {
+      const jobObj = {...job};
+      return this.firestore.collection('jobs').add(jobObj).then(docRef =>{
+        const jobId = docRef.id;
+        resolve(jobId);
+        this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+      }).catch((err) => {
+        this.alertService.showError(toastMess.CREATE_FAILED);
+        resolve(false);
+      });
     });
   }
   getJobDetails(positionId){

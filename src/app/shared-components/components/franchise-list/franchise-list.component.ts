@@ -51,7 +51,9 @@ export class FranchiseListComponent implements OnInit {
   ) {
     this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
       this.franchiseData = data;
-      console.log(this.franchiseData);
+      console.log('====================================');
+      console.log(data);
+      console.log('====================================');
       this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
       setTimeout(() =>{
         this.dataSource.paginator = this.paginator;
@@ -62,7 +64,7 @@ export class FranchiseListComponent implements OnInit {
   ngOnInit()
    {
     this.getFranchisee();
-     this.displayRegistrationForm = false;
+    this.displayRegistrationForm = false;
 
    }
 
@@ -70,14 +72,12 @@ export class FranchiseListComponent implements OnInit {
     getFranchisee(){
     this.franchisees = [];
       this.dbHelper.collectionWithIds$('franchisee').subscribe((data: []) => {
-        console.log(data);
         this.franchisees = data;
       });
     }
     async addUserToFranchise(franchiseId){
     // show email password and role to register
       this.displayRegistrationForm = true;
-      console.log(franchiseId);
      const userModal = await this.modalController.create({
        component: RegisterUserComponent,
        swipeToClose: true,
@@ -97,14 +97,15 @@ export class FranchiseListComponent implements OnInit {
 
   }
    async addStoreToFranchise(franchiseId){
-    console.log('display add store', franchiseId);
     const storeIsAddedByAdmin = true;
+    const isAdminDashBoard = true;
       const addStoreModel = await this.modalController.create({
         component: AddStoreComponent,
         swipeToClose: true,
         componentProps: {
           franchiseId,
-          storeIsAddedByAdmin
+          storeIsAddedByAdmin,
+          isAdminDashBoard
         }
       });
       return await addStoreModel.present();

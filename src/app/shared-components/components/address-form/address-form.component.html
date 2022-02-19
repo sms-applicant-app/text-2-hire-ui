@@ -1,18 +1,21 @@
 <ion-list class="headless">
   <h3>{{addressType}} Address</h3>
   <div *ngIf="!addressAdded">
-    <form [formGroup]="addressForm">
+    <form [formGroup]="addressForm" (ngSubmit)="submitAddress()">
       <ion-item class="mb-3">
         <ion-label position="stacked" required="true">Street address</ion-label>
         <ion-input formControlName="streetAdd1" clearInput placeholder="Street address here..." required></ion-input>
+        <span class="field-err" *ngIf="addressForm.controls.streetAdd1.errors?.required && (addressForm.controls.streetAdd1.dirty || addressForm.controls.streetAdd1.touched)">Street address required</span>
       </ion-item>
       <ion-item class="mb-3">
         <ion-label position="stacked">Street Address 2</ion-label>
         <ion-input formControlName="streetAdd2" clearInput placeholder="Ex: Suite 101"></ion-input>
+
       </ion-item>
       <ion-item class="mb-3">
         <ion-label position="stacked" required="true">City </ion-label>
         <ion-input formControlName="city" autocomplete="address-level2" clearInput placeholder="City here..." required></ion-input>
+        <span class="field-err" *ngIf="addressForm.controls.city.errors?.required && (addressForm.controls.city.dirty || addressForm.controls.city.touched)">City required</span>
       </ion-item>
       <ion-item class="mb-3">
         <ion-label position="stacked" required="true">State</ion-label>
@@ -69,12 +72,14 @@
           <ion-select-option value="WI">Wisconsin</ion-select-option>
           <ion-select-option value="WY">Wyoming</ion-select-option>
         </ion-select>
+        <span class="field-err" *ngIf="addressForm.controls.state.errors?.required && (addressForm.controls.state.dirty || addressForm.controls.state.touched)">State required</span>
       </ion-item>
       <ion-item class="mb-3">
         <ion-label position="stacked" required="true">ZIP code</ion-label>
         <ion-input formControlName="zip" clearInput placeholder="12345" required></ion-input>
+        <span class="field-err" *ngIf="addressForm.controls.zip.errors?.required && (addressForm.controls.zip.dirty || addressForm.controls.zip.touched)">Zipcode required</span>
       </ion-item>
-      <button mat-stroked-button color="primary" (click)="submitAddress()">Add Address</button>
+      <button mat-stroked-button color="primary" type="submit">Add Address</button>
     </form>
   </div>
   <span *ngIf="addressAdded">

@@ -9,8 +9,9 @@
 
           <div *ngIf="authService.appUserData">
             <p class="role-name">{{roleName}}</p>
-            <button mat-stroked-button color="primary" (click)="goProfile()"  *ngIf="getUserRole() === 'hiringManager'">Go profile</button>
-            <div *ngIf="getUserRole() === 'hiringManager'">
+
+            <button mat-stroked-button color="primary" (click)="goProfile()"  *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">Go profile</button>
+            <div *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">
               <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
             </div>
             <div *ngIf="getUserRole() === 'franchisee'">

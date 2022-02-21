@@ -1,0 +1,31 @@
+<p>
+  Add forms such as company policy or unique forms to the position
+</p>
+<label>
+  <input
+    type="file"
+    class="text-nowrap text-truncate"
+    multiple
+    (change)="selectFile($event)"
+  />
+</label>
+
+<button
+  mat-stroked-button color="primary"
+  [disabled]="selectedFiles?.length == 0"
+  (click)="upload()"
+>
+  Upload
+</button>
+
+<div class="row">
+  <ng-container *ngFor="let item of selectedFiles; let i = index">
+    <p>{{item.name}}</p> <span>{{item.size}} MB</span> <button (click)="removeFile(i)">Remove</button>
+   <div class="progress mt-2" *ngIf="item?.uploadPercent > 0">
+      <div class="progress-bar progress-bar-info" role="progressbar" attr.aria-valuenow="{{ item.uploadPercent }}"
+        aria-valuemin="0" aria-valuemax="100" [ngStyle]="{ width: item.uploadPercent + '%' }">
+        {{ item.uploadPercent }}%
+      </div>
+    </div>
+  </ng-container>  
+</div>

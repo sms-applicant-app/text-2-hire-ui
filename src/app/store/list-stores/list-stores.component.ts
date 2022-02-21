@@ -22,12 +22,10 @@ export class ListStoresComponent implements OnInit {
 
   getAllStoresByFranchiseId(){
     this.storesData = this.storeService.getStoresByFranchise(this.franchisedId);
-    console.log('stores',this.storesData);
   }
   //TODO future feature a FO can click his hiring manager and see what stores he is over and monitor performance metrics
   getStoresByHiringManager(){
     const userId = JSON.parse(localStorage.getItem('user')).uid;
     this.storesData = this.storeService.getStoresByHiringManger(userId);
-    console.log('store data returned for hiring manager', this.storesData);
   }
 }

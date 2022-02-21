@@ -21,9 +21,9 @@ export class AppComponent implements OnInit{
     { title: 'Log out', url: '/logout', icon: 'log-out-outline' },
 
   ];
-    userData: any;
-    isLoggedIn: boolean;
-    roleName: string;
+  userData: any;
+  isLoggedIn: boolean;
+  roleName: string;
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public ngFireAuth: AngularFireAuth,
@@ -45,13 +45,15 @@ export class AppComponent implements OnInit{
   }
 
   goToPage(url: string) {
-    if(url == '/logout') {
+    if(url === '/logout') {
       this.authService.SignOut();
     } else {
       this.router.navigate([url]);
     }
   }
-
+  goProfile() {
+    this.router.navigate(['profile']);
+  }
   getUserRole(){
     const appUserData = JSON.parse(localStorage.getItem('appUserData'));
     return appUserData?.role;

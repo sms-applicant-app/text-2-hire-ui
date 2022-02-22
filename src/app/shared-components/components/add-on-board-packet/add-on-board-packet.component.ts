@@ -6,7 +6,7 @@ import {CustomForms, OnBoardPacket} from "../../../shared/models/onBoardPacket";
 import { ModalController } from '@ionic/angular';
 import { AlertService } from '../../../shared/services/alert.service';
 import { formInclude } from '../../../shared/constants/formInclude';
-
+import { FileItem } from '../../../shared/models/file-item';
 
 @Component({
   selector: 'app-add-on-board-packet',
@@ -23,7 +23,8 @@ export class AddOnBoardPacketComponent implements OnInit {
   addCustomForm: boolean;
   customFormsAdded: boolean;
   newOnboardPacket = new OnBoardPacket();
-  newCustomForms = new CustomForms();
+  fileItemsUploaded: FileUpload[] = [];
+
   formInclude: Array<any> = [
     { id: 1, value: 'w4', label: 'W-4 Employee With Holding Certificate' , isChecked : false},
     { id: 2, value: 'i9', label: 'Employment Eligibility Verification' , isChecked : false},
@@ -71,16 +72,17 @@ export class AddOnBoardPacketComponent implements OnInit {
     const control = this.customForms.get('onBoardingPackageName') as FormArray;
     return control;
   }
-  formUploaded($event){
-    this.formNames = [];
-    console.log('formsUploaded', $event);
-    this.fileUpload = $event;
-    if($event){
-      console.log('do something with this form', this.fileUpload);
-      this.formNames.push(this.fileUpload.file.name);
-      console.log('uploaded forms', this.formNames);
+
+  formUploaded(fileItems: FileUpload[]){
+    if(fileItems.length > 0) {
+      this.formNames = [];
+      this.addCustomForm = false;
+      this.customFormsAdded = true;
+      this.fileItemsUploaded = this.fileItemsUploaded.concat(fileItems);
+      this.formNames = this.formNames.concat(this.fileItemsUploaded.map(c=> c.name));
     }
   }
+
   submitCustomForms(){
     if (this.federalForms.invalid || !this.federalForms.dirty) {
       this.alertService.showError('Please enter required field');
@@ -91,21 +93,15 @@ export class AddOnBoardPacketComponent implements OnInit {
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
       this.newOnboardPacket.storeId = this.storeId.toString();
-      if (this.fileUpload && this.fileUpload.file && this.fileUpload.file.name !== '') {
-        this.newOnboardPacket.customForms = this.fileUpload.file.name;
+      if (this.fileItemsUploaded?.length > 0) {
+        const customForms  = this.fileItemsUploaded.map(f => new CustomForms(f.name, f.url));
+        this.newOnboardPacket.customForms = JSON.stringify(customForms);
       }
       this.createOnboadingPackage(this.newOnboardPacket);
       this.closeModal();
     }
   }
-  uploadTask($event){
-    console.log('percentage complete', $event);
-    if ($event === 100){
-      this.addCustomForm = false;
-      this.customFormsAdded = true;
-      // push to array of forms
-    }
-  }
+
   createOnboadingPackage(packet){
     this.onBoardingService.createOnboardPacket(packet).then(data =>{
       console.log('sent forms', packet);
@@ -116,5 +112,4 @@ export class AddOnBoardPacketComponent implements OnInit {
       .dismiss()
       .then();
   }
-
 }

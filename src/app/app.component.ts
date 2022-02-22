@@ -3,8 +3,8 @@ import {AuthService} from './shared/services/auth.service';
 import {AddStoreComponent} from './shared-components/components/add-store/add-store.component';
 import {ModalController} from '@ionic/angular';
 import {AddFranchiseComponent} from './shared-components/components/add-franchise/add-franchise.component';
-import {AngularFireAuth} from "@angular/fire/auth";
-import { Router } from '@angular/router';
+import {AngularFireAuth} from '@angular/fire/auth';
+import { NavigationEnd, Router } from '@angular/router';
 import { roles } from './shared/constants/role';
 @Component({
   selector: 'app-root',
@@ -21,9 +21,10 @@ export class AppComponent implements OnInit{
     { title: 'Log out', url: '/logout', icon: 'log-out-outline' },
 
   ];
-    userData: any;
-    isLoggedIn: boolean;
-    roleName: string;
+  userData: any;
+  isLoggedIn: boolean;
+  roleName: string;
+  isProfilePage: boolean;
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public ngFireAuth: AngularFireAuth,
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit{
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
     this.roleName = roles[`${this.authService.appUserData?.role}`];
+    this.routerChange();
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;
@@ -45,15 +47,29 @@ export class AppComponent implements OnInit{
   }
 
   goToPage(url: string) {
-    if(url == '/logout') {
+    if(url === '/logout') {
       this.authService.SignOut();
     } else {
       this.router.navigate([url]);
     }
   }
-
+  goProfile() {
+    this.router.navigate(['profile']);
+  }
   getUserRole(){
     const appUserData = JSON.parse(localStorage.getItem('appUserData'));
     return appUserData?.role;
+  }
+
+  routerChange() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url.includes('profile')) {
+          this.isProfilePage = true;
+        } else {
+          this.isProfilePage = false;
+        }
+      }
+    });
   }
 }

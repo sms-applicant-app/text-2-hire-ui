@@ -9,12 +9,14 @@
 
           <div *ngIf="authService.appUserData">
             <p class="role-name">{{roleName}}</p>
-            <span *ngIf="getUserRole() === 'hiringManager'">
+
+            <button mat-stroked-button color="primary" (click)="goProfile()"  *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">Go profile</button>
+            <div *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">
               <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
-            </span>
-            <span *ngIf="getUserRole() === 'franchisee'">
+            </div>
+            <div *ngIf="getUserRole() === 'franchisee'">
               <app-stores-list-by-franchise></app-stores-list-by-franchise>
-            </span>
+            </div>
           </div>
           <span *ngIf="authService.appUserData">
             <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">

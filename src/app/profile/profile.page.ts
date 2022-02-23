@@ -7,6 +7,8 @@ import { UserService } from '../shared/services/user.service';
 import { matchingPasswords, phoneValidator } from '../shared/utils/app-validators';
 import { FirestoreHelperService } from '../shared/firestore-helper.service';
 import { ActivatedRoute } from '@angular/router';
+import { AlertService } from '../shared/services/alert.service';
+import { toastMess } from '../shared/constants/messages';
 
 @Component({
   selector: 'app-profile',
@@ -28,7 +30,7 @@ export class ProfilePage implements OnInit {
     public fb: FormBuilder,
     public dbHelper: FirestoreHelperService,
     private location: Location,
-    private route: ActivatedRoute
+    public alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -105,7 +107,9 @@ export class ProfilePage implements OnInit {
           updatedAt: this.appUserData.updatedAt
         };
         localStorage.setItem('appUserData', JSON.stringify(newUserData));
+        this.alertService.showSuccess(toastMess.UPDATE_SUCCESS);
         this.isCalling = false;
+        this.isEditForm = false
         // this.userService.getUserById(userId).subscribe((data: any) =>{
         //   this.appUserData = data;
         //   localStorage.setItem('appUserData', JSON.stringify(data));

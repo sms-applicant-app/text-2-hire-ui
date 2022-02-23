@@ -134,8 +134,8 @@ export class ApplicantListComponent implements OnInit {
     async getApplicantAndSendCalendarLink(applicant, store, action){
 
       console.log('applicant data ', applicant, 'store data',store.storeHiringManager, );
-      const hiringManager= await this.dbHelper.doc$(`users/${store.storeHiringManager}`)
-     console.log('hringmanager', hiringManager)
+      const hiringManager = await this.dbHelper.doc$(`users/${store.storeHiringManager}`);
+      console.log('hringmanager', hiringManager);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
@@ -165,8 +165,8 @@ export class ApplicantListComponent implements OnInit {
           this.applicantService.updateApplicant(email, {status: action} );
         }
       });
-    });
-  }
+    }
+
   // get applicants by job
   getApplicantsByJobId(positionId){
       this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
@@ -198,13 +198,16 @@ export class ApplicantListComponent implements OnInit {
     return await applicantDetails.present();
   }
   async addNewHire(applicant, storeData){
-    // add onboarding packages
-    console.log('applicant', applicant, storeData);
+    console.log('store information ', storeData);
+    const hiringManagerEmail = storeData.storeHiringManger;
+   // const franchiseName = await this.dbHelper.doc$(`franchisee/${franchiseId}`);
+
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
-        applicant
+        applicant,
+        hiringManagerEmail
       }
     });
     return await addNewHireModal.present();

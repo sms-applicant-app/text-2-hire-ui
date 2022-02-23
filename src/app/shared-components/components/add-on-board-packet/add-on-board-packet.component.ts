@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {FileUpload} from "../../../shared/models/file-upload";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {OnboardingService} from "../../../shared/services/onboarding.service";
-import {CustomForms, OnBoardPacket} from "../../../shared/models/onBoardPacket";
+import {FileUpload} from '../../../shared/models/file-upload';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {OnboardingService} from '../../../shared/services/onboarding.service';
+import {CustomForms, OnBoardPacket} from '../../../shared/models/onBoardPacket';
 import { ModalController } from '@ionic/angular';
 import { AlertService } from '../../../shared/services/alert.service';
 import { formInclude } from '../../../shared/constants/formInclude';
@@ -14,7 +14,8 @@ import { FileItem } from '../../../shared/models/file-item';
   styleUrls: ['./add-on-board-packet.component.scss'],
 })
 export class AddOnBoardPacketComponent implements OnInit {
-  @Input() storeId: string;
+  @Input() storeData: any;
+  @Input() franchiseName: string;
   fileUpload: FileUpload;
   customForms: FormGroup;
   federalForms: FormGroup;
@@ -92,7 +93,8 @@ export class AddOnBoardPacketComponent implements OnInit {
       this.newOnboardPacket.i9 =  this.federalForms.controls.i9.value ? formInclude.I9 : '';
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
-      this.newOnboardPacket.storeId = this.storeId.toString();
+      this.newOnboardPacket.storeId = this.storeData.storeId.toString();
+      this.newOnboardPacket.receivingHiringManager = this.storeData.hiringManagerId;
       if (this.fileItemsUploaded?.length > 0) {
         const customForms  = this.fileItemsUploaded.map(f => new CustomForms(f.name, f.url));
         this.newOnboardPacket.customForms = JSON.stringify(customForms);

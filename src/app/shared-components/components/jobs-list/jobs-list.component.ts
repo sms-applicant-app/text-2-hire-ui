@@ -160,13 +160,13 @@ export class JobsListComponent implements OnInit {
   }
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;
-    const storeId = this.storeId;
+    const storeData = this.storeData;
     const createOnboardPackage = await this.modalController.create({
       component: AddOnBoardPacketComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeId
+        storeData
       }
     });
     return await createOnboardPackage.present();

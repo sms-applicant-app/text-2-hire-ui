@@ -6,6 +6,8 @@ export class OnBoardPacket {
   stateW4: string;
   storeId: string;
   customForms?: string;
+  applicantId?: string;
+  receivingHiringManager?: string;
 }
 export class CustomForms {
   formUrl: string;

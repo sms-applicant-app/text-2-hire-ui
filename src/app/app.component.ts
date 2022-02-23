@@ -31,7 +31,6 @@ export class AppComponent implements OnInit{
               public router: Router,) {}
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
-    this.roleName = roles[`${this.authService.appUserData?.role}`];
     this.routerChange();
   }
   async addFranchise(){
@@ -59,6 +58,9 @@ export class AppComponent implements OnInit{
   getUserRole(){
     const appUserData = JSON.parse(localStorage.getItem('appUserData'));
     return appUserData?.role;
+  }
+  getUserRoleName(){
+    return roles[`${this.authService.appUserData?.role}`];
   }
 
   routerChange() {

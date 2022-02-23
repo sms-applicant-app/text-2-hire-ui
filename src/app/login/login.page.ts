@@ -143,9 +143,9 @@ export class LoginPage implements OnInit {
         this.firstTimeLogin = true;
         this.authService.SendVerificationMail();
         this.dbHelper.set(`users/${this.userId}`, user);
-        this.registrationForm.reset();
         this.authService.SignIn(this.newUser.email, password.value);
         this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+        this.registrationForm.reset();
       }).catch((err) => {
         this.alertService.showError(err.message);
       });

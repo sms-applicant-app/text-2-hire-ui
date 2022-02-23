@@ -5,6 +5,8 @@ const toastMess = {
 
   CREATE_SUCCESS: 'Create success',
   CREATE_FAILED: 'Create failed',
+  UPDATE_SUCCESS: 'Update success',
+
 
   CREATE_ONBOARD_SUCCESS: 'Create onboard package success',
   CREATE_ONBOARD_FAILED: 'Create onboard package failed',

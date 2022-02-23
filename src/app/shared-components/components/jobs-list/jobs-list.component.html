@@ -1,85 +1,82 @@
 
-<div *ngIf="viewApplicants !=true">
-  <div class ="container-fluid">
-    <div class="modal-header" *ngIf="userRole === 'franchisee'">
-      <p class="modal-title">Get Positions By Store</p>
-      <button class="btn btn-clear close-modal" (click)="closeModal()">
-        <ion-icon name="close-outline"></ion-icon>
-      </button>
-    </div>
-      <div class="p-2 row">
-        <div *ngIf="(!storeId || !selectedStoreId) && userRole === 'hiringManager'">
-          <h3 class="card-title justify-content-evenly flex-column">
-            <span class="card-label fw-bolder fs-3 mb-1">Please choose store</span>
-          </h3>
-        </div>
-        <div *ngIf="storeId || selectedStoreId">
+<div *ngIf="viewApplicants !=true" class="container-fluid height-100">
+  <div class="modal-header" *ngIf="userRole === 'franchisee'">
+    <p class="modal-title">Get Positions By Store</p>
+    <button class="btn btn-clear close-modal" (click)="closeModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+  <div class="pl-3 pr-3">
+    <div class="p-0 mb-2 row">
+      <div *ngIf="(!storeId || !selectedStoreId) && userRole === 'hiringManager'">
+        <h3 class="card-title justify-content-evenly flex-column">
+          <span class="card-label fw-bolder fs-3 mb-1">Please choose store</span>
+        </h3>
+      </div>
+      <div *ngIf="storeId || selectedStoreId" class="row">
+        <div class="col-6">
           <h3 class="card-title justify-content-evenly flex-column">
             <span class="card-label fw-bolder fs-3 mb-1">Positions for:</span> {{storeName}}
           </h3>
+        </div>
+        <div class="col-6">
           <h3 class="card-title justify-content-evenly flex-column">
             <span class="card-label fw-bolder fs-3 mb-1">Store Id to Text:</span>
             <span>{{storeId ? storeId : selectedStoreId}}</span>
           </h3>
         </div>
-        <div class="d-flex flex-row">
-          <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
-          <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
-
-        </div>
       </div>
-      <div class="card-body">
-        <div class="card mb-5 mb-xl-8">
-          <div>
-            <div class="table-responsive" [ngClass]="{'table-default': userRole !== 'hiringManager'}">
-              <p *ngIf="jobs.length <= 0">No Jobs for this Store Yet</p>
-              <table *ngIf="jobs.length" class="table align-middle gs-0 gy-4">
-                <thead>
-                <tr class="fw-bolder text-muted bg-light">
-                 <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
-              <!-- <th class="ps-4 min-w-300px rounded-start">Store ID</th>-->
-                  <th class="ps-4 rounded-start">Job Title</th>
-                  <th class="ps-4 rounded-start">Location</th>
-                  <th class="ps-4 rounded-start">Position Active</th>
-                  <th class="ps-4 rounded-start">Actions</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let job of jobs">
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.jobTitle}}</a>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.addressId}}</a>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.positionOpen}}</a>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="d-flex flex-shrink-0">
-                        <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id, job.position)" >
-                          <ion-icon class="font-24" name="eye-outline"></ion-icon>
-                        </button>
-                        <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)" >
-                          <ion-icon class="font-24" name="trash-outline"></ion-icon>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      <div class="d-flex flex-row">
+        <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
+        <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
       </div>
     </div>
+    <div class="table-responsive" [ngClass]="{'table-default': userRole !== 'hiringManager'}">
+      <p *ngIf="jobs.length <= 0">No Jobs for this Store Yet</p>
+      <table *ngIf="jobs.length" class="table align-middle gs-0 gy-4">
+        <thead>
+        <tr class="fw-bolder text-muted bg-light">
+          <!-- <th class="ps-4 min-w-300px rounded-start">Select</th>-->
+      <!-- <th class="ps-4 min-w-300px rounded-start">Store ID</th>-->
+          <th class="ps-4 rounded-start">Job Title</th>
+          <th class="ps-4 rounded-start">Location</th>
+          <th class="ps-4 rounded-start">Position Active</th>
+          <th class="ps-4 rounded-start">Actions</th>
+
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobs">
+            <td>
+              <div class="d-flex align-items-center">
+                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.jobTitle}}</a>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.addressId}}</a>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.positionOpen}}</a>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex flex-shrink-0">
+                <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id, job.position)" >
+                  <ion-icon class="font-24" name="eye-outline"></ion-icon>
+                </button>
+                <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)" >
+                  <ion-icon class="font-24" name="trash-outline"></ion-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 <div *ngIf="viewApplicants === true">
   <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>

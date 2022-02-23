@@ -112,12 +112,14 @@ export class JobsListComponent implements OnInit {
             if(jobs.docs.length === 0){
               console.log('no jobs with that store', this.storeId);
             } else {
-              jobs.forEach(job =>{
-                const j = job.data();
-                const positionId = job.id;
-                this.jobs.push({id: positionId, position:j});
-                this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
+              this.jobs = jobs.docs.map(doc => {
+                const data = doc.data();
+                return {
+                  id: doc.id,
+                  position: data
+                };
               });
+              this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
             }
           });
         }
@@ -169,10 +171,11 @@ export class JobsListComponent implements OnInit {
     });
     return await createOnboardPackage.present();
   }
-  getApplicants(positionId){
+  getApplicants(positionId: string, jobData: any) {
+    this.jobData = jobData;
     this.viewApplicants = true;
     this.positionId = positionId;
-    this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
+    this.firestore.collection('applicant', ref => ref.where('positionId', '==', positionId)).get()
       .subscribe(ss =>{
         this.applicants = [];
         if (ss.docs.length === 0){
@@ -182,7 +185,6 @@ export class JobsListComponent implements OnInit {
            const a = applicant.data();
            const id = applicant.id;
            this.applicants.push({ id, applicant: a});
-           console.log('applicants applied', this.applicants);
          });
         }
       });

@@ -8,5 +8,11 @@ export class OnBoardPacket {
   customForms?: string;
 }
 export class CustomForms {
-  formUrl?: string;
+  formUrl: string;
+  name: string;
+
+  constructor(name: string, url: string) {
+    this.formUrl = url;
+    this.name = name;
+  }
 }

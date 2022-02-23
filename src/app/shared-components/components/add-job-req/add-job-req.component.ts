@@ -25,7 +25,7 @@ export class AddJobReqComponent implements OnInit {
   addJoblistingFrom: FormGroup;
   jobDetailsFrom: FormGroup;
   jobsData: any = [];
-  onboardingPackagesData: any = [];
+  onboardingPackagesData: any[] = [];
   onboardingPackageId: string;
   hiringManagerId: string;
   //storeData: any;
@@ -86,9 +86,12 @@ export class AddJobReqComponent implements OnInit {
         if (res.docs.length === 0){
           console.log('no docs with that franchise', this.franchiseId);
         } else {
-          this.onboardingPackagesData = res.docs.map((data) => {
-            console.log('data.id', data.id);
-            return data.data();
+          this.onboardingPackagesData = res.docs.map((doc) => {
+            let data = doc.data()
+            return {
+              id: doc.id,
+              ...data
+            };
           });
         }
     });
@@ -132,7 +135,8 @@ export class AddJobReqComponent implements OnInit {
       this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
       this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
       this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
-      this.newJobListing.onboardingPackageName = this.addJoblistingFrom.controls.onboardingPackage.value;
+      this.newJobListing.onboardingPackageId = this.addJoblistingFrom.controls.onboardingPackage.value;
+      this.newJobListing.onboardingPackageName = this.onboardingPackagesData.find(c=> c.id == this.newJobListing.onboardingPackageId).name;
       this.jobService.addJobRec(this.newJobListing).then((res) => {
         if(res){
           const data = {

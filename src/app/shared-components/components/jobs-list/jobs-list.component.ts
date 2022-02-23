@@ -132,14 +132,14 @@ export class JobsListComponent implements OnInit {
   }
   async addJobRec(){
     const franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
-    const storeId = this.storeId;
+    const storeData = this.storeData;
     const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeId,
+        storeData,
         onJobAddedSub
       }
     });

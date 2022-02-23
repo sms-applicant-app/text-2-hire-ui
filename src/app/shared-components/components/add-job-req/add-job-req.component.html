@@ -69,7 +69,7 @@
                 <ion-label position="stacked" >Select Onboarding Package</ion-label>
                 <select class="form-select pl-0" formControlName="onboardingPackage" type="select">
                   <option value="" *ngIf="onboardingPackagesData.length === 0">No onboarding package</option>
-                  <option [value]="package.name" *ngFor="let package of onboardingPackagesData">
+                  <option [value]="package.id" *ngFor="let package of onboardingPackagesData">
                     {{package.name}}
                   </option>
                 </select>

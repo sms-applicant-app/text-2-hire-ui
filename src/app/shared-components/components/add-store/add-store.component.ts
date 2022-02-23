@@ -141,8 +141,7 @@ export class AddStoreComponent implements OnInit {
    return this.firestore.collection('storeIds', ref => ref.orderBy('createdAt', 'desc').limit(1)).get()
       .subscribe(ss => {
         if(ss.docs.length === 0){
-          const id = 0o01;
-          this.newGeneratedStoreId.generatedStoreId = 0o000101;
+          this.newGeneratedStoreId.generatedStoreId = '1';
           this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
           this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then(data=>{
             console.log('added generated store Id', data);
@@ -155,11 +154,11 @@ export class AddStoreComponent implements OnInit {
         });
       });
   }
-  createStoreUniqueId(lastId){
+  createStoreUniqueId(lastId: string){
     // change state to HN for hirenow later we can make better unique ID
     let increment = 0;
     increment = 1;
-    this.newStore.storeId = +increment + parseInt(lastId);
+    this.newStore.storeId = (+increment + parseInt(lastId, 10)).toString();
     this.newGeneratedStoreId.generatedStoreId = this.newStore.storeId;
   }
 

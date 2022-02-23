@@ -4,7 +4,7 @@ import {StoreManager} from './store-manager';
 import firebase from 'firebase';
 
 export class Store {
-  storeId: number;
+  storeId: string;
   storeName: string;
   storePhoneNumber: string;
   storeHiringManager: number;

@@ -119,6 +119,7 @@ export class LoginPage implements OnInit {
 
   goToLogin() {
     this.alreadyRegistered = true;
+    this.registrationForm.reset();
   }
   goBack() {
     this.alreadyRegistered = false;
@@ -144,6 +145,7 @@ export class LoginPage implements OnInit {
         this.dbHelper.set(`users/${this.userId}`, user);
         this.authService.SignIn(this.newUser.email, password.value);
         this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+        this.registrationForm.reset();
       }).catch((err) => {
         this.alertService.showError(err.message);
       });

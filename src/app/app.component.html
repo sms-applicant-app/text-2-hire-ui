@@ -3,18 +3,19 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header> - HIRENOW.US</ion-list-header><br>
-          <ion-note>Software - Registered Trademark</ion-note>
+        <div id="inbox-list" class="side-menu">
+          <p class="side-menu-title">HIRENOW.US</p><br>
+          <p class="side-menu-subtitle">Software - Registered Trademark</p>
 
           <div *ngIf="authService.appUserData">
-            <p class="role-name">{{roleName}}</p>
-            <span *ngIf="getUserRole() === 'hiringManager'">
+            <div><span>Role name:</span><span class="role-name"> {{getUserRoleName()}}</span></div>
+            <button class="mt-3" mat-stroked-button color="primary" (click)="goProfile()"  *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">Go profile</button>
+            <div *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">
               <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
-            </span>
-            <span *ngIf="getUserRole() === 'franchisee'">
+            </div>
+            <div *ngIf="getUserRole() === 'franchisee'">
               <app-stores-list-by-franchise></app-stores-list-by-franchise>
-            </span>
+            </div>
           </div>
           <span *ngIf="authService.appUserData">
             <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
@@ -24,7 +25,7 @@
               </ion-item>
             </ion-menu-toggle>
           </span>
-        </ion-list>
+        </div>
       </ion-content>
     </ion-menu>
    <!-- <app-alert></app-alert>-->

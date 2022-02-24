@@ -17,8 +17,9 @@ import {FirestoreHelperService} from "../../shared/firestore-helper.service";
 export class AddNewHireComponent implements OnInit {
   @Input() applicant: any;
   @Input() store: any;
+  @Input() hiringManagersEmail: any;
   storeId: string;
-
+  applicantId: string;
   positionAppliedForId: string;
   onBoardingPackages: any = [];
   dataSource: MatTableDataSource<Applicant>;
@@ -29,9 +30,10 @@ export class AddNewHireComponent implements OnInit {
   constructor(  public dbHelper: FirestoreHelperService, public storeService: StoreService, public smsService: SmsService, public onBoardingService: OnboardingService, public firestore: AngularFirestore, public fb: FormBuilder) { }
 
   ngOnInit() {
-    console.log('incoming applicant', this.applicant, 'incoming store', this.store);
+    console.log('incoming applicant', this.applicant, 'incoming store', this.store, 'hiring manager email', this.hiringManagersEmail);
     this.storeId = this.applicant.applicant.storeId;
     this.positionAppliedForId = this.applicant.positionId;
+    this.applicantId = this.applicant.email;
     //this.getListOfOnboardingPackages();
     this.getOnboardingPacketsByStoreId(this.storeId);
     this.customFormsAdded = false;

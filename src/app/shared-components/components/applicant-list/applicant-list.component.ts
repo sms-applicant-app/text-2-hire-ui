@@ -23,7 +23,7 @@ import { UserService } from './../../../shared/services/user.service';
 })
 export class ApplicantListComponent implements OnInit {
   @Input() positionId: string;
-  @Input() positionData: any;
+  @Input() jobData: any;
   @Output() messageEvent = new EventEmitter<any>();
   @Input() store: any;
   applicantStatus: ApplicantStatus;
@@ -57,7 +57,7 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-    //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
+   console.log('incoming position', this.jobData);
     this.storeData = this.store;
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();
@@ -77,6 +77,7 @@ export class ApplicantListComponent implements OnInit {
     this.jobService.getJobDetails(this.positionId).subscribe((data: any) => {
       if (data) {
         this.positionDetails = data;
+        console.log('position details',this.positionDetails);
       }
     });
   }
@@ -118,7 +119,7 @@ export class ApplicantListComponent implements OnInit {
   }
 
   getHiringManager(){
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
+    return this.firestore.collection('users', ref => ref.where('email', '==', this.jobData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           console.log('Document not found! Try again!');
@@ -130,28 +131,25 @@ export class ApplicantListComponent implements OnInit {
         }
       });
   }
-    getApplicantAndSendCalendarLink(applicant, store, action){
-      console.log('applicant data ', applicant, 'store data',store);
+    async getApplicantAndSendCalendarLink(applicant, store, action){
+
+      console.log('applicant data ', applicant, 'store data',store.storeHiringManager, );
+      const hiringManager = await this.dbHelper.doc$(`users/${store.storeHiringManager}`);
+      console.log('hringmanager', hiringManager);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
       const jobTitle = this.positionDetails.jobTitle;
-      const hiringManagerName = this.hiringMangerData.fullName;
+      const hiringManagerName = store.hiringManagerName;
       console.log('hiringManagerName', hiringManagerName);
       const storeName = store.storeName;
       console.log('storeName', store.storeName);
       //TODO get franchise name from userAppData @powergate delete this todo when completed
       const franchiseName = 'ACME';
-      const calendarLink = this.hiringMangerData.calendarLink;
+      const calendlyLink = this.hiringMangerData.calendlyLink;
 
-      //    applicantName,
-      //       storeName,
-      //       franchiseName,
-      //       hiringManagerName,
-      //       jobTitle,
-      //       calendarLink
-      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
+      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,jobTitle, phoneNumber, calendlyLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
@@ -167,8 +165,8 @@ export class ApplicantListComponent implements OnInit {
           this.applicantService.updateApplicant(email, {status: action} );
         }
       });
-
     }
+
   // get applicants by job
   getApplicantsByJobId(positionId){
       this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
@@ -200,13 +198,16 @@ export class ApplicantListComponent implements OnInit {
     return await applicantDetails.present();
   }
   async addNewHire(applicant, storeData){
-    // add onboarding packages
-    console.log('applicant', applicant, storeData);
+    console.log('store information ', storeData);
+    const hiringManagerEmail = storeData.storeHiringManger;
+   // const franchiseName = await this.dbHelper.doc$(`franchisee/${franchiseId}`);
+
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
-        applicant
+        applicant,
+        hiringManagerEmail
       }
     });
     return await addNewHireModal.present();

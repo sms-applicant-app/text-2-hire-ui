@@ -108,14 +108,15 @@ export class AddJobReqComponent implements OnInit {
 
   }
   addJobListing(stepper: MatStepper){
-    if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
+ /*   if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
       const storeId = this.storeId;
       if (storeId) {
         this.newJobListing.storeId = this.storeId.toString();
       } else {
         const selectedStore = localStorage.getItem('selectedStore');
         this.newJobListing.storeId = selectedStore;
-      }
+      }*/
+      this.newJobListing.storeId = this.storeData.storeId;
       // this if statement is for if a Franchise owner adds a position
       console.log('storeData', this.storeData);
       this.newJobListing.hiringManagerEmail = this.storeData.storeHiringManager;

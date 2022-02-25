@@ -16,6 +16,7 @@ import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-n
 import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from './../../../shared/services/alert.service';
+import { Role } from './../../../shared/models/role';
 
 @Component({
   selector: 'app-jobs-list',
@@ -133,25 +134,32 @@ export class JobsListComponent implements OnInit {
     this.messageEvent.emit(this.franchiseId);
   }
   async addJobRec(){
-    const franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
-    const storeData = this.storeData;
-  //  const onJobAddedSub = new Subject<JobListing>();
+
+    let franchiseId;
+    if (this.userRole === Role.hiringManager) {
+      franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+    } else {
+      franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
+    }
+    const storeId = this.storeId;
+
+    const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
         storeData,
-        //onJobAddedSub
+        onJobAddedSub
       }
     });
-   /* onJobAddedSub.subscribe((newJob: any) => {
+    onJobAddedSub.subscribe((newJob: any) => {
       this.jobs.unshift({id: newJob.id, position: newJob});
     });
 
     addJobRec.onDidDismiss().then(data => {
       onJobAddedSub.unsubscribe();
-    });*/
+    });
 
     return await addJobRec.present();
   }
@@ -161,7 +169,6 @@ export class JobsListComponent implements OnInit {
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;
     const storeData = this.storeData;
-    console.log('passing to onboard packet', storeData);
     const createOnboardPackage = await this.modalController.create({
       component: AddOnBoardPacketComponent,
       swipeToClose: true,

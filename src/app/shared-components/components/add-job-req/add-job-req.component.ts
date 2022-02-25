@@ -65,7 +65,7 @@ export class AddJobReqComponent implements OnInit {
   }
   initJobsDetailsForm(){
     this.jobDetailsFrom = this.fb.group({
-      fullDescription: [''],
+      fullDescription: ['',  Validators.required],
       benefits: [''],
       specialNotes: [''],
       qualifications: ['']
@@ -85,6 +85,7 @@ export class AddJobReqComponent implements OnInit {
               ...data
             };
           });
+          this.addJoblistingFrom.patchValue({ onboardingPackage: this.onboardingPackagesData[0].id });
         }
     });
   }
@@ -128,7 +129,7 @@ export class AddJobReqComponent implements OnInit {
       if (this.newJobListing.onboardingPackageId) {
         let packageData = this.onboardingPackagesData.find(c=> c.id == this.newJobListing.onboardingPackageId) as any;
         if(packageData) {
-          this.newJobListing.onboardingPackageName = packageData.name;
+          this.newJobListing.onboardingPackageName = packageData.name || '';
         }
       }
       this.jobService.addJobRec(this.newJobListing).then((res) => {

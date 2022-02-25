@@ -215,10 +215,11 @@ export class AddStoreComponent implements OnInit {
       this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
       if (this.addressAdded && this.addressAdded.addressId) {
         this.newStore.addressId = this.addressAdded.addressId;
-      } else {
-        this.alertService.showError('Please add Store address');
-        return;
       }
+      // else {
+      //   this.alertService.showError('Please add Store address');
+      //   return;
+      // }
       this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
       this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
       this.storeService.createStore(this.newStore).then((resp: any) =>{

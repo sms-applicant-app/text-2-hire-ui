@@ -125,8 +125,11 @@ export class AddJobReqComponent implements OnInit {
       this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
       this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
       this.newJobListing.onboardingPackageId = this.addJoblistingFrom.controls.onboardingPackage.value;
-      if (this.onboardingPackagesData.length !== 0) {
-        this.newJobListing.onboardingPackageName = this.onboardingPackagesData.find(c=> c.id == this.newJobListing.onboardingPackageId).name;
+      if (this.newJobListing.onboardingPackageId) {
+        let packageData = this.onboardingPackagesData.find(c=> c.id == this.newJobListing.onboardingPackageId) as any;
+        if(packageData) {
+          this.newJobListing.onboardingPackageName = packageData.name;
+        }
       }
       this.jobService.addJobRec(this.newJobListing).then((res) => {
         if(res){

@@ -118,13 +118,13 @@ export class AddStoreComponent implements OnInit {
 
   receiveAddressMessage($event){
     this.addressAdded = $event;
-    if($event){
-      this.getLastGeneratedStoreId();
-    }
   }
 
   selectionChange(e) {
     console.log('store step', e);
+    if(e.selectedIndex == 3) {
+      this.getLastGeneratedStoreId();
+    }
   }
 
 
@@ -216,10 +216,9 @@ export class AddStoreComponent implements OnInit {
       if (this.addressAdded && this.addressAdded.addressId) {
         this.newStore.addressId = this.addressAdded.addressId;
       }
-      // else {
-      //   this.alertService.showError('Please add Store address');
-      //   return;
-      // }
+      else {
+        this.newStore.addressId = this.addressId;
+      }
       this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
       this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
       this.storeService.createStore(this.newStore).then((resp: any) =>{

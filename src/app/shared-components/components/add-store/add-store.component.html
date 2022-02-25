@@ -1,83 +1,90 @@
 <!--begin::Stepper-->
 <mat-dialog-content>
-  <mat-horizontal-stepper #stepper (selectionChange)="selectionChange($event)">
-<mat-stepper linear>
-  <mat-step [stepControl]="addStoreForm" label="Name, Phone">
-    <form [formGroup]="addStoreForm">
+  <mat-horizontal-stepper [linear]="true" #stepper (selectionChange)="selectionChange($event)">
+    <mat-step [stepControl]="addStoreForm" label="Name, Phone">
+      <form [formGroup]="addStoreForm">
         <div class="form-row">
           <div class="form-group col-md-12">
             <ion-item lines="full" class="mb-3">
               <ion-label position="stacked" required>Name of Store</ion-label>
               <ion-input clearInput type="text" formControlName="storeName" required></ion-input>
-              <span class="field-err" *ngIf="addStoreForm.controls.storeName.errors?.required && (addStoreForm.controls.storeName.dirty || addStoreForm.controls.storeName.touched)">Name of Store required</span>
+              <span class="field-err"
+                *ngIf="addStoreForm.controls.storeName.errors?.required && (addStoreForm.controls.storeName.dirty || addStoreForm.controls.storeName.touched)">Name
+                of Store required</span>
             </ion-item>
 
-            <ion-item  lines="full" class="mb-3">
+            <ion-item lines="full" class="mb-3">
               <ion-label position="stacked" required>Store Phone Number</ion-label>
               <ion-input clearInput type="text" formControlName="storePhoneNumber"></ion-input>
-              <span class="field-err" *ngIf="addStoreForm.controls.storePhoneNumber.errors?.required && (addStoreForm.controls.storePhoneNumber.dirty || addStoreForm.controls.storePhoneNumber.touched)">Store phone number required</span>
+              <span class="field-err"
+                *ngIf="addStoreForm.controls.storePhoneNumber.errors?.required && (addStoreForm.controls.storePhoneNumber.dirty || addStoreForm.controls.storePhoneNumber.touched)">Store
+                phone number required</span>
             </ion-item>
             <div class="d-flex flex-row justify-content-end mt-4">
               <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
-              <button mat-raised-button color="primary" matStepperNext>Next</button>
+              <button mat-raised-button [disabled]="addStoreForm.invalid"  color="primary" matStepperNext>Next</button>
             </div>
           </div>
         </div>
       </form>
-  </mat-step>
-  <mat-step label="Address" style="margin-bottom: 20px;">
-    <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
-    <div class="d-flex flex-row justify-content-end mt-4">
-      <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
-      <button mat-raised-button color="primary" matStepperNext type="button">Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Hiring Manager">
-    <div *ngIf="!addingNewUser">
-      <button mat-stroked-button color="primary" (click)="addNewUserToStore()" class="mb-4">Add New Hiring Manager</button>
+    </mat-step>
+    <mat-step label="Address" style="margin-bottom: 20px;">
+      <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId"
+        [addressType]="addressType"></app-address-form>
+      <div class="d-flex flex-row justify-content-end mt-4">
+        <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
+        <button mat-raised-button [disabled]="!addressAdded" color="primary" matStepperNext type="button">Next</button>
+      </div>
+    </mat-step>
+    <mat-step label="Hiring Manager" [editable]="addressAdded">
+      <div *ngIf="!addingNewUser">
+        <button mat-stroked-button color="primary" (click)="addNewUserToStore()" class="mb-4">Add New Hiring
+          Manager</button>
         <div class="card card-custom">
-        <h3 *ngIf="hiringManagers.length <= 0">No Users for this store</h3>
-       <div class="hiring-manager-table" *ngIf="hiringManagers.length > 0">
-          <mat-table [dataSource]="dataSource">
-            <ng-container  matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef>Hiring Manger's Name</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.fullName}}</mat-cell>
-            </ng-container>
-            <ng-container  matColumnDef="phoneNumber">
-              <mat-header-cell *matHeaderCellDef>Phone Number</mat-header-cell>
-              <mat-cell *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
-            </ng-container>
-                <ng-container  matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-          <mat-cell *matCellDef="let element">
-            <button mat-icon-button color="primary" (click)="addHiringManagerToStore(element.email, element.fullName, stepper)">
-              <ion-icon name="person-add-outline"></ion-icon>
-              <span class="pl-2">Add Hiring manager </span>
-            </button>
-          </mat-cell>
-        </ng-container>
-            <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
-          </mat-table>
+          <h3 *ngIf="hiringManagers.length <= 0">No Users for this store</h3>
+          <div class="hiring-manager-table" *ngIf="hiringManagers.length > 0">
+            <mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Hiring Manger's Name</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.fullName}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="phoneNumber">
+                <mat-header-cell *matHeaderCellDef>Phone Number</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <button mat-icon-button color="primary"
+                    (click)="addHiringManagerToStore(element.email, element.fullName, stepper)">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                    <span class="pl-2">Add Hiring manager </span>
+                  </button>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
+            </mat-table>
+          </div>
         </div>
-        </div>
-    </div>
-    <div *ngIf="addingNewUser">
-      <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId" [storeId]="storeId"></app-register-user>
-    </div>
-    <div class="d-flex flex-row justify-content-end mt-4">
-      <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
-      <button mat-raised-button color="primary" matStepperNext type="button">Next</button>
-    </div>
-  </mat-step>
+      </div>
+      <div *ngIf="addingNewUser">
+        <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId"
+          [storeId]="storeId"></app-register-user>
+      </div>
+      <div class="d-flex flex-row justify-content-end mt-4">
+        <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
+        <button mat-raised-button color="primary" matStepperNext type="button">Next</button>
+      </div>
+    </mat-step>
 
-  <mat-step label="Store Added" style="padding-bottom: 10px;">
-    <h2>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h2><br>
-    <h4>Swipe or click off this window if finished</h4>
-    <button mat-raised-button color="primary" (click)="addStore(stepper)">Add Store</button>
-    <!--<ion-button (click)="closeModal()">Finished</ion-button>-->
-  </mat-step>
-</mat-stepper>
+    <mat-step label="Store Added" style="padding-bottom: 10px;">
+      <h2>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h2>
+      <br>
+      <h4>Swipe or click off this window if finished</h4>
+      <button mat-raised-button color="primary" (click)="addStore(stepper)">Add Store</button>
+      <!--<ion-button (click)="closeModal()">Finished</ion-button>-->
+    </mat-step>
   </mat-horizontal-stepper>
 </mat-dialog-content>
 <!--end::Stepper-->

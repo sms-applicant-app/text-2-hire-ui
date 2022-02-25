@@ -11,6 +11,7 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { OnboardingService } from '../../../shared/services/onboarding.service';
 import {Subject} from 'rxjs';
 import {Store} from "../../../shared/models/store";
+import {StoreService} from "../../../shared/services/store.service";
 @Component({
   selector: 'app-add-job-req',
   templateUrl: './add-job-req.component.html',
@@ -18,8 +19,10 @@ import {Store} from "../../../shared/models/store";
 })
 export class AddJobReqComponent implements OnInit {
   @Input() storeId: string;
+
   @Input() franchiseId: string;
   // franchiseId: string;
+
   newJobListing: JobPosting = new JobPosting();
   addJoblistingFrom: FormGroup;
   jobDetailsFrom: FormGroup;
@@ -27,6 +30,7 @@ export class AddJobReqComponent implements OnInit {
   onboardingPackagesData: any[] = [];
   onboardingPackageId: string;
   hiringManagerId: string;
+  //storeData: any;
   onJobAddedSub: Subject<JobPosting>;
   private userData: any;
   private userId: string;
@@ -37,6 +41,7 @@ export class AddJobReqComponent implements OnInit {
     public jobService: JobService,
     public modalController: ModalController,
     public alertService: AlertService,
+    public storeService: StoreService,
     public onboardingService: OnboardingService
     ) { }
 
@@ -44,11 +49,16 @@ export class AddJobReqComponent implements OnInit {
     this.initAddJobForm();
     this.initJobsDetailsForm();
     this.getOnboardingPackages();
-    // this.userId = JSON.parse(localStorage.getItem('user')).email;
-    // this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
-    //   this.userData = doc.data();
-    //   this.franchiseId = this.userData.franchiseId;
-    // });
+
+    this.franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+    this.userId = JSON.parse(localStorage.getItem('user')).email;
+    this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
+      this.userData = doc.data();
+    });
+    this.storeService.getStoreByGeneratedStoreId(this.storeId).subscribe((data: any)=>{
+      console.log('store', data);
+      this.storeData = data;
+    });
   }
   initAddJobForm(){
     this.addJoblistingFrom = this.fb.group({
@@ -110,6 +120,9 @@ export class AddJobReqComponent implements OnInit {
         const selectedStore = localStorage.getItem('selectedStore');
         this.newJobListing.storeId = selectedStore;
       }
+      // this if statement is for if a Franchise owner adds a position
+      console.log('storeData', this.storeData);
+      this.newJobListing.hiringManagerId = this.storeData.storeHiringManager;
       this.newJobListing.franchiseId = this.franchiseId;
       this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
       this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;

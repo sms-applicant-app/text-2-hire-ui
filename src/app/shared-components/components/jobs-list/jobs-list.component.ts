@@ -134,6 +134,7 @@ export class JobsListComponent implements OnInit {
     this.messageEvent.emit(this.franchiseId);
   }
   async addJobRec(){
+
     let franchiseId;
     if (this.userRole === Role.hiringManager) {
       franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
@@ -141,13 +142,14 @@ export class JobsListComponent implements OnInit {
       franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
     }
     const storeId = this.storeId;
+
     const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeId,
+        storeData,
         onJobAddedSub
       }
     });
@@ -166,13 +168,13 @@ export class JobsListComponent implements OnInit {
   }
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;
-    const storeId = this.storeId;
+    const storeData = this.storeData;
     const createOnboardPackage = await this.modalController.create({
       component: AddOnBoardPacketComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeId
+        storeData
       }
     });
     return await createOnboardPackage.present();

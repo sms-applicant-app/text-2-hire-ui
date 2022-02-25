@@ -60,7 +60,7 @@ export class StorePage implements OnInit {
   getAllFranchiseStoresById(){
   console.log('franchise id', this.franchiseId);
   if(!this.franchiseId) return;
-   this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
+   this.storesData = this.franchiseService.getStoresByFranchiseById(this.franchiseId);
   }
 
   async addJobRec(){
@@ -77,6 +77,6 @@ export class StorePage implements OnInit {
     });
     return await addJobRec.present();
   }
-  
-  
+
+
 }

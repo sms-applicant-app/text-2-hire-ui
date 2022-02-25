@@ -19,8 +19,8 @@ import {StoreService} from "../../../shared/services/store.service";
 })
 export class AddJobReqComponent implements OnInit {
   @Input() storeId: string;
-  @Input() storeData: any;
-  franchiseId: string;
+  @Input() franchiseId: string;
+  // franchiseId: string;
   newJobListing: JobPosting = new JobPosting();
   addJoblistingFrom: FormGroup;
   jobDetailsFrom: FormGroup;
@@ -71,7 +71,7 @@ export class AddJobReqComponent implements OnInit {
   }
   initJobsDetailsForm(){
     this.jobDetailsFrom = this.fb.group({
-      fullDescription: [''],
+      fullDescription: ['',  Validators.required],
       benefits: [''],
       specialNotes: [''],
       qualifications: ['']
@@ -91,6 +91,7 @@ export class AddJobReqComponent implements OnInit {
               ...data
             };
           });
+          this.addJoblistingFrom.patchValue({ onboardingPackage: this.onboardingPackagesData[0].id });
         }
     });
   }
@@ -134,7 +135,13 @@ export class AddJobReqComponent implements OnInit {
       this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
       this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
       this.newJobListing.onboardingPackageId = this.addJoblistingFrom.controls.onboardingPackage.value;
-      this.newJobListing.onboardingPackageName = this.onboardingPackagesData.find(c=> c.id == this.newJobListing.onboardingPackageId).name;
+      if (this.newJobListing.onboardingPackageId) {
+        let packageData = this.onboardingPackagesData.find(c=> c.id == this.newJobListing.onboardingPackageId) as any;
+        if(packageData) {
+          this.newJobListing.onboardingPackageName = packageData.name || '';
+        }
+      }
+      console.log('this.newJobListing',this.newJobListing);
       this.jobService.addJobRec(this.newJobListing).then((res) => {
         if(res){
           const data = {

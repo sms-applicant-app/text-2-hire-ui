@@ -10,6 +10,7 @@ import { AdminFranchiseListPage } from './admin-franchise-list.page';
 import {SharedComponentsModule} from "../../shared-components/shared-components.module";
 import {MatStepperModule} from "@angular/material/stepper";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
+import {AngularMaterialModule} from "../../app-material/angular-material.module";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
     IonicModule,
     AdminFranchiseListPageRoutingModule,
     SharedComponentsModule,
-    MatStepperModule
+    MatStepperModule,
+    AngularMaterialModule
   ],
   exports: [
 

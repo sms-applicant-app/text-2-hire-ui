@@ -23,8 +23,7 @@ import { AlertService } from './../../../shared/services/alert.service';
   styleUrls: ['./jobs-list.component.scss'],
 })
 export class JobsListComponent implements OnInit {
-  @Input() franchiseId: string;
-  @Input() storeId: string;
+  @Input() storeData: any;
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
@@ -35,9 +34,10 @@ export class JobsListComponent implements OnInit {
   positionId: string;
   applicants: any = [];
   storeName: string;
+  storeId: string;
   selectedStoreId: string;
   viewApplicants: boolean;
-  storeData: any;
+  franchiseId: string;
   dataSource: MatTableDataSource<JobListing>;
   displayColumns = ['jobId', 'title','status', 'location', 'actions'];
   //todo action see applicant status update position, schedule interview
@@ -53,8 +53,11 @@ export class JobsListComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('incoming store', this.storeData);
+    this.storeId = this.storeData.storeId;
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
+    this.franchiseId = this.userData.franchiseId;
    // if user role is hiring manager get jobs by storeId
    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
@@ -86,7 +89,7 @@ export class JobsListComponent implements OnInit {
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
-          console.log('no jobs with that store', this.storeId);
+          console.log('no jobs for franchise with that store', this.storeId);
         } else {
           jobs.forEach(job =>{
             this.jobData = job.data();
@@ -110,7 +113,7 @@ export class JobsListComponent implements OnInit {
           .subscribe(jobs =>{
             this.jobs = [];
             if(jobs.docs.length === 0){
-              console.log('no jobs with that store', this.storeId);
+              console.log('no jobs with that selected store', this.storeId);
             } else {
               this.jobs = jobs.docs.map(doc => {
                 const data = doc.data();

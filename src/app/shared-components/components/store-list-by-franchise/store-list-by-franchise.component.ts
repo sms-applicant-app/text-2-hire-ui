@@ -87,15 +87,17 @@ export class StoreListByFranchiseComponent implements OnInit {
       }
     });
   }
-  async getPositionsForStore(storeId, storeName, storeData){
+  async getPositionsForStore(storeData){
     this.seePositions = true;
+    console.log('selected store in store list', storeData);
+
+
     localStorage.setItem('selectedStoreData', JSON.stringify(storeData));
     const getPositionModal = await this.modalController.create({
       component: JobsListComponent,
       swipeToClose: true,
       componentProps: {
-        storeId,
-        storeName,
+       storeData
       }
     });
     return await getPositionModal.present();

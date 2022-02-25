@@ -18,7 +18,8 @@ import {Store} from "../../../shared/models/store";
 })
 export class AddJobReqComponent implements OnInit {
   @Input() storeId: string;
-  franchiseId: string;
+  @Input() franchiseId: string;
+  // franchiseId: string;
   newJobListing: JobPosting = new JobPosting();
   addJoblistingFrom: FormGroup;
   jobDetailsFrom: FormGroup;
@@ -43,11 +44,11 @@ export class AddJobReqComponent implements OnInit {
     this.initAddJobForm();
     this.initJobsDetailsForm();
     this.getOnboardingPackages();
-    this.userId = JSON.parse(localStorage.getItem('user')).email;
-    this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
-      this.userData = doc.data();
-      this.franchiseId = this.userData.franchiseId;
-    });
+    // this.userId = JSON.parse(localStorage.getItem('user')).email;
+    // this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
+    //   this.userData = doc.data();
+    //   this.franchiseId = this.userData.franchiseId;
+    // });
   }
   initAddJobForm(){
     this.addJoblistingFrom = this.fb.group({
@@ -132,6 +133,7 @@ export class AddJobReqComponent implements OnInit {
           this.newJobListing.onboardingPackageName = packageData.name || '';
         }
       }
+      console.log('this.newJobListing',this.newJobListing);
       this.jobService.addJobRec(this.newJobListing).then((res) => {
         if(res){
           const data = {

@@ -58,18 +58,20 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('incoming franchise id from login', this.franchiseId);
     this.appUserData = JSON.parse(localStorage.getItem('appUserData'));
-    if(this.appUserData.role === Role.admin){
+    if(this.appUserData.role === Role.franchisee){
       this.getStoresByFranchise();
     } else {
-      this.getListOfStoresBasedOnUser();
+      this.getListOfStoresByFranchiseOwner();
     }
     this.seeStores = true;
     this.seeApplicants = false;
     this.seePositions = false;
   }
+  //TODO get all franchises but this is on the store page so we should never show franchise on store page
   getStoresByFranchise() {
-   this.listStore = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
+   this.listStore = this.franchiseService.getStoresByFranchiseById(this.franchiseId);
     this.franchiseService.getStoreByFranchiseId(this.franchiseId).subscribe((res) => {
       if (res) {
         this.listStore = [];
@@ -100,8 +102,8 @@ export class StoreListByFranchiseComponent implements OnInit {
     });
     return await getPositionModal.present();
   }
-  async getListOfStoresBasedOnUser(){
-   await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
+  async getListOfStoresByFranchiseOwner(){
+   await this.firestore.doc(`store/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
       this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
         .subscribe(stores =>{
@@ -129,26 +131,24 @@ export class StoreListByFranchiseComponent implements OnInit {
 
   }
   async addStore(){
-    const franchiseId = this.franchiseId;
-    const onStoreAddedSub = new Subject<Store>();
+
     const isAdminDashBoard = false;
     const addStoreModel = await this.modalController.create({
       component: AddStoreComponent,
       swipeToClose: true,
       componentProps: {
-        franchiseId,
-        onStoreAddedSub,
+
         isAdminDashBoard
       }
     });
-
+/*
     onStoreAddedSub.subscribe((newStore: Store) => {
       this.listStore.unshift(newStore);
     });
 
     addStoreModel.onDidDismiss().then(data => {
       onStoreAddedSub.unsubscribe();
-    });
+    });*/
 
     return await addStoreModel.present();
   }

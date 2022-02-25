@@ -6,7 +6,7 @@ import {AuthService} from '../../../shared/services/auth.service';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
 
 import {Role} from '../../../shared/models/role';
-import { AlertService } from './../../../shared/services/alert.service';
+import { AlertService } from '../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
 import { emailValidator, phoneValidator, validatedURL } from '../../../shared/utils/app-validators';
 

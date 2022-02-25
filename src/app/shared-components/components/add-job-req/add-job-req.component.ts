@@ -44,18 +44,22 @@ export class AddJobReqComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    console.log('incoming store id add job component', this.storeId, this.storeData);
     this.initAddJobForm();
     this.initJobsDetailsForm();
-    this.getOnboardingPackages();
+  //  this.getOnboardingPackages();
     this.franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     this.firestore.doc(`users/${this.userId}`).get().subscribe(doc => {
       this.userData = doc.data();
     });
-    this.storeService.getStoreByGeneratedStoreId(this.storeId).subscribe((data: any)=>{
-      console.log('store', data);
-      this.storeData = data;
-    });
+    if (this.storeId !== undefined || null){
+      this.storeService.getStoreByGeneratedStoreId(this.storeId).subscribe((data: any)=>{
+        console.log('store', data);
+        this.storeData = data;
+      });
+    }
+
   }
   initAddJobForm(){
     this.addJoblistingFrom = this.fb.group({
@@ -87,7 +91,7 @@ export class AddJobReqComponent implements OnInit {
           console.log('no docs with that franchise', this.franchiseId);
         } else {
           this.onboardingPackagesData = res.docs.map((doc) => {
-            let data = doc.data()
+            let data = doc.data();
             return {
               id: doc.id,
               ...data

@@ -15,6 +15,7 @@ import { FileItem } from '../../../shared/models/file-item';
 })
 export class AddOnBoardPacketComponent implements OnInit {
   @Input() storeData: any;
+  @Input() storeId: string;
   @Input() franchiseName: string;
   fileUpload: FileUpload;
   customForms: FormGroup;
@@ -40,6 +41,7 @@ export class AddOnBoardPacketComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    console.log('incoming store id add-on-board-packet component', this.storeData);
     this.customForms = this.fb.group({
       onBoardingPackageName: this.fb.array([])
     });
@@ -95,6 +97,8 @@ export class AddOnBoardPacketComponent implements OnInit {
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
       this.newOnboardPacket.storeId = this.storeData.storeId.toString();
       this.newOnboardPacket.receivingHiringManager = this.storeData.hiringManagerId;
+      // @ts-ignore
+      // @ts-ignore
       if (this.fileItemsUploaded?.length > 0) {
         const customForms  = this.fileItemsUploaded.map(f => new CustomForms(f.name, f.url));
         this.newOnboardPacket.customForms = JSON.stringify(customForms);

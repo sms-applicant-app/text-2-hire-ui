@@ -20,6 +20,7 @@ import {StoreService} from "../../../shared/services/store.service";
 export class AddJobReqComponent implements OnInit {
   @Input() storeId: string;
   @Input() franchiseId: string;
+  @Input() storeData: any;
   // franchiseId: string;
   newJobListing: JobPosting = new JobPosting();
   addJoblistingFrom: FormGroup;
@@ -117,7 +118,7 @@ export class AddJobReqComponent implements OnInit {
       }
       // this if statement is for if a Franchise owner adds a position
       console.log('storeData', this.storeData);
-      this.newJobListing.hiringManagerId = this.storeData.storeHiringManager;
+      this.newJobListing.hiringManagerEmail = this.storeData.storeHiringManager;
       this.newJobListing.franchiseId = this.franchiseId;
       this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
       this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
@@ -127,7 +128,7 @@ export class AddJobReqComponent implements OnInit {
       this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
       this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
       this.newJobListing.positionOpen = true;
-      this.newJobListing.hiringManagerId = JSON.parse(localStorage.getItem('user')).email;
+     // this.newJobListing.hiringManagerId = JSON.parse(localStorage.getItem('user')).email;
       this.newJobListing.benefits = this.jobDetailsFrom.controls.benefits.value;
       this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
       this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;

@@ -144,7 +144,7 @@ export class JobsListComponent implements OnInit {
     } else {
       franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
     }
-    const storeId = this.storeId;
+    const storeData = this.storeData;
 
     const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({

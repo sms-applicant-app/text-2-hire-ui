@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {StoreService} from "../../shared/services/store.service";
+import {StoreService} from '../../shared/services/store.service';
 
 @Component({
   selector: 'app-list-stores',

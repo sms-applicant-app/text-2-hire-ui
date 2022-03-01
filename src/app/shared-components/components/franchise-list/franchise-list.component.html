@@ -9,13 +9,13 @@
   </div>-->
 </div>
   <div class="table-responsive" *ngIf="franchiseData.length > 0">
-    <mat-table style="min-width: 1100px;" [dataSource]="dataSource">
+    <mat-table style="min-width: 1100px;" [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"> 
       <ng-container  matColumnDef="businessLegalName">
         <mat-header-cell *matHeaderCellDef>Franchise Legal Name</mat-header-cell>
         <mat-cell *matCellDef="let element">{{element.businessLegalName}}</mat-cell>
       </ng-container>
       <ng-container  matColumnDef="dateCreated">
-        <mat-header-cell *matHeaderCellDef>Date Created</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">Date Created</mat-header-cell>
         <mat-cell *matCellDef="let element">{{element.dateCreated}}</mat-cell>
       </ng-container>
       <ng-container  matColumnDef="phoneNumber">
@@ -50,5 +50,10 @@
       <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayColumns "></mat-row>
     </mat-table>
+    <mat-paginator 
+      [pageSizeOptions]="[25, 50]"
+      showFirstLastButtons 
+      aria-label="Select page of periodic elements">
+    </mat-paginator>
   </div>
 </div>

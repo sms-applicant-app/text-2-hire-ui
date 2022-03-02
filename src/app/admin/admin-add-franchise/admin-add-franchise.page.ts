@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NavigationExtras, Router} from "@angular/router";
-import {DatePipe} from "@angular/common";
+import * as firebase from 'firebase';
+
 import {FirestoreHelperService} from "../../shared/firestore-helper.service";
 import {FranchiseService} from "../../shared/services/franchise.service";
 import {Franchisee} from "../../shared/models/franchisee";
@@ -9,13 +10,15 @@ import {Address} from "../../shared/models/address";
 import { v4 as uuidv4 } from 'uuid';
 import {MatStepper} from '@angular/material/stepper';
 import {MatDialog} from "@angular/material/dialog";
+import { emailValidator, phoneValidator } from '../../shared/utils/app-validators';
+import { AlertService } from '../../shared/services/alert.service';
 
 
 @Component({
   selector: 'app-admin-add-franchise',
   templateUrl: './admin-add-franchise.page.html',
   styleUrls: ['./admin-add-franchise.page.scss'],
-  providers: [ DatePipe , MatStepper]
+  providers: [ MatStepper]
 })
 export class AdminAddFranchisePage implements OnInit {
   addFranchiseForm: FormGroup;
@@ -34,17 +37,16 @@ export class AdminAddFranchisePage implements OnInit {
   addressAdded: boolean;
   franchiseAdded = false;
   date;
-  latestDate: string;
   addedFranchiseOwner: boolean;
   showFranchiseDetails: boolean;
 
   constructor(
     public dbHelper: FirestoreHelperService,
-    public datePipe: DatePipe,
     public fb: FormBuilder,
     public router: Router,
     public franchiseService: FranchiseService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public alertService: AlertService,
   ) { }
 
   ngOnInit() {
@@ -56,18 +58,12 @@ export class AdminAddFranchisePage implements OnInit {
     this.addedFranchiseOwner = false;
     this.showFranchiseDetails = false;
   }
-  createDate() {
-    this.date = new Date();
-    this.latestDate = this.datePipe.transform(this.date, 'MM-dd-yyyy');
-
-    return this.latestDate;
-  }
   initAddFranchiseForm(){
     this.addFranchiseForm = this.fb.group({
       legalBusinessName: ['', Validators.required],
-      corporateEmail: [''],
+      corporateEmail: ['', [Validators.required, emailValidator]],
       dba: [''],
-      corporatePhone: ['']
+      corporatePhone: ['', [Validators.required, phoneValidator]]
     });
   }
   receiveUserMessage($event){
@@ -79,34 +75,39 @@ export class AdminAddFranchisePage implements OnInit {
   }
   receiveAddressMessage($event){
     this.addressAdded = $event;
-    console.log('address added', this.addressAdded);
     if(this.addressAdded){
-      this.goToFranchiseList();
+      this.alertService.showSuccess('Add address success')
     }
   }
-
  async addFranchise(){
-    this.createDate();
+   if (this.addFranchiseForm.valid) {
+    this.franchiseAdded = true;
+    if (this.addressId) {
+      this.newFranchise.addressId = this.addressId;
+    }
+    this.newFranchise.dateCreated = firebase.default.firestore.FieldValue.serverTimestamp();
     this.newFranchise.businessLegalName = this.addFranchiseForm.controls.legalBusinessName.value;
     this.newFranchise.corporateEmail = this.addFranchiseForm.controls.corporateEmail.value;
-   // this.newFranchise.jobTitle = this.addFranchiseForm.controls.jobTitle.value;
     this.newFranchise.dba = this.addFranchiseForm.controls.dba.value;
     this.newFranchise.phoneNumber = this.addFranchiseForm.controls.corporatePhone.value;
-    this.newFranchise.addressId = this.addressId;
-    this.newFranchise.dateCreated = this.latestDate;
     const newFranchise = await this.franchiseService.createFranchise(this.newFranchise);
-    this.franchiseAdded = true;
     this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));
-    console.log('new franchise id=', this.newFranchise.id);
+    this.alertService.showSuccess(`${this.newFranchise.businessLegalName} create success`)
+    this.router.navigate(['admin/admin-franchise-list'])
    return this.newFranchise.id;
+  } else {
+    this.alertService.showError('Please enter field')
+  }
+
 }
   addFranchiseAddress(){
-    this.addressId = uuidv4();
-    this.addAddress = true;
-    this.addressType = 'franchise';
-    this.addFranchise().then(franchiseId =>{
-      console.log('franchise added in address method ', franchiseId);
-    });
+    if (this.addFranchiseForm.valid) {
+      this.addressId = uuidv4();
+      this.addAddress = true;
+      this.addressType = 'Franchise';
+    } else {
+      this.alertService.showError('Please enter field')
+    }
   }
   goToFranchiseList(){
     const userRole = JSON.parse(localStorage.getItem('appUserData')).role;
@@ -115,7 +116,6 @@ export class AdminAddFranchisePage implements OnInit {
     }
     this.router.navigate(['admin/admin-franchise-list']);
   }
-
 
   createUserForFranchise(){
     const navigationExtras: NavigationExtras={

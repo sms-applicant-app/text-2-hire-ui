@@ -4,61 +4,66 @@
 
 <ion-content>
   <div class="container ion-padding-top">
-   <!-- <span *ngIf="!addedFranchiseOwner">
-        <app-register-user (messageEvent)="receiveUserMessage($event)" (addedUserEvent)="receiveUserMessage($event)"></app-register-user>
-    </span>-->
-    <span *ngIf="!franchiseAdded ">
-    <h2 style="font-weight: bold">Business Information</h2>
-      <form [formGroup]="addFranchiseForm" >
-
-        <div class="col-lg-7 col-sm-12">
+    <div class="row">
+      <div class="col-6">
+        <h2 style="font-weight: bold">Business Information</h2>
+        <form [formGroup]="addFranchiseForm" >
+          <div>
+              <ion-item>
+                <ion-label position="stacked">Legal Business Name</ion-label>
+                <ion-input clearInput formControlName="legalBusinessName" required></ion-input>
+                <span class="field-err"
+                *ngIf="addFranchiseForm.controls.legalBusinessName.errors?.required && (addFranchiseForm.controls.legalBusinessName.dirty || addFranchiseForm.controls.legalBusinessName.touched)">
+                Legal Business Name required</span>
+              </ion-item>
+          </div>
+          <div>
             <ion-item>
-              <ion-label position="stacked" >Legal Business Name</ion-label>
-              <ion-input clearInput formControlName="legalBusinessName"></ion-input>
-            </ion-item>
-        </div>
-          <div class="col-lg-7 col-sm-12">
-            <ion-item>
-              <ion-label position="stacked" >Corporate Email</ion-label>
-              <ion-input clearInput formControlName="corporateEmail"></ion-input>
+              <ion-label position="stacked">Corporate Email</ion-label>
+              <ion-input clearInput formControlName="corporateEmail" required></ion-input>
+              <span class="field-err"
+              *ngIf="addFranchiseForm.controls.corporateEmail.errors?.required && (addFranchiseForm.controls.corporateEmail.dirty || addFranchiseForm.controls.corporateEmail.touched)">
+              Corporate Email required</span>
             </ion-item>
           </div>
-        <!-- TODO remove title or position move to register user -->
-          <!--<div class="col-lg-7 col-sm-12">
-
+          <!-- TODO remove title or position move to register user -->
+            <!--<div class="col-lg-7 col-sm-12">
+  
+              <ion-item>
+                <ion-label position="stacked">Job Title / Position</ion-label>
+                <ion-input clearInput formControlName="jobTitle"></ion-input>
+              </ion-item>
+            </div>-->
+          <div>
             <ion-item>
-              <ion-label position="stacked">Job Title / Position</ion-label>
-              <ion-input clearInput formControlName="jobTitle"></ion-input>
-            </ion-item>
-          </div>-->
-          <div class=" col-lg-7 col-sm-12">
-            <ion-item>
-            <ion-label position="stacked">DBA (optional)</ion-label>
-            <ion-input clearInput formControlName="dba"></ion-input>
+              <ion-label position="stacked">DBA (optional)</ion-label>
+              <ion-input clearInput formControlName="dba"></ion-input>
             </ion-item>
           </div>
-
-          <div class="col-lg-7 col-sm-12">
+          <div>
             <ion-item>
               <ion-label position="stacked">Corporate Phone</ion-label>
               <ion-input clearInput formControlName="corporatePhone" ></ion-input>
+              <span class="field-err"
+              *ngIf="addFranchiseForm.controls.corporatePhone.errors?.required && (addFranchiseForm.controls.corporatePhone.dirty || addFranchiseForm.controls.corporatePhone.touched)">
+              Corporate Phone required</span>
             </ion-item>
           </div>
-
-      </form>
-      </span>
-    <span *ngIf="!addAddress">
-      <ion-button (click)="addFranchiseAddress()" color="success">Add Corporate Address</ion-button>
-    </span>
-    <span *ngIf="franchiseAdded">
+        </form>
+        <button class="mt-4" *ngIf="!addAddress" mat-stroked-button color="primary" (click)="addFranchiseAddress()">Add Corporate Address</button>
+      </div>
+      <div class="col-6">
+        <div *ngIf="addAddress">
+          <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
+        </div>
+      </div>
+    </div>
+    <!-- <div *ngIf="franchiseAdded">
       <app-franchise-details [franchisee]="newFranchise"></app-franchise-details>
-    </span>
-
-    <span *ngIf="addAddress">
-        <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId" [addressType]="addressType"></app-address-form>
-    </span>
-
-    <a routerLink="/admin" class="btn btn-link">Cancel</a>
-    <button (click)="goToFranchiseList()">Submit</button>
+    </div> -->
+    <div class="mt-4">
+      <button class="mr-3"mat-raised-button routerLink="/admin">Cancel</button>
+      <button mat-raised-button color="primary" (click)="addFranchise()">Submit</button>
+    </div>
   </div>
 </ion-content>

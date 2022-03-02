@@ -41,9 +41,9 @@ export class FranchiseService {
     const franchiseObj = {...franchise};
     console.log('adding franchise',franchise);
     return this.firestore.collection('franchisee').add(franchiseObj).then(docRef =>{
-        const franchiseId = docRef.id;
+      const franchiseId = docRef.id;
       localStorage.setItem('added-franchisee', JSON.stringify(franchiseId));
-        console.log('add franchise id =', franchiseId);
+      console.log('add franchise id =', franchiseId);
     });
   }
   getFranchises(){

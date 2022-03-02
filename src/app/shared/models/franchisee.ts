@@ -8,7 +8,7 @@ export class Franchisee extends User {
   corporateEmail: string;
   corporatePhoneNumber: string;
   addressId: string;
-  dateCreated: string;
+  dateCreated: any;
   jobTitle: string;
   franchiseOwner: User;
   dba: string;

@@ -45,7 +45,7 @@ export class FranchiseListComponent implements OnInit {
     public authService: AuthService,
     public userService: UserService,
     public storeService: StoreService,
-    private _liveAnnouncer: LiveAnnouncer,
+    public liveAnnouncer: LiveAnnouncer,
     public alertService: AlertService,
     public franchiseService: FranchiseService
   ) {}
@@ -59,37 +59,41 @@ export class FranchiseListComponent implements OnInit {
     this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
       if (data) {
         this.franchiseData = data;
-        console.log('this.franchiseData', this.franchiseData);
         this.handleTable();
       }
     });
   }
+
   handleTable() {
     this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
   async addUserToFranchise(franchiseId){
   // show email password and role to register
     this.displayRegistrationForm = true;
     const userModal = await this.modalController.create({
-      component: RegisterUserComponent,
-      swipeToClose: true,
-      componentProps: {
-      franchiseId
+        component: RegisterUserComponent,
+        swipeToClose: true,
+        componentProps: {
+        franchiseId
       }
     });
     return await userModal.present();
 
   }
+
   export(){
 
   }
+
   getFranchiseDetails(franchiseId){
     //show stores card with list of jobs 2 cards one with users, stores
     this.router.navigate([`/admin/admin-franchise-details/${franchiseId}`]);
 
   }
+
   async addStoreToFranchise(franchiseId){
     const storeIsAddedByAdmin = true;
     const isAdminDashBoard = true;
@@ -104,35 +108,39 @@ export class FranchiseListComponent implements OnInit {
       });
       return await addStoreModel.present();
   }
+
   announceSortChange(sortState: Sort) {
     console.log('sortState', sortState);
     if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+      this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
-      this._liveAnnouncer.announce('Sorting cleared');
+      this.liveAnnouncer.announce('Sorting cleared');
     }
   }
+
   handledActiveUser(franchise) {
     console.log('franchise', franchise);
     this.alertService.confirmChangeStatus('Franchisee').then((data) => {
       if (data) {
+        let dataUpdate = {};
         if (franchise.isActive === true) {
           // deactive franchise
           franchise.isActive = false;
-          const dataUpdate = {
+          dataUpdate = {
             isActive: false,
           }
-          this.franchiseService.updateFranchise(franchise.id, dataUpdate)
         } else {
           // active franchise
           franchise.isActive = true;
-          const dataUpdate = {
+          dataUpdate = {
             isActive: true,
           }
-          this.franchiseService.updateFranchise(franchise.id, dataUpdate).then(res => {
-            console.log('res', res)
-          })
         }
+
+        // update store, job, 
+        this.franchiseService.updateFranchise(franchise.id, dataUpdate).then(res => {
+          console.log('res', res)
+        });
       }
     });
   }

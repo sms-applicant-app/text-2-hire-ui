@@ -6,6 +6,9 @@ import {AddFranchiseComponent} from './shared-components/components/add-franchis
 import {AngularFireAuth} from '@angular/fire/auth';
 import { NavigationEnd, Router } from '@angular/router';
 import { roles } from './shared/constants/role';
+import { FranchiseService } from './shared/services/franchise.service';
+import { AlertService } from './shared/services/alert.service';
+import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -28,9 +31,21 @@ export class AppComponent implements OnInit{
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public ngFireAuth: AngularFireAuth,
-              public router: Router,) {}
+              public router: Router,
+              public franchiseService: FranchiseService,
+              public alertService: AlertService) {}
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    // recheck franchise owner active status
+    if(this.authService.appUserData && this.authService.appUserData.franchiseId) { 
+      this.franchiseService.getFranchiseById(this.authService.appUserData.franchiseId).pipe(take(1)).subscribe((franchise: any) => {
+        // check franchise status
+        if(franchise.isActive === false) {
+          this.alertService.showError('Franchise is not active. User is not allowed to access this application.');
+          this.authService.SignOut();
+        }
+      });
+    }
     this.routerChange();
   }
   async addFranchise(){

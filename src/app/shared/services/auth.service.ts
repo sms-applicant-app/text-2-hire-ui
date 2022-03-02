@@ -5,13 +5,14 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import {User} from '../models/user';
 
 import {AlertController} from '@ionic/angular';
-import {first} from 'rxjs/operators';
+import {first, take} from 'rxjs/operators';
 import {of} from 'rxjs';
 import firebase from 'firebase';
 import {UserService} from './user.service';
 import {Store} from '../models/store';
 import { AlertService } from '../../shared/services/alert.service';
 import {toastMess} from '../../shared/constants/messages';
+import { FranchiseService } from './franchise.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +33,7 @@ export class AuthService {
       public alertController: AlertController,
       public userService: UserService,
       public alertService: AlertService,
+      public franchiseService: FranchiseService
   ) {
     this.ngFireAuth.authState.subscribe(user => {
       if (user) {
@@ -81,12 +83,26 @@ export class AuthService {
   SignIn(email, password) {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.userService.getUserById(email).subscribe((data: any) =>{
-          this.appUserData = data;
-          localStorage.setItem('appUserData', JSON.stringify(data));
-          this.ngZone.run(() =>{
-            this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
-            this.alertService.showSuccess(toastMess.LOGIN_SUCCESS);
+        this.userService.getUserById(email).subscribe((data: any) => {
+          this.ngZone.run(() => {
+            if(data.franchiseId) {
+              this.franchiseService.getFranchiseById(data.franchiseId).pipe(take(1)).subscribe((franchise: any) => {
+                // check franchise status
+                if(franchise.isActive === false) {
+                  this.alertService.showError('Login error. Franchise is not active.');
+                } else {
+                  this.appUserData = data;
+                  localStorage.setItem('appUserData', JSON.stringify(data));
+                  this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
+                  this.alertService.showSuccess(toastMess.LOGIN_SUCCESS);
+                }
+              });
+            } else {
+              this.appUserData = data;
+              localStorage.setItem('appUserData', JSON.stringify(data));
+              this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
+              this.alertService.showSuccess(toastMess.LOGIN_SUCCESS);
+            }
           });
         });
   }).catch((err) => {

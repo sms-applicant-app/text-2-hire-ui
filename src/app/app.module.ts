@@ -35,7 +35,7 @@ import { ToastrModule } from 'ngx-toastr';
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule.enablePersistence(),
+    // AngularFirestoreModule.enablePersistence(), // disable cached data below client browser, always get lastest data from server
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFirestoreModule,

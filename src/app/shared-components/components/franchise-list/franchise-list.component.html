@@ -9,7 +9,7 @@
   </div>-->
 </div>
   <div class="table-responsive" *ngIf="franchiseData.length > 0">
-    <mat-table style="min-width: 1100px;" [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"> 
+    <mat-table style="min-width: 1250px;" [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"> 
       <ng-container  matColumnDef="businessLegalName">
         <mat-header-cell *matHeaderCellDef>Franchise Legal Name</mat-header-cell>
         <mat-cell *matCellDef="let element">{{element.businessLegalName}}</mat-cell>
@@ -33,17 +33,21 @@
       <ng-container  matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
         <mat-cell *matCellDef="let element">
-            <button class="p-0" mat-button (click)="addUserToFranchise(element.id)">
-            <ion-icon name="add-circle"></ion-icon>
+            <button class="p-0" mat-button (click)="addUserToFranchise(element.id)" [disabled]="element.isActive === false">
+              <ion-icon name="add-circle"></ion-icon>
               User 
             </button>
-            <button class="p-0" mat-button (click)="addStoreToFranchise(element.id)">
+            <button class="p-0" mat-button (click)="addStoreToFranchise(element.id)" [disabled]="element.isActive === false">
               <ion-icon name="add-circle-outline"></ion-icon>
               Store
             </button>
-            <button class="p-0" mat-button (click)="getFranchiseDetails(element.id)">
+            <button class="p-0" mat-button (click)="getFranchiseDetails(element.id)" [disabled]="element.isActive === false">
               <ion-icon name="open-outline"></ion-icon>
               Details 
+            </button>
+            <button aria-label="Click to change status Franchisee" class="p-0" mat-stroked-button [color]="element.isActive === false ? 'warn' : 'primary'" (click)="handledActiveUser(element)">
+              <span *ngIf="element.isActive || element.isActive === undefined">Active</span>
+              <span *ngIf="element.isActive === false">Inactive</span>
             </button>
         </mat-cell>
       </ng-container>

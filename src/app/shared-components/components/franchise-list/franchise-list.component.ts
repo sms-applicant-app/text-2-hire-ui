@@ -15,6 +15,7 @@ import {RegisterUserComponent} from '../register-user/register-user.component';
 import {AddStoreComponent} from '../add-store/add-store.component';
 import {UserService} from "../../../shared/services/user.service";
 import {StoreService} from "../../../shared/services/store.service";
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-franchise-list',
@@ -44,7 +45,9 @@ export class FranchiseListComponent implements OnInit {
     public authService: AuthService,
     public userService: UserService,
     public storeService: StoreService,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    public alertService: AlertService,
+    public franchiseService: FranchiseService
   ) {}
 
   ngOnInit() {
@@ -56,6 +59,7 @@ export class FranchiseListComponent implements OnInit {
     this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
       if (data) {
         this.franchiseData = data;
+        console.log('this.franchiseData', this.franchiseData);
         this.handleTable();
       }
     });
@@ -107,5 +111,29 @@ export class FranchiseListComponent implements OnInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
+  }
+  handledActiveUser(franchise) {
+    console.log('franchise', franchise);
+    this.alertService.confirmChangeStatus('Franchisee').then((data) => {
+      if (data) {
+        if (franchise.isActive === true) {
+          // deactive franchise
+          franchise.isActive = false;
+          const dataUpdate = {
+            isActive: false,
+          }
+          this.franchiseService.updateFranchise(franchise.id, dataUpdate)
+        } else {
+          // active franchise
+          franchise.isActive = true;
+          const dataUpdate = {
+            isActive: true,
+          }
+          this.franchiseService.updateFranchise(franchise.id, dataUpdate).then(res => {
+            console.log('res', res)
+          })
+        }
+      }
+    });
   }
 }

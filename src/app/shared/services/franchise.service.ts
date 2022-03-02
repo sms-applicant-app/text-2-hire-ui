@@ -58,7 +58,7 @@ export class FranchiseService {
   return this.dbHelper.collectionWithIds$('franchisee');
   }
   updateFranchise(franchiseId, data): Promise<any>{
-    return this.firestore.collection('franchisee').doc(`${franchiseId}`).set({data}, {merge: true});
+    return this.firestore.collection('franchisee').doc(`${franchiseId}`).set(data, {merge: true});
   }
   deleteFranchise(franchiseId){
     this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp =>{

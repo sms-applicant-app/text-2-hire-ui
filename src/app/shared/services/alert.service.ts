@@ -102,4 +102,31 @@ export class AlertService {
       await alert.present();
     });
   }
+
+  async confirmChangeStatus(alertTitle) {
+    return new Promise(async (resolve, reject) => {
+      const alert = await this.alertController.create({
+        header: 'Confirm',
+        message: `Do you want to change the status of this <strong>${alertTitle}</strong>?`,
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: '',
+            handler: (e) => {
+              resolve(false);
+            }
+          }, {
+            text: 'Ok',
+            cssClass: 'btn btn-danger',
+            handler: () => {
+              resolve(true);
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    });
+  }
 }

@@ -2,6 +2,7 @@ import { AlertService } from './../../../shared/services/alert.service';
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Address} from "../../../shared/models/address";
+import { AddressService } from '../../../shared/services/address.service';
 
 @Component({
   selector: 'app-address-form',
@@ -19,7 +20,8 @@ export class AddressFormComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
-    public alertService: AlertService
+    public alertService: AlertService,
+    public addressService: AddressService
     ) { }
 
   ngOnInit() {
@@ -48,6 +50,7 @@ export class AddressFormComponent implements OnInit {
   }
   submitAddress(){
     if (this.addressForm.valid) {
+      console.log('this.addressId', this.addressId);
       this.newAddress.addressId = this.addressId;
       this.newAddress.addressType = this.addressType;
       this.newAddress.streetAdd1 = this.addressForm.controls.streetAdd1.value;
@@ -55,6 +58,7 @@ export class AddressFormComponent implements OnInit {
       this.newAddress.state = this.addressForm.controls.state.value;
       this.newAddress.zipCode = this.addressForm.controls.zip.value;
       this.newAddress.city = this.addressForm.controls.city.value;
+      this.addressService.createAddress(this.newAddress);
       this.addressAdded = true;
       this.sendMessage();
     } else {

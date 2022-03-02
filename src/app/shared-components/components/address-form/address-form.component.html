@@ -82,12 +82,12 @@
       <button mat-stroked-button color="primary" type="submit">Add Address</button>
     </form>
   </div>
-  <span *ngIf="addressAdded">
-    <p>{{newAddress.streetAdd1}}<br>
-        {{newAddress.streetAdd2}}<br>
-        {{newAddress.state}},
-        {{newAddress.city}},
-        {{newAddress.zipCode}}</p>
-  </span>
+  <div *ngIf="addressAdded">
+    <p>Street Address: {{newAddress.streetAdd1}}</p>
+    <p>Street Address 2: {{newAddress.streetAdd2}}</p>
+    <p>State: {{newAddress.state}}</p>
+    <p>City: {{newAddress.city}}</p>
+    <p>Zipcode: {{newAddress.zipCode}}</p>
+  </div>
 </ion-list>
 

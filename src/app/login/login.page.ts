@@ -138,14 +138,17 @@ export class LoginPage implements OnInit {
           phoneNumber: this.registrationForm.controls.phoneNumber.value,
           dateCreated: this.latestDate,
           updatedAt: this.latestDate,
-          franchiseId: uuid.v4()
+          franchiseId: uuid.v4(),
+          firstTimeLogin: true,
         };
-        this.firstTimeLogin = true;
+        const userData = localStorage.setItem('appUserData', JSON.stringify(user));
+        console.log(userData);
         this.authService.SendVerificationMail();
         if(user.role === 'franchisee'){
           this.dbHelper.set(`franchisee/${user.email}`, user);
-          this.authService.SignIn(this.newUser.email, password.value);
-          this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+          this.authService.SignIn(this.newUser.email, password.value).then(data =>{
+            this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+          });
         }
         this.registrationForm.reset();
       }).catch((err) => {

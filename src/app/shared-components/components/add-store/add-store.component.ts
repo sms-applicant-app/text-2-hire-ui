@@ -84,7 +84,7 @@ export class AddStoreComponent implements OnInit {
   ngOnInit() {
 
     this.userId = JSON.parse(localStorage.getItem('user')).email;
-    this.role = this.authService.getRole();
+    //this.role = this.authService.getRole();
     this.addAddress = false;
     this.addingNewUser = false;
    // this.userService.getUsersByFranchise(this.franchiseId);

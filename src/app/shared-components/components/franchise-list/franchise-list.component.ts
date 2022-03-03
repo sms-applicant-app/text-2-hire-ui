@@ -16,6 +16,7 @@ import {AddStoreComponent} from '../add-store/add-store.component';
 import {UserService} from "../../../shared/services/user.service";
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from '../../../shared/services/alert.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-franchise-list',
@@ -56,9 +57,12 @@ export class FranchiseListComponent implements OnInit {
   }
   getFranchisee(){
     this.franchiseData = [];
-    this.dbHelper.collectionWithIds$('franchisee').subscribe(data => {
+    this.dbHelper.collectionWithIds$('franchisee', ref => ref.orderBy('dateCreated', 'desc')).subscribe(data => {
       if (data) {
         this.franchiseData = data;
+        this.franchiseData.forEach(franchise => {
+          franchise.dateCreated = franchise.dateCreated.toDate();
+        });
         this.handleTable();
       }
     });
@@ -66,8 +70,10 @@ export class FranchiseListComponent implements OnInit {
 
   handleTable() {
     this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   async addUserToFranchise(franchiseId){

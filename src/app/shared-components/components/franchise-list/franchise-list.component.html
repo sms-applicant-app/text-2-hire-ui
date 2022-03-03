@@ -16,7 +16,7 @@
       </ng-container>
       <ng-container  matColumnDef="dateCreated">
         <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">Date Created</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.dateCreated}}</mat-cell>
+        <mat-cell *matCellDef="let element">{{element.dateCreated | date:'MM-dd-YYYY'}}</mat-cell>
       </ng-container>
       <ng-container  matColumnDef="phoneNumber">
         <mat-header-cell *matHeaderCellDef>Corporate Phone Number</mat-header-cell>

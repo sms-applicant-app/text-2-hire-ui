@@ -13,4 +13,5 @@ export class Franchisee extends User {
   franchiseOwner: User;
   dba: string;
   store: Store[] = [];
+  isActive: boolean;
 }

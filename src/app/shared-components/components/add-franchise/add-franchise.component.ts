@@ -90,6 +90,7 @@ export class AddFranchiseComponent implements OnInit {
     this.newFranchise.addressId = this.addressId;
     this.newFranchise.franchiseOwnerId = this.userData.email;
     this.newFranchise.dateCreated = this.latestDate;
+    this.newFranchise.isActive = true;
     const newFranchise = await this.franchiseService.createFranchise(this.newFranchise);
     this.franchiseAdded = true;
     this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));

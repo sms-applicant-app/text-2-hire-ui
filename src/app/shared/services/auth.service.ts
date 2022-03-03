@@ -84,6 +84,7 @@ export class AuthService {
         this.userService.getUserById(email).subscribe((data: any) =>{
           this.appUserData = data;
           localStorage.setItem('appUserData', JSON.stringify(data));
+          //todo re look at route by role function on line 97
           this.ngZone.run(() =>{
             this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
             this.alertService.showSuccess(toastMess.LOGIN_SUCCESS);

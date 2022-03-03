@@ -42,9 +42,8 @@ export class AddressFormComponent implements OnInit {
         Validators.required]
       ],
       zip: ['',
-        [Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(5)]]
+        [ Validators.required,
+          Validators.minLength(5)]]
     });
   }
   submitAddress(){

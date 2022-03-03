@@ -11,8 +11,8 @@ import {ModalController} from '@ionic/angular';
 import {AddNewHireComponent} from '../../../store/add-new-hire/add-new-hire.component';
 import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
 import {AlertService} from '../../../shared/services/alert.service';
-import { JobService } from './../../../shared/services/job.service';
-import { UserService } from './../../../shared/services/user.service';
+import { JobService } from '../../../shared/services/job.service';
+import { UserService } from '../../../shared/services/user.service';
 
 
 @Component({
@@ -57,7 +57,7 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-   console.log('incoming position', this.jobData);
+   console.log('incoming position FROM COMPONANT A', this.jobData);
     this.storeData = this.store;
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();

@@ -85,10 +85,15 @@ export class AuthService {
       .then((result) => {
         this.userService.getUserById(email).subscribe((data: any) => {
           this.ngZone.run(() => {
+            if(!data) {
+              this.alertService.showError('User not found');
+              return;
+            }
+
             if(data.franchiseId) {
               this.franchiseService.getFranchiseById(data.franchiseId).pipe(take(1)).subscribe((franchise: any) => {
                 // check franchise status
-                if(franchise.isActive === false) {
+                if(franchise && franchise.isActive === false) {
                   this.alertService.showError('Login error. Franchise is not active.');
                 } else {
                   this.appUserData = data;

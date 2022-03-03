@@ -88,14 +88,14 @@ export class AddOnBoardPacketComponent implements OnInit {
       this.alertService.showError('Please enter required field');
       return;
     } else if (this.federalForms.valid) {
+      this.newOnboardPacket.customForms = [];
       this.newOnboardPacket.name = this.federalForms.controls.name.value;
       this.newOnboardPacket.i9 =  this.federalForms.controls.i9.value ? formInclude.I9 : '';
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
       this.newOnboardPacket.storeId = this.storeId.toString();
       if (this.fileItemsUploaded?.length > 0) {
-        const customForms  = this.fileItemsUploaded.map(f => new CustomForms(f.name, f.url));
-        this.newOnboardPacket.customForms = JSON.stringify(customForms);
+        this.newOnboardPacket.customForms  = this.fileItemsUploaded.map(f => new CustomForms(f.name, f.url));
       }
       this.createOnboadingPackage(this.newOnboardPacket);
       this.closeModal();

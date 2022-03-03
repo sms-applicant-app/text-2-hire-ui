@@ -40,7 +40,7 @@ export class AppComponent implements OnInit{
     if(this.authService.appUserData && this.authService.appUserData.franchiseId) { 
       this.franchiseService.getFranchiseById(this.authService.appUserData.franchiseId).pipe(take(1)).subscribe((franchise: any) => {
         // check franchise status
-        if(franchise.isActive === false) {
+        if(franchise && franchise.isActive === false) {
           this.alertService.showError('Franchise is not active. User is not allowed to access this application.');
           this.authService.SignOut();
         }

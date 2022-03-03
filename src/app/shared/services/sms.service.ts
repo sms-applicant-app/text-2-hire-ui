@@ -29,11 +29,11 @@ export class SmsService {
 
     return this.http.post(`${this.requestInterviewEndPoint}`, obj, httpOptions);
   }
-  sendNewHireForms( name, applicantPhone, linkToOnboardingForms, franchiseName, hiringManagersName, storePhone, startDate){
+  sendNewHireForms( name, applicantPhone,uniqueIdToOnboardingForms, franchiseName, hiringManagersName, storePhone, startDate){
     const data = {
       name,
       applicantPhone,
-      linkToOnboardingForms,
+      uniqueIdToOnboardingForms,
       franchiseName,
       hiringManagersName,
       storePhone,

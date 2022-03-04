@@ -129,7 +129,7 @@ export class FranchiseListComponent implements OnInit {
     this.alertService.confirmChangeStatus('Franchisee').then((data) => {
       if (data) {
         let dataUpdate = {};
-        if (franchise.isActive === true) {
+        if (franchise.isActive || franchise.isActive === undefined) {
           // deactive franchise
           franchise.isActive = false;
           dataUpdate = {
@@ -142,7 +142,6 @@ export class FranchiseListComponent implements OnInit {
             isActive: true,
           }
         }
-
         // update store, job, 
         this.franchiseService.updateFranchise(franchise.id, dataUpdate).then(res => {
           console.log('res', res)

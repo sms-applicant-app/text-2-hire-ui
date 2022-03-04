@@ -24,7 +24,8 @@ import { Role } from './../../../shared/models/role';
   styleUrls: ['./jobs-list.component.scss'],
 })
 export class JobsListComponent implements OnInit {
-  @Input() storeData: any;
+  @Input() franchiseId: string;
+  @Input() storeId: string;
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
@@ -35,10 +36,9 @@ export class JobsListComponent implements OnInit {
   positionId: string;
   applicants: any = [];
   storeName: string;
-  storeId: string;
   selectedStoreId: string;
   viewApplicants: boolean;
-  franchiseId: string;
+  storeData: any;
   dataSource: MatTableDataSource<JobListing>;
   displayColumns = ['jobId', 'title','status', 'location', 'actions'];
   //todo action see applicant status update position, schedule interview
@@ -54,11 +54,8 @@ export class JobsListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('incoming store', this.storeData);
-    this.storeId = this.storeData.storeId;
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    this.franchiseId = this.userData.franchiseId;
    // if user role is hiring manager get jobs by storeId
    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
@@ -90,7 +87,7 @@ export class JobsListComponent implements OnInit {
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
-          console.log('no jobs for franchise with that store', this.storeId);
+          console.log('no jobs with that store', this.storeId);
         } else {
           jobs.forEach(job =>{
             this.jobData = job.data();
@@ -114,7 +111,7 @@ export class JobsListComponent implements OnInit {
           .subscribe(jobs =>{
             this.jobs = [];
             if(jobs.docs.length === 0){
-              console.log('no jobs with that selected store', this.storeId);
+              console.log('no jobs with that store', this.storeId);
             } else {
               this.jobs = jobs.docs.map(doc => {
                 const data = doc.data();
@@ -137,22 +134,20 @@ export class JobsListComponent implements OnInit {
     this.messageEvent.emit(this.franchiseId);
   }
   async addJobRec(){
-
     let franchiseId;
     if (this.userRole === Role.hiringManager) {
       franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
     } else {
       franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
     }
-    const storeData = this.storeData;
-
+    const storeId = this.storeId;
     const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
       component: AddJobReqComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeData,
+        storeId,
         onJobAddedSub
       }
     });
@@ -171,13 +166,13 @@ export class JobsListComponent implements OnInit {
   }
   async createOnboardingPacket(){
     const franchiseId = this.franchiseId;
-    const storeData = this.storeData;
+    const storeId = this.storeId;
     const createOnboardPackage = await this.modalController.create({
       component: AddOnBoardPacketComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
-        storeData
+        storeId
       }
     });
     return await createOnboardPackage.present();

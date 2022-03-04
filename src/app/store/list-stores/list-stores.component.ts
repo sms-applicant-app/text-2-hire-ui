@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {StoreService} from '../../shared/services/store.service';
+import {StoreService} from "../../shared/services/store.service";
 
 @Component({
   selector: 'app-list-stores',
@@ -7,21 +7,21 @@ import {StoreService} from '../../shared/services/store.service';
   styleUrls: ['./list-stores.component.scss'],
 })
 export class ListStoresComponent implements OnInit {
-  @Input()franchiseId: string;
-
+  @Input()franchiseIdFromList: string;
+  franchisedId: string;
   storesData: any;
   userData: any;
 
   constructor(public storeService: StoreService) { }
 
   ngOnInit() {
-    console.log('incoming franchise id', this.franchiseId);
-   // this.franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+    this.franchisedId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
     this.getAllStoresByFranchiseId();
   }
 
+
   getAllStoresByFranchiseId(){
-    this.storesData = this.storeService.getStoresByFranchise(this.franchiseId);
+    this.storesData = this.storeService.getStoresByFranchise(this.franchisedId);
   }
   //TODO future feature a FO can click his hiring manager and see what stores he is over and monitor performance metrics
   getStoresByHiringManager(){

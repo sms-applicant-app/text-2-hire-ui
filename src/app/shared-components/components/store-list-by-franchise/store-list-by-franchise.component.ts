@@ -12,12 +12,12 @@ import {UserService} from '../../../shared/services/user.service';
 import {AddJobReqComponent} from '../add-job-req/add-job-req.component';
 import {ModalController} from '@ionic/angular';
 import * as uuid from 'uuid';
-import {AddStoreComponent} from '../add-store/add-store.component';
-import { AlertService } from '../../../shared/services/alert.service';
-import { Role } from '../../../shared/models/role';
-import { FranchiseService } from '../../../shared/services/franchise.service';
-import { StoreService } from '../../../shared/services/store.service';
-import { JobsListComponent } from '../jobs-list/jobs-list.component';
+import {AddStoreComponent} from "../add-store/add-store.component";
+import { AlertService } from './../../../shared/services/alert.service';
+import { Role } from './../../../shared/models/role';
+import { FranchiseService } from './../../../shared/services/franchise.service';
+import { StoreService } from './../../../shared/services/store.service';
+import { JobsListComponent } from './../jobs-list/jobs-list.component';
 @Component({
   selector: 'app-store-list-by-franchise',
   templateUrl: './store-list-by-franchise.component.html',
@@ -58,20 +58,18 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('incoming franchise id from login', this.franchiseId);
     this.appUserData = JSON.parse(localStorage.getItem('appUserData'));
-    if(this.appUserData.role === Role.franchisee){
+    if(this.appUserData.role === Role.admin){
       this.getStoresByFranchise();
     } else {
-      this.getListOfStoresByFranchiseOwner();
+      this.getListOfStoresBasedOnUser();
     }
     this.seeStores = true;
     this.seeApplicants = false;
     this.seePositions = false;
   }
-  //TODO get all franchises but this is on the store page so we should never show franchise on store page
   getStoresByFranchise() {
-   this.listStore = this.franchiseService.getStoresByFranchiseById(this.franchiseId);
+   this.listStore = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
     this.franchiseService.getStoreByFranchiseId(this.franchiseId).subscribe((res) => {
       if (res) {
         this.listStore = [];
@@ -89,23 +87,21 @@ export class StoreListByFranchiseComponent implements OnInit {
       }
     });
   }
-  async getPositionsForStore(storeData){
+  async getPositionsForStore(storeId, storeName, storeData){
     this.seePositions = true;
-    console.log('selected store in store list', storeData);
-
-
     localStorage.setItem('selectedStoreData', JSON.stringify(storeData));
     const getPositionModal = await this.modalController.create({
       component: JobsListComponent,
       swipeToClose: true,
       componentProps: {
-       storeData
+        storeId,
+        storeName,
       }
     });
     return await getPositionModal.present();
   }
-  async getListOfStoresByFranchiseOwner(){
-   await this.firestore.doc(`store/${this.userId}`).get().subscribe(doc =>{
+  async getListOfStoresBasedOnUser(){
+   await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
       this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
         .subscribe(stores =>{
@@ -133,24 +129,26 @@ export class StoreListByFranchiseComponent implements OnInit {
 
   }
   async addStore(){
-
+    const franchiseId = this.franchiseId;
+    const onStoreAddedSub = new Subject<Store>();
     const isAdminDashBoard = false;
     const addStoreModel = await this.modalController.create({
       component: AddStoreComponent,
       swipeToClose: true,
       componentProps: {
-
+        franchiseId,
+        onStoreAddedSub,
         isAdminDashBoard
       }
     });
-/*
+
     onStoreAddedSub.subscribe((newStore: Store) => {
       this.listStore.unshift(newStore);
     });
 
     addStoreModel.onDidDismiss().then(data => {
       onStoreAddedSub.unsubscribe();
-    });*/
+    });
 
     return await addStoreModel.present();
   }

@@ -13,7 +13,6 @@ export class UploadListComponent implements OnInit {
   constructor(private uploadService: FileUploadService) { }
 
   ngOnInit() {
-    console.log('incoming store id upload list', this.storeId);
     const path = this.storeId;
     console.log('upload list ', this.storeId);
     this.uploadService.getFiles(path,6).snapshotChanges().pipe(

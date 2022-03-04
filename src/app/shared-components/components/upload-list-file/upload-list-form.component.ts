@@ -18,11 +18,11 @@ export class UploadListFormComponent implements OnInit {
   selectedFiles: FileItem[] = [];
 
   constructor(
-    private firestore: AngularFireDatabase,
+    private firestore: AngularFireDatabase, 
     private storage: AngularFireStorage) { }
 
   ngOnInit() {
-    console.log('incoming store id upload list form component', this.storeId);
+
   }
 
   selectFile(event: any): void {

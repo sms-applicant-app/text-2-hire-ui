@@ -31,7 +31,7 @@
                     <tbody>
                     <tr *ngFor="let p of onBoardingPackages">
                       <td class="form-check form-check-sm form-check-custom form-check-solid">
-                        <input class="form-check-input" type="checkbox" value="{{p.id}}">
+                        <input class="form-check-input" type="checkbox" value="{{p.id}}" [(ngModel)]="p.isChecked">
                       </td>
                       <td>
                         <div class="d-flex align-items-center">
@@ -71,25 +71,23 @@
                       <th></th>
                       </thead>
                       <tbody>
-                      <span *ngFor="let forms of formNames">
-          <p>{{forms}}</p>
-        </span>
                       <ng-container formArrayName="onBoardingPackageName" *ngFor="let group of getFormControls.controls ; let i=index">
                         <tr [formGroupName]="i">
                           <mat-form-field>
-                            <input matInput type="text" formControlName="fileName" value="{{formNames}}">
+                            <input matInput type="text" formControlName="name">
                           </mat-form-field>
+                          <span>{{ group.get('fileName').value }}</span>
                         </tr>
                       </ng-container>
                       </tbody>
                     </table>
                   </form>
                 </div>
-                <label class="required form-label">Upload Custom Forms</label>
-                <div class="row">
-                  <app-upload-form (uploadCompleteEvent)="uploadTask($event)" (formAddedEvent)="formUploaded($event)" [storeId]="storeId">
-
-                  </app-upload-form>
+                <div *ngIf="!customFormsAdded">
+                  <label class="required form-label">Upload Custom Forms</label>
+                  <div class="row">
+                    <app-upload-list-form (uploadCompleteEvent)="formUploaded($event)" [storeId]="storeId"></app-upload-list-form>
+                  </div>
                 </div>
               </div>
             </div>

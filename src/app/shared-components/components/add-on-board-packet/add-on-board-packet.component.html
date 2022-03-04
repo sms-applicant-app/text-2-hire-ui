@@ -41,14 +41,12 @@
           <th></th>
           </thead>
           <tbody>
-          <span *ngFor="let forms of formNames">
-            <p>{{forms}}</p>
-          </span>
           <ng-container formArrayName="onBoardingPackageName" *ngFor="let group of getFormControls.controls ; let i=index">
             <tr [formGroupName]="i">
               <mat-form-field>
-                <input matInput type="text" formControlName="fileName" value="{{formNames}}">
+                <input matInput type="text" formControlName="name">
               </mat-form-field>
+              <span>{{ group.get('fileName').value }}</span>
             </tr>
           </ng-container>
           </tbody>

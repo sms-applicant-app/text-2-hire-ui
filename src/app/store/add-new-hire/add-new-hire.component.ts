@@ -107,7 +107,7 @@ export class AddNewHireComponent implements OnInit {
           formUrl: p.packages.i9,
           name: 'Employment Eligibility Verification'
         });
-        isW4 = true
+        isI9 = true
       }
 
       if(p.packages.stateW4 && !isstateW4) {

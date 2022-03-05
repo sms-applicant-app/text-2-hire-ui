@@ -93,8 +93,9 @@ export class AddOnBoardPacketComponent implements OnInit {
     if (this.federalForms.invalid || !this.federalForms.dirty) {
       this.alertService.showError('Please enter required field');
       return;
-    } else if (this.federalForms.valid) {
-      this.newOnboardPacket.customForms = [];
+    }
+
+    this.newOnboardPacket.customForms = [];
       this.newOnboardPacket.name = this.federalForms.controls.name.value;
       this.newOnboardPacket.i9 =  this.federalForms.controls.i9.value ? formInclude.I9 : '';
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
@@ -106,7 +107,6 @@ export class AddOnBoardPacketComponent implements OnInit {
       }
       this.createOnboadingPackage(this.newOnboardPacket);
       this.closeModal();
-    }
   }
 
   createOnboadingPackage(packet){

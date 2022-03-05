@@ -125,7 +125,7 @@ export class LoginPage implements OnInit {
     this.alreadyRegistered = false;
   }
 
-  registerFranchise(password) {
+  registerUser(password) {
     if (this.registrationForm.valid) {
       this.createDate();
       this.newUser.email = this.registrationForm.controls.email.value;
@@ -142,11 +142,9 @@ export class LoginPage implements OnInit {
         };
         this.firstTimeLogin = true;
         this.authService.SendVerificationMail();
-        if(user.role === 'franchisee'){
-          this.dbHelper.set(`franchisee/${user.email}`, user);
-          this.authService.SignIn(this.newUser.email, password.value);
-          this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
-        }
+        this.dbHelper.set(`users/${this.userId}`, user);
+        this.authService.SignIn(this.newUser.email, password.value);
+        this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
         this.registrationForm.reset();
       }).catch((err) => {
         this.alertService.showError(err.message);

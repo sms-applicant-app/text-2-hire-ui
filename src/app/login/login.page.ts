@@ -28,6 +28,7 @@ export class LoginPage implements OnInit {
   userId: string;
   date: Date;
   latestDate: string;
+  userData: any;
   isRegisteringFranchiseUser = false;
   isRegisteringStore = false;
   firstTimeLogin: boolean;
@@ -111,6 +112,11 @@ export class LoginPage implements OnInit {
       const email = formValue.email;
       const password = formValue.password;
       console.log(email, password);
+      this.userData = this.userService.getUserById(email).subscribe(user =>{
+        console.log(this.userData, user);
+      });
+
+      //localStorage.setItem('appUserData')
      await this.authService.SignIn(email, password);
     } else {
       this.alertService.showError('Please enter field required');
@@ -138,9 +144,10 @@ export class LoginPage implements OnInit {
           phoneNumber: this.registrationForm.controls.phoneNumber.value,
           dateCreated: this.latestDate,
           updatedAt: this.latestDate,
-          franchiseId: uuid.v4()
+          franchiseId: uuid.v4(),
+          firstTimeLogin: true
         };
-        this.firstTimeLogin = true;
+
         this.authService.SendVerificationMail();
         this.dbHelper.set(`users/${this.userId}`, user);
         this.authService.SignIn(this.newUser.email, password.value);

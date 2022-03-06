@@ -5,10 +5,15 @@ import {Observable} from 'rxjs';
 import {Store} from '../models/store';
 import {FranchiseService} from './franchise.service';
 import {GeneratedStoreId} from '../models/generatedStoreId';
-import {AngularFireObject} from "@angular/fire/database";
+import {AngularFireObject} from '@angular/fire/database';
 import { toastMess } from '../constants/messages';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {DomSanitizer} from "@angular/platform-browser";
 
-
+const httpOptions = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  headers: new HttpHeaders({'Content-Type': 'application/json', 'Access-Control-Allow-Origin':' *'})
+};
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +24,9 @@ export class StoreService {
   generatedStoreIdRef: AngularFirestoreCollection<GeneratedStoreId>;
   lastGeneratedId: any;
   storeIdRef: AngularFireObject<any>;
+
   constructor(
-    public firestore: AngularFirestore, public franchiseService: FranchiseService, public alertService: AlertService
+    public firestore: AngularFirestore, public franchiseService: FranchiseService, public alertService: AlertService, public httpClient: HttpClient, public sanitizer: DomSanitizer
   ) { }
   getStoresByFranchise(franchiseId){
     return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
@@ -53,6 +59,8 @@ export class StoreService {
     return this.firestore.collection('store').add(storeObj).then(docRef =>{
       const storeId = docRef.id;
       localStorage.setItem('added-storeId', JSON.stringify(storeId));
+      const qrCode = this.createQRCode(storeId, 1);
+      console.log('returned qr-code in service', qrCode);
       this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
     }).catch((err) => {
       this.alertService.showError(toastMess.CREATE_FAILED);
@@ -76,7 +84,7 @@ export class StoreService {
   }
   findStores(storeId: string, filter = '', sortOrder ='asc',
                        pageNumber = 0, pageSize = 3): Observable<Store[]>{
-    return
+    return;
   }
   getLastGeneratedStoreId(){
     return this.firestore.collection('storeIds', ref => ref.orderBy('createdAt', 'desc').limit(1)).get()
@@ -100,6 +108,30 @@ export class StoreService {
   lastGeneratedStoreId(): Observable<any>{
     this.lastGeneratedId = this.getLastGeneratedStoreId();
     return this.lastGeneratedId;
+  }
+  createQRCode(storeId, download){
+    try{
+      const apiKey = '7vktnoN4oJutWLz_w7nP10xqmC2i6Y-u7YchDQt-flvRuR1S1zvXvM3BL_d45dFv';
+      const url = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://applicant.hirenow.us/positions/${storeId}`;
+      const body =
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          frame_name: 'no-frame',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          qr_code_text: `https://applicant.hirenow.us/positions/${storeId}`,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          image_format: 'SVG',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          qr_code_logo: 'scan-me-square',
+          download: `${download}`
+        };
+
+      return this.httpClient.post(url, body, httpOptions);
+    } catch (error){
+      console.log(error, 'creating qr code');
+      return error;
+    }
+
   }
   deleteStore(id){
     return this.firestore.doc(`store/${id}`).delete().then(resp =>{

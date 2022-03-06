@@ -42,9 +42,6 @@ export class StorePage implements OnInit {
   }
 
   ngOnInit() {
-
-  }
-  ionViewWillEnter(){
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
     this.franchiseId = this.userData.franchiseId;
     if(this.userData.role === 'hiringManager'){
@@ -57,6 +54,7 @@ export class StorePage implements OnInit {
     }
     this.getAllFranchiseStoresById();
   }
+
   getAllFranchiseStoresById(){
   console.log('franchise id', this.franchiseId);
   if(!this.franchiseId) return;
@@ -77,6 +75,6 @@ export class StorePage implements OnInit {
     });
     return await addJobRec.present();
   }
-  
-  
+
+
 }

@@ -21,6 +21,7 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
 import { phoneValidator } from '../../../shared/utils/app-validators';
 import { AuthService } from '../../../shared/services/auth.service';
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 
@@ -61,6 +62,8 @@ export class AddStoreComponent implements OnInit {
   dataSource: MatTableDataSource<User>;
   hiringManagers: any = [];
   lastGeneratedId: any;
+  qrCodeId: string;
+  storeCreated: boolean;
   displayColumns= ['name', 'phoneNumber', 'actions'];
   onStoreAddedSub: Subject<Store>;
   role: string;
@@ -78,6 +81,7 @@ export class AddStoreComponent implements OnInit {
     public alertService: AlertService,
     public modalController: ModalController,
     public authService: AuthService,
+    public sanitizer: DomSanitizer
 
   ) { }
 
@@ -92,6 +96,7 @@ export class AddStoreComponent implements OnInit {
     this.addStoreAddress();
     this.initialStoreId = '005';
     this.getHiringManagersPerFranchise();
+    this.storeAdded = false;
   }
 
   createDate() {
@@ -224,14 +229,19 @@ export class AddStoreComponent implements OnInit {
       this.storeService.createStore(this.newStore).then((resp: any) =>{
         this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
         this.newGeneratedStoreId.storeId = this.storeId;
+        this.storeAdded = true;
         this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
+       /* this.qrCode = this.storeService.createQRCode(this.storeId, 1).subscribe((data: any)=>{
+          console.log('qr-code', this.qrCode);
+        });*/
+
         this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
         if ( this.isAdminDashBoard === false) {
           this.onStoreAddedSub.next({
             ...this.newStore
           });
         }
-        this.closeModal();
+
       });
     } else {
       this.alertService.showError('Please add Name or Phone Store');

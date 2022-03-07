@@ -27,7 +27,7 @@ export class UserService {
     return this.firestore.collection('user', ref => ref.where(`${franchiseId}`, '==', franchiseId )).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
-          this.message = 'Document not found! Try again!';
+          this.message = 'No Users for franchise!';
         } else {
           ss.docs.forEach(doc => {
             this.message = '';

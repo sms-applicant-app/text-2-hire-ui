@@ -22,6 +22,7 @@ import { toastMess } from '../../../shared/constants/messages';
 import { phoneValidator } from '../../../shared/utils/app-validators';
 import { AuthService } from '../../../shared/services/auth.service';
 import {DomSanitizer} from "@angular/platform-browser";
+import {StoreHiringManager} from "../../../shared/models/store-manager";
 
 
 
@@ -61,6 +62,7 @@ export class AddStoreComponent implements OnInit {
   existingHiringManagerId: string;
   dataSource: MatTableDataSource<User>;
   hiringManagers: any = [];
+  newStoreManger: StoreHiringManager = new StoreHiringManager();
   lastGeneratedId: any;
   qrCodeId: string;
   storeCreated: boolean;
@@ -190,7 +192,7 @@ export class AddStoreComponent implements OnInit {
   receiveUserMessage($event){
     this.newUserHiringManagerData = $event;
     console.log('user added', this.newUserHiringManagerData);
-    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+    this.newStore.storeHiringEmail = this.newUserHiringManagerData.email;
     this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
     console.log('adding new manager',this.newStore);
   }
@@ -204,11 +206,12 @@ export class AddStoreComponent implements OnInit {
   addHiringManagerToStore(userId,hiringManagerName, stepper: MatStepper){
     // update hiring manager by assigning the store to id to their user object
     // if new user create User if existing just update user
+    console.log('adding hiring manager ', userId, hiringManagerName);
       const storeId = this.newStore.storeId;
-      this.newStore.storeHiringManager = userId;
+      this.newStore.storeHiringEmail = userId;
       this.newStore.hiringManagersName = hiringManagerName;
      //todo: add navigation to go to next Mat Step
-    this.alertService.showSuccess('Hiring manager added ', this.newStore.storeHiringManager);
+    this.alertService.showSuccess('Hiring manager added ', this.newStore.storeHiringEmail);
     stepper.next();
   }
   addStore(stepper: MatStepper){

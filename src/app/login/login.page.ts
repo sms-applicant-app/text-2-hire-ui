@@ -162,12 +162,16 @@ export class LoginPage implements OnInit {
           updatedAt: this.latestDate,
           franchiseId: uuid.v4(),
           firstTimeLogin: true // next logging need to be prompted to finish Franchise profile ticket HNC-165
-        };
+        });
+        const userData = localStorage.setItem('appUserData', JSON.stringify(user));
+        console.log(userData);
 
         this.authService.SendVerificationMail();
+
         this.dbHelper.set(`users/${this.userId}`, user);
         this.authService.SignIn(this.newUser.email, password.value);
         this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+
         this.registrationForm.reset();
       }).catch((err) => {
         this.alertService.showError(err.message);

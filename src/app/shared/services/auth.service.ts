@@ -6,12 +6,23 @@ import {User} from '../models/user';
 
 import {AlertController} from '@ionic/angular';
 import {first} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import firebase from 'firebase';
 import {UserService} from './user.service';
 import {Store} from '../models/store';
-import { AlertService } from '../../shared/services/alert.service';
+import { AlertService } from './alert.service';
 import {toastMess} from '../../shared/constants/messages';
+import {FirestoreHelperService} from '../firestore-helper.service';
+import {FranchiseService} from "./franchise.service";
+interface Franchise {
+  dateCreate: string;
+  email: string;
+  firstName: string;
+  franchiseId: string;
+  phoneNumber: string;
+  role: string;
+  updatedAt: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +31,7 @@ export class AuthService {
   userData: any;
   appUserData: any;
   profileData: any;
+  franchise: Observable<Franchise[]>;
 
   user: User;
   isLogin = false;
@@ -32,6 +44,8 @@ export class AuthService {
       public alertController: AlertController,
       public userService: UserService,
       public alertService: AlertService,
+      public dbHelper: FirestoreHelperService,
+      public franchiseService: FranchiseService
   ) {
     this.ngFireAuth.authState.subscribe(user => {
       if (user) {
@@ -47,7 +61,7 @@ export class AuthService {
     });
   }
 
-  getRole() {
+  async getRole() {
     const appUserData = JSON.parse(localStorage.getItem('appUserData')).role;
     return appUserData;
   }
@@ -68,8 +82,8 @@ export class AuthService {
             JSON.parse(localStorage.getItem('user'));
           }
         });
-        this.userService.getUserById(email).subscribe((data: any) => {
-          console.log(data.role, 'returned from log in');
+        this.userService.getFranchiseeById(email).subscribe((data: any) => {
+          console.log(data, 'returned from log in');
           this.appUserData = data;
           localStorage.setItem('appUserData', JSON.stringify(data));
           this.routeUserBasedOnRole(data.role);
@@ -80,14 +94,15 @@ export class AuthService {
   // Login in with email/password
   SignIn(email, password) {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
-      .then((result) => {
-        this.userService.getUserById(email).subscribe((data: any) =>{
-          this.appUserData = data;
-          localStorage.setItem('appUserData', JSON.stringify(data));
-          this.ngZone.run(() =>{
-            this.router.navigateByUrl('store', {state: {franchiseId: data.franchiseId}});
-            this.alertService.showSuccess(toastMess.LOGIN_SUCCESS);
-          });
+
+      .then((result) => {;
+        console.log('results', result);
+       this.userData = this.franchiseService.getFranchiseById(email).subscribe((franchise: any) =>{
+          console.log(franchise.role, this.userData.role);
+          this.userData = franchise;
+         localStorage.setItem('appUserData', JSON.stringify(this.userData));
+          this.routeUserBasedOnRole(this.userData.role);
+
         });
   }).catch((err) => {
     this.alertService.showError(err.message);
@@ -108,7 +123,7 @@ export class AuthService {
         console.log('Route Franchisee');
       }*/
     // combining user roles for franchise and hiring manager to minimize change management on the dashboard
-    if (userRole === 'hiringManager') {
+    if (userRole === 'hiringManager' || userRole === 'franchisee') {
       console.log('route by user role', userRole);
       this.router.navigate(['store']);
     }

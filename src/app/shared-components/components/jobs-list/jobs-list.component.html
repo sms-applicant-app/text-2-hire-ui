@@ -27,8 +27,8 @@
         </div>
       </div>
       <div class="d-flex flex-row">
-        <button class="mr-4" mat-raised-button color="primary" (click)="addJobRec()">Add Position</button>
-        <button mat-raised-button color="primary" (click)="createOnboardingPacket()">Create Onboard Package</button>
+        <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
+        <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
       </div>
     </div>
     <div class="table-responsive" [ngClass]="{'table-default': userRole !== 'hiringManager'}">
@@ -79,7 +79,7 @@
   </div>
 </div>
 <div *ngIf="viewApplicants === true">
-  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [jobData]="jobData"></app-applicant-list>
+  <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>
 </div>
 
 

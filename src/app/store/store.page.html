@@ -50,7 +50,7 @@
 </div>
   </div>
   <span *ngIf="role === 'franchisee'">
-    <app-store-list-by-franchise [franchiseId]="franchiseId"></app-store-list-by-franchise>
+    <app-list-stores [franchiseIdFromList]="franchiseId"></app-list-stores>
   </span>
 
   <span *ngIf="role === 'hiringManager'">

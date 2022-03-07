@@ -94,6 +94,7 @@ export class AuthService {
   // Login in with email/password
   SignIn(email, password) {
     return this.ngFireAuth.signInWithEmailAndPassword(email, password)
+
       .then((result) => {;
         console.log('results', result);
        this.userData = this.franchiseService.getFranchiseById(email).subscribe((franchise: any) =>{
@@ -101,6 +102,7 @@ export class AuthService {
           this.userData = franchise;
          localStorage.setItem('appUserData', JSON.stringify(this.userData));
           this.routeUserBasedOnRole(this.userData.role);
+
         });
   }).catch((err) => {
     this.alertService.showError(err.message);

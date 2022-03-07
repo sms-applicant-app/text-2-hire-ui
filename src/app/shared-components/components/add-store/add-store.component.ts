@@ -87,11 +87,11 @@ export class AddStoreComponent implements OnInit {
     //this.role = this.authService.getRole();
     this.addAddress = false;
     this.addingNewUser = false;
-   // this.userService.getUsersByFranchise(this.franchiseId);
+    this.userService.getUsersByFranchise(this.franchiseId);
     this.createStoreForm();
     this.addStoreAddress();
     this.initialStoreId = '005';
-   // this.getHiringManagersPerFranchise();
+    this.getHiringManagersPerFranchise();
   }
 
   createDate() {

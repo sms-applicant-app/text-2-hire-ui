@@ -11,7 +11,7 @@ export class JobPosting {
   addressId: string;
   jobType: string; // full time part time
   positionOpen: boolean;
-  hiringManagerEmail: string;
+  hiringManagerId: string;
   companyWebsite?: string;
   salary?: string;
   positionExpiration?: string;

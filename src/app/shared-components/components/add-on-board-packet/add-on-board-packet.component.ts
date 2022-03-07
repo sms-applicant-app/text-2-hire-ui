@@ -49,24 +49,15 @@ export class AddOnBoardPacketComponent implements OnInit {
     });
     this.addCustomForm = false;
     this.customFormsAdded = false;
-    this.addFormRowToPackage();
   }
   ngAfterOnInit() {
     this.formsControl = this.customForms.get('onBoardingPackageName') as FormArray;
   }
-  initiateOnboardPackage(): FormGroup {
-    return this.fb.group({
-      fileName: [],
-    });
-  }
-  addCustomFormButton(){
-    this.addFormRowToPackage();
+
+  addCustomFormButton() {
     this.addCustomForm = true;
   }
-  addFormRowToPackage(){
-    const control = this.customForms.get('onBoardingPackageName') as FormArray;
-    return control.push((this.initiateOnboardPackage()));
-  }
+
   get getFormControls(){
     const control = this.customForms.get('onBoardingPackageName') as FormArray;
     return control;

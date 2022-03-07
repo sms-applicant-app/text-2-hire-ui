@@ -25,7 +25,6 @@ export class ApplicantListComponent implements OnInit {
   @Input() positionId: string;
   @Input() positionData: any;
   @Output() messageEvent = new EventEmitter<any>();
-  @Input() store: any;
   applicantStatus: ApplicantStatus;
   applicants: any = [];
   dataSource: MatTableDataSource<Applicant>;
@@ -39,6 +38,7 @@ export class ApplicantListComponent implements OnInit {
   positionDetails: any;
   control: FormArray;
   hiringMangerData: any;
+  hiringManager: string;
   selectedStore: any;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
   constructor(public fb: FormBuilder,
@@ -53,14 +53,16 @@ export class ApplicantListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('incoming position data from parent component', this.positionData);
     this.touchedRows = [];
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
     //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
-    this.storeData = this.store;
+
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
-    this.getHiringManager();
+    this.hiringManager = JSON.parse(localStorage.getItem('selectedStoreData')).hiringManager;
+    //this.getHiringManager(this.hiringManager);
     this.getApplicantsByJobId(this.positionId);
     this.getPositionDetail();
     this.isSubmitted = false;
@@ -117,11 +119,12 @@ export class ApplicantListComponent implements OnInit {
 
   }
 
-  getHiringManager(){
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
+  getHiringManager(hiringManger){
+    console.log('getting hiring manager');
+    return this.firestore.collection('users', ref => ref.where('email', '==',hiringManger).where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
-          console.log('Document not found! Try again!');
+          console.log('No hiring managers found! Try again!', hiringManger);
         } else {
           ss.docs.forEach(doc => {
             this.hiringMangerData = doc.data();
@@ -137,13 +140,13 @@ export class ApplicantListComponent implements OnInit {
       const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
       const jobTitle = this.positionDetails.jobTitle;
-      const hiringManagerName = this.hiringMangerData.fullName;
+      const hiringManagerName = store.hiringManagersName;
       console.log('hiringManagerName', hiringManagerName);
       const storeName = store.storeName;
       console.log('storeName', store.storeName);
       //TODO get franchise name from userAppData @powergate delete this todo when completed
       const franchiseName = 'ACME';
-      const calendarLink = this.hiringMangerData.calendarLink;
+      const calendarLink = this.hiringMangerData.calendlyLink;
 
       //    applicantName,
       //       storeName,

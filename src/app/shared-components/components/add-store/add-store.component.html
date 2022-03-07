@@ -79,11 +79,38 @@
     </mat-step>
 
     <mat-step label="Store Added" style="padding-bottom: 10px;">
-      <h2>Your Unique StoreId that will be texted to the Hirenow number is <strong>{{newStore.storeId}}</strong></h2>
+      <h2>Your Unique StoreId the applicants will need to test to 314.526.2241 is <br><strong>{{newStore.storeId}}</strong><br> Its important to print this number and display at entrances, on tables or use a free QR code generator.
+      </h2>
+      <p>To use a free QR Generator such as <a href="https://www.qr-code-generator.com/" target="_blank">QR-Generator</a>
+        and simply copy and past https://applicant.hirenow.us/positions/{{newStore.storeId}}<br></p>
       <br>
-      <h4>Swipe or click off this window if finished</h4>
-      <button mat-raised-button color="primary" (click)="addStore(stepper)">Add Store</button>
+      <h2>Review the Store information and if correct add store</h2>
+      <p>{{newStore.storeName}}</p>
+      <p>{{newStore.hiringManagersName}}</p>
+      <p>{{newStore.storePhoneNumber}}</p>
+
+      <button mat-raised-button color="primary" matStepperNext type="button" (click)="addStore(stepper)">Add Store</button>
       <!--<ion-button (click)="closeModal()">Finished</ion-button>-->
+    </mat-step>
+    <mat-step label="Download QR-Cde" style="padding-bottom: 10px;">
+      <div class="row">
+        <div class="col-8" *ngIf="storeAdded === true">
+
+          <h2>Right Click on QR Code to save image for printing</h2>
+              <div class="col-6">
+            <img src='https://api.qrserver.com/v1/create-qr-code/?data=https://applicant.hirenow.us/positions/{{newStore.storeId}}&amp;size=200x200' alt="" title="{{newStore.storeName}}" />
+              </div>
+
+
+        </div>
+      </div>
+      <div class="row padding-top" style="padding-top: 10px;">
+        <div class="col-6">
+        <button mat-raised-button color="primary" type="button" (click)="closeModal()">Finished</button>
+        </div>
+      </div>
+      <!-- <img src="{{qrCode}}" alt="{{newStore.storeName}}" height="100px" width="100px">-->
+
     </mat-step>
   </mat-horizontal-stepper>
 </mat-dialog-content>

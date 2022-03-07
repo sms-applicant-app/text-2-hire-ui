@@ -6,6 +6,7 @@ import {AddFranchiseComponent} from './shared-components/components/add-franchis
 import {AngularFireAuth} from '@angular/fire/auth';
 import { NavigationEnd, Router } from '@angular/router';
 import { roles } from './shared/constants/role';
+import {AngularFirestore} from "@angular/fire/firestore";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit{
     { title: 'Log out', url: '/logout', icon: 'log-out-outline' },
 
   ];
+  hiringManager: any =[];
   userData: any;
   isLoggedIn: boolean;
   roleName: string;
@@ -28,10 +30,12 @@ export class AppComponent implements OnInit{
   constructor(public authService: AuthService,
               public modalController: ModalController,
               public ngFireAuth: AngularFireAuth,
-              public router: Router,) {}
+              public router: Router,
+              public firestore: AngularFirestore) {}
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
     this.routerChange();
+   // this.cleanUpHiringManagersWithNoCalendarLink();
   }
   async addFranchise(){
     const franchiseOwner = this.authService.userData.email;
@@ -44,7 +48,29 @@ export class AppComponent implements OnInit{
     });
     return await addFranchise.present();
   }
-
+ /* cleanUpHiringManagersWithNoCalendarLink(){
+    this.firestore.collection('users', ref => ref.where('role', '==', 'hiringManager')).get()
+      .subscribe(ss =>{
+        this.hiringManager = [];
+        if(ss.docs.length === 0){
+          console.log('no hiring managers');
+        } else {
+          ss.forEach(hm =>{
+            console.log(hm.data());
+            const id = hm.id;
+          this.hiringManager.push(id, hm.data());
+            if (this.hiringManager.calendlyLink === null){
+              const hms = hm.data();
+              for(let i=0; i < this.hiringManager.length; i++){
+                if (hms[i].calendly === undefined){
+                  console.log('hm with no calendly', hms);
+                }
+              }
+            }
+          });
+        }
+      });
+  }*/
   goToPage(url: string) {
     if(url === '/logout') {
       this.authService.SignOut();

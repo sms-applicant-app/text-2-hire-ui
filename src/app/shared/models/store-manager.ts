@@ -1,8 +1,13 @@
 import {User} from './user';
 
-export class StoreManager {
-  user: User;
+export class StoreHiringManager {
+  userId: string;
   dateCreated: string;
   franchiseId: string;
-  stores = [];
+  fullName: string;
+  email;
+  phoneNumber: string;
+  calendlyLink: string;
+  role: string;
+  storeIds = [];
 }

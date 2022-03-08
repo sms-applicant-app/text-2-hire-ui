@@ -13,7 +13,7 @@
       <ng-container  matColumnDef="storeName">
         <mat-header-cell *matHeaderCellDef class="pl-0">Locations</mat-header-cell>
         <i class="fas fa-map-marker-alt"></i>
-          <div class="list-store-item" [ngClass]="{'active': selectedItem == element.storeId}" *matCellDef="let element" (click)="getOpenPositionsByStore(element.storeId)">
+          <div class="list-store-item" [ngClass]="{'active': selectedItem == element.storeId}" *matCellDef="let element" (click)="getOpenPositionsByStore(element.storeId, element)">
             <mat-cell class="pl-0">{{element.storeName}} | ID = {{element.storeId}}</mat-cell>
           </div>
         <i class="fas fa-angle-right"></i>

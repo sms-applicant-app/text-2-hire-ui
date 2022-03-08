@@ -60,8 +60,9 @@ export class FranchiseListComponent implements OnInit {
     this.dbHelper.collectionWithIds$('franchisee', ref => ref.orderBy('dateCreated', 'desc')).subscribe(data => {
       if (data) {
         this.franchiseData = data;
+        console.log('data', data);
         this.franchiseData.forEach(franchise => {
-          franchise.dateCreated = franchise.dateCreated.toDate();
+          // franchise.dateCreated = franchise.dateCreated.toDate();
         });
         this.handleTable();
       }

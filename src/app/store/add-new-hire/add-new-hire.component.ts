@@ -10,7 +10,7 @@ import {StoreService} from "../../shared/services/store.service";
 import {FirestoreHelperService} from "../../shared/firestore-helper.service";
 import { AlertService } from '../../shared/services/alert.service';
 import { CustomForms } from '../../shared/models/onBoardPacket';
-import { formInclude } from '../../shared/constants/formInclude';
+import {ModalController} from '@ionic/angular';
 
 @Component({
   selector: 'app-add-new-hire',
@@ -29,14 +29,16 @@ export class AddNewHireComponent implements OnInit {
   formNames: any = [];
   customForms: FormGroup;
   fileUpload: FileUpload;
-  constructor(  
-    public dbHelper: FirestoreHelperService, 
-    public storeService: StoreService, 
-    public smsService: SmsService, 
-    public onBoardingService: OnboardingService, 
-    public firestore: AngularFirestore, 
+  constructor( 
+    public dbHelper: FirestoreHelperService,
+    public storeService: StoreService,
+    public smsService: SmsService,
+    public onBoardingService: OnboardingService,
+    public firestore: AngularFirestore,
     public fb: FormBuilder,
-    public alertService: AlertService) { }
+    public alertService: AlertService,
+    public modalController: ModalController,
+    ) { }
 
   ngOnInit() {
     console.log('incoming applicant', this.applicant, 'incoming store', this.store);
@@ -132,12 +134,15 @@ export class AddNewHireComponent implements OnInit {
 
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     console.log('customForms', customForms);
-    this.firestore.collection('applicant').doc(applicant.id).set({
-      customForms: customForms
-    }, {merge: true}).then(() => {
+    this.firestore.collection('applicant').doc(applicant.id)
+      .set({customForms: customForms}, {merge: true})
+      .then(() => {
+        this.alertService.showSuccess('Send package success');
+        this.closeModal();
        this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, onBoadingUid, 'Jimmy Johns', 'Brandon','3145995164', '12/01/2021' ).subscribe(data =>{
           console.log(data);
        });
+       alert('applicant id:' + onBoadingUid);
     });
   }
 
@@ -163,5 +168,8 @@ export class AddNewHireComponent implements OnInit {
         })
       );
     }
+  }
+  closeModal() {
+    this.modalController.dismiss().then();
   }
 }

@@ -82,7 +82,8 @@ export class AddNewHireComponent implements OnInit {
 
   }
   sendOnboardingLinkToApplicant(applicant) {
-    const onBoadingUid = '1234567';
+    // send applicant id to sms service
+    const onBoadingUid = applicant.applicant.applicantId;
     console.log('applicant', applicant);
     const onBoardingPackagesSelected = this.onBoardingPackages.filter(p => p.isChecked === true);
     if(onBoardingPackagesSelected.length === 0) {
@@ -138,9 +139,10 @@ export class AddNewHireComponent implements OnInit {
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();
-      //  this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, onBoadingUid, 'Jimmy Johns', 'Brandon','3145995164', '12/01/2021' ).subscribe(data =>{
-      //     console.log(data);
-      //  });
+       this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, onBoadingUid, 'Jimmy Johns', 'Brandon','3145995164', '12/01/2021' ).subscribe(data =>{
+          console.log(data);
+       });
+       alert('applicant id:' + onBoadingUid);
     });
   }
 

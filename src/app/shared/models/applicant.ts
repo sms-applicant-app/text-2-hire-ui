@@ -1,4 +1,5 @@
 import {ApplicantStatus} from './applicant-status';
+import { CustomForms } from './onBoardPacket';
 
 export class Applicant {
   name: string;
@@ -14,5 +15,5 @@ export class Applicant {
   dob?: string;
   gender?: string;
   interviewNotes?: string;
-  onboardPacketId?: string;
+  customForms?: Array<CustomForms>;
 }

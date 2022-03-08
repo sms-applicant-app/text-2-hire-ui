@@ -62,7 +62,7 @@ export class AddStoreComponent implements OnInit {
   hiringManagers: any = [];
   lastGeneratedId: any;
   displayColumns= ['name', 'phoneNumber', 'actions'];
-  onStoreAddedSub: Subject<Store>;
+  onStoreAddedSub: Subject<any>;
   role: string;
 
   constructor(
@@ -221,13 +221,14 @@ export class AddStoreComponent implements OnInit {
       }
       this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
       this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-      this.storeService.createStore(this.newStore).then((resp: any) =>{
+      this.storeService.createStore(this.newStore).then((objId: string) =>{
         this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
         this.newGeneratedStoreId.storeId = this.storeId;
         this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
         this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
         if ( this.isAdminDashBoard === false) {
           this.onStoreAddedSub.next({
+            id: objId,
             ...this.newStore
           });
         }

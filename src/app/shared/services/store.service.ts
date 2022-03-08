@@ -54,6 +54,7 @@ export class StoreService {
       const storeId = docRef.id;
       localStorage.setItem('added-storeId', JSON.stringify(storeId));
       this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+      return docRef.id;
     }).catch((err) => {
       this.alertService.showError(toastMess.CREATE_FAILED);
     });

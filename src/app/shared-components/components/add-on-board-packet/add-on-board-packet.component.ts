@@ -18,7 +18,6 @@ export class AddOnBoardPacketComponent implements OnInit {
   fileUpload: FileUpload;
   customForms: FormGroup;
   federalForms: FormGroup;
-  formNames: any = [];
   formsControl: FormArray;
   addCustomForm: boolean;
   customFormsAdded: boolean;
@@ -50,24 +49,15 @@ export class AddOnBoardPacketComponent implements OnInit {
     });
     this.addCustomForm = false;
     this.customFormsAdded = false;
-    this.addFormRowToPackage();
   }
   ngAfterOnInit() {
     this.formsControl = this.customForms.get('onBoardingPackageName') as FormArray;
   }
-  initiateOnboardPackage(): FormGroup {
-    return this.fb.group({
-      fileName: [],
-    });
-  }
-  addCustomFormButton(){
-    this.addFormRowToPackage();
+
+  addCustomFormButton() {
     this.addCustomForm = true;
   }
-  addFormRowToPackage(){
-    const control = this.customForms.get('onBoardingPackageName') as FormArray;
-    return control.push((this.initiateOnboardPackage()));
-  }
+
   get getFormControls(){
     const control = this.customForms.get('onBoardingPackageName') as FormArray;
     return control;
@@ -75,11 +65,18 @@ export class AddOnBoardPacketComponent implements OnInit {
 
   formUploaded(fileItems: FileUpload[]){
     if(fileItems.length > 0) {
-      this.formNames = [];
       this.addCustomForm = false;
       this.customFormsAdded = true;
       this.fileItemsUploaded = this.fileItemsUploaded.concat(fileItems);
-      this.formNames = this.formNames.concat(this.fileItemsUploaded.map(c=> c.name));
+      this.customForms.controls['onBoardingPackageName'] = this.fb.array(
+        this.fileItemsUploaded.map((c, index) => {
+          return this.fb.group({
+            name: [`Form ${index + 1}`, Validators.required],
+            fileName: [c.name],
+            url: c.url,
+          });
+        })
+      );
     }
   }
 
@@ -87,19 +84,20 @@ export class AddOnBoardPacketComponent implements OnInit {
     if (this.federalForms.invalid || !this.federalForms.dirty) {
       this.alertService.showError('Please enter required field');
       return;
-    } else if (this.federalForms.valid) {
-      this.newOnboardPacket.customForms = [];
+    }
+
+    this.newOnboardPacket.customForms = [];
       this.newOnboardPacket.name = this.federalForms.controls.name.value;
       this.newOnboardPacket.i9 =  this.federalForms.controls.i9.value ? formInclude.I9 : '';
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
       this.newOnboardPacket.storeId = this.storeId.toString();
-      if (this.fileItemsUploaded?.length > 0) {
-        this.newOnboardPacket.customForms  = this.fileItemsUploaded.map(f => new CustomForms(f.name, f.url));
+      const customForms = this.customForms.controls['onBoardingPackageName'].value;
+      if (customForms && customForms?.length > 0) {
+        this.newOnboardPacket.customForms  = customForms.map(f => new CustomForms(f.name, f.url));
       }
       this.createOnboadingPackage(this.newOnboardPacket);
       this.closeModal();
-    }
   }
 
   createOnboadingPackage(packet){

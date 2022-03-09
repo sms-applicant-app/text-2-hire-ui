@@ -77,7 +77,8 @@ import { UploadListFormComponent } from './components/upload-list-file/upload-li
         AddStoreComponent,
         StoresByHiringManagerComponent,
         AddFranchiseComponent,
-        ApplicantTableRowComponent
+        ApplicantTableRowComponent,
+        UploadListFormComponent
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

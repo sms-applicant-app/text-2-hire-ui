@@ -3,8 +3,7 @@ import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {Franchisee} from "../models/franchisee";
 import {FirestoreHelperService} from "../firestore-helper.service";
-import {Store} from "../models/store";
-import {map} from "rxjs/operators";
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,9 @@ export class FranchiseService {
   message: string;
   storeData: any;
   constructor(
-    public firestore: AngularFirestore, public dbHelper: FirestoreHelperService
+    public firestore: AngularFirestore,
+    public dbHelper: FirestoreHelperService,
+    public alertService: AlertService
   ) { }
   getFranchiseOwner(id): Observable<any>{
     return this.firestore.doc(`users/${id}`).valueChanges();

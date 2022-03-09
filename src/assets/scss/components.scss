@@ -32,6 +32,11 @@
   height: 400px;
   overflow: auto;
 }
+.table-responsive {
+  &::-webkit-scrollbar {
+    height: 15px;
+  }
+}
 //app-add-on-board-packet
 
 app-add-on-board-packet, app-jobs-list, app-add-job-req {
@@ -43,3 +48,4 @@ app-add-on-board-packet, app-jobs-list, app-add-job-req {
 .btn-large {
   min-width: 100px !important;
 }
+

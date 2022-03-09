@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import { InactiveUser } from './../../../shared/models/inactiveUser';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FranchiseService} from '../../../shared/services/franchise.service';
 import {Franchisee} from '../../../shared/models/franchisee';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
@@ -8,16 +9,13 @@ import {MatTableDataSource} from '@angular/material/table';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { Router} from '@angular/router';
 import {AuthService} from '../../../shared/services/auth.service';
-import {uniqid} from 'uniqid';
-import {ModalController, NavParams} from '@ionic/angular';
-import {User} from '../../../shared/models/user';
+import {ModalController} from '@ionic/angular';
 import {RegisterUserComponent} from '../register-user/register-user.component';
 import {AddStoreComponent} from '../add-store/add-store.component';
 import {UserService} from "../../../shared/services/user.service";
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from '../../../shared/services/alert.service';
-import { take } from 'rxjs/operators';
-
+import { InactiveUserService } from './../../../shared/services/inactiveUser.service';
 @Component({
   selector: 'app-franchise-list',
   templateUrl: './franchise-list.component.html',
@@ -28,7 +26,6 @@ export class FranchiseListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() franchisee: Franchisee[];
-  ID: any;
   dataSource: MatTableDataSource<Franchisee>;
   displayColumns= ['businessLegalName', 'dateCreated', 'phoneNumber', 'corporateEmail', 'dba', 'actions'];
   franchiseData: any = [];
@@ -39,6 +36,7 @@ export class FranchiseListComponent implements OnInit {
   bodyText: string;
   userId: string;
   userData: any;
+  inactiveUser: InactiveUser = new InactiveUser();
   constructor(
     public modalController: ModalController,
     public dbHelper: FirestoreHelperService,
@@ -48,7 +46,8 @@ export class FranchiseListComponent implements OnInit {
     public storeService: StoreService,
     public liveAnnouncer: LiveAnnouncer,
     public alertService: AlertService,
-    public franchiseService: FranchiseService
+    public franchiseService: FranchiseService,
+    public inactiveUserService: InactiveUserService,
   ) {}
 
   ngOnInit() {
@@ -125,28 +124,20 @@ export class FranchiseListComponent implements OnInit {
     }
   }
 
-  handledActiveUser(franchise) {
+  deleteFranchise(franchise) {
     console.log('franchise', franchise);
-    this.alertService.confirmChangeStatus('Franchisee').then((data) => {
+    this.alertService.alertConfirm('Franchisee').then((data) => {
       if (data) {
-        let dataUpdate = {};
-        if (franchise.isActive || franchise.isActive === undefined) {
-          // deactive franchise
-          franchise.isActive = false;
-          dataUpdate = {
-            isActive: false,
-          }
-        } else {
-          // active franchise
-          franchise.isActive = true;
-          dataUpdate = {
-            isActive: true,
-          }
-        }
-        // update store, job, 
-        this.franchiseService.updateFranchise(franchise.id, dataUpdate).then(res => {
-          console.log('res', res)
-        });
+        this.inactiveUser = {
+          franchiseId: franchise.id,
+          businessLegalName: franchise.businessLegalName,
+          corporateEmail: franchise.corporateEmail,
+          addressId: franchise.addressId,
+          phoneNumber: franchise.phoneNumber
+        };
+        this.inactiveUserService.createInactiveUser(this.inactiveUser);
+        this.franchiseService.deleteFranchise(franchise.id);
+        this.alertService.showSuccess(`Delete ${franchise.businessLegalName} success`);
       }
     });
   }

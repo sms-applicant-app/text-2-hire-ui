@@ -67,8 +67,8 @@ export class UserService {
     });
   }
 
-  deleteUser(franchiseId) {
-    this.firestore.doc(`users/${franchiseId}`).delete().then(resp => {
+  deleteUser(userId) {
+    this.firestore.doc(`users/${userId}`).delete().then(resp => {
       console.log('deleting user', resp);
     });
   }

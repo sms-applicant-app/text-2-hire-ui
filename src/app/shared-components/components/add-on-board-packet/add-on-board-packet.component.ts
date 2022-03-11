@@ -15,6 +15,7 @@ import { FileItem } from '../../../shared/models/file-item';
 })
 export class AddOnBoardPacketComponent implements OnInit {
   @Input() storeId: string;
+  @Input() applicantId: string;
   fileUpload: FileUpload;
   customForms: FormGroup;
   federalForms: FormGroup;
@@ -38,6 +39,7 @@ export class AddOnBoardPacketComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    console.log('incoming', this.applicantId)
     this.customForms = this.fb.group({
       onBoardingPackageName: this.fb.array([])
     });
@@ -92,6 +94,7 @@ export class AddOnBoardPacketComponent implements OnInit {
       this.newOnboardPacket.stateW4 = this.federalForms.controls.stateW4.value ? formInclude.STATE_W4 : '';
       this.newOnboardPacket.w4 = this.federalForms.controls.w4.value ? formInclude.W4 : '';
       this.newOnboardPacket.storeId = this.storeId.toString();
+      this.newOnboardPacket.applicantId = this.applicantId
       const customForms = this.customForms.controls['onBoardingPackageName'].value;
       if (customForms && customForms?.length > 0) {
         this.newOnboardPacket.customForms  = customForms.map(f => new CustomForms(f.name, f.url));

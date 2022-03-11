@@ -53,6 +53,7 @@ export class ApplicantListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('Incoming position, ',this.positionId, this.positionData);
     this.touchedRows = [];
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
@@ -143,7 +144,7 @@ export class ApplicantListComponent implements OnInit {
       console.log('storeName', store.storeName);
       //TODO get franchise name from userAppData @powergate delete this todo when completed
       const franchiseName = 'ACME';
-      const calendarLink = this.hiringMangerData.calendarLink;
+      const calendarLink = this.hiringMangerData.calendlyLink;
 
       //    applicantName,
       //       storeName,

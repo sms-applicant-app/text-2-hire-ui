@@ -29,7 +29,7 @@ export class AddNewHireComponent implements OnInit {
   formNames: any = [];
   customForms: FormGroup;
   fileUpload: FileUpload;
-  constructor( 
+  constructor(
     public dbHelper: FirestoreHelperService,
     public storeService: StoreService,
     public smsService: SmsService,
@@ -134,8 +134,8 @@ export class AddNewHireComponent implements OnInit {
 
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     console.log('customForms', customForms);
-    this.firestore.collection('applicant').doc(applicant.id)
-      .set({customForms: customForms}, {merge: true})
+    this.firestore.collection('applicant').doc(applicant.applicant.email)
+      .set({customForms}, {merge: true})
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();

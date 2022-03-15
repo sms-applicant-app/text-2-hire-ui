@@ -9,6 +9,7 @@ export class Franchisee extends User {
   corporatePhoneNumber: string;
   addressId: string;
   dateCreated: any;
+  createdDate: any;
   jobTitle: string;
   franchiseOwner: User;
   dba: string;

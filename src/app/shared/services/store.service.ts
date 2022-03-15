@@ -20,7 +20,9 @@ export class StoreService {
   lastGeneratedId: any;
   storeIdRef: AngularFireObject<any>;
   constructor(
-    public firestore: AngularFirestore, public franchiseService: FranchiseService, public alertService: AlertService
+    public firestore: AngularFirestore,
+    public franchiseService: FranchiseService,
+    public alertService: AlertService
   ) { }
   getStoresByFranchise(franchiseId){
     return this.firestore.collection('store', ref => ref.where(`${franchiseId}`, '==', franchiseId)).get()
@@ -106,5 +108,19 @@ export class StoreService {
     return this.firestore.doc(`store/${id}`).delete().then(resp =>{
       console.log('deleting store', resp);
     });
+  }
+  deleteStoresByFranchiseId(franchiseId){
+    this.firestore.collection('store', ref => ref.where('franchiseId', '==', franchiseId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          console.log('Document not found! Try again!');
+        } else {
+          ss.docs.forEach(doc => {
+            doc.ref.delete().then().catch(err => {
+              console.log('err', err);
+            });
+          });
+        }
+      });
   }
 }

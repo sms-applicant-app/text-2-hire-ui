@@ -62,8 +62,6 @@ export class FranchiseService {
     return this.firestore.collection('franchisee').doc(`${franchiseId}`).set(data, {merge: true});
   }
   deleteFranchise(franchiseId){
-    this.firestore.doc(`franchisee/${franchiseId}`).delete().then(resp =>{
-      console.log('deleting franchise', resp);
-    });
+    return this.firestore.doc(`franchisee/${franchiseId}`).delete();
   }
 }

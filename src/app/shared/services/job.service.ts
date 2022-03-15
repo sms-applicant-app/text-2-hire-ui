@@ -66,4 +66,18 @@ export class JobService {
       console.log('deleting jobs', resp);
     });
   }
+  deleteJobsByFranchiseId(franchiseId){
+    this.firestore.collection('jobs', ref => ref.where('franchiseId', '==', franchiseId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          console.log('Document not found!');
+        } else {
+          ss.docs.forEach(doc => {
+            doc.ref.delete().then().catch(err => {
+              console.log('err', err);
+            });
+          });
+        }
+      });
+  }
 }

@@ -69,7 +69,7 @@ export class StoreListByFranchiseComponent implements OnInit {
     this.seePositions = false;
   }
   getStoresByFranchise() {
-   this.listStore = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
+  //  this.listStore = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
     this.franchiseService.getStoreByFranchiseId(this.franchiseId).subscribe((res) => {
       if (res) {
         this.listStore = [];

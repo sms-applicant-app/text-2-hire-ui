@@ -16,6 +16,7 @@ import {UserService} from "../../../shared/services/user.service";
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from '../../../shared/services/alert.service';
 import { InactiveUserService } from './../../../shared/services/inactiveUser.service';
+import { JobService } from './../../../shared/services/job.service';
 @Component({
   selector: 'app-franchise-list',
   templateUrl: './franchise-list.component.html',
@@ -48,6 +49,7 @@ export class FranchiseListComponent implements OnInit {
     public alertService: AlertService,
     public franchiseService: FranchiseService,
     public inactiveUserService: InactiveUserService,
+    public jobService: JobService,
   ) {}
 
   ngOnInit() {
@@ -56,12 +58,13 @@ export class FranchiseListComponent implements OnInit {
   }
   getFranchisee(){
     this.franchiseData = [];
-    this.dbHelper.collectionWithIds$('franchisee', ref => ref.orderBy('dateCreated', 'desc')).subscribe(data => {
+    this.dbHelper.collectionWithIds$('franchisee', ref => ref.orderBy('createdDate', 'desc')).subscribe(data => {
       if (data) {
         this.franchiseData = data;
         console.log('data', data);
         this.franchiseData.forEach(franchise => {
           // franchise.dateCreated = franchise.dateCreated.toDate();
+          franchise.createdDate = franchise.createdDate.toDate();
         });
         this.handleTable();
       }
@@ -135,10 +138,25 @@ export class FranchiseListComponent implements OnInit {
           addressId: franchise.addressId,
           phoneNumber: franchise.phoneNumber
         };
-        this.inactiveUserService.createInactiveUser(this.inactiveUser);
-        this.franchiseService.deleteFranchise(franchise.id);
-        this.alertService.showSuccess(`Delete ${franchise.businessLegalName} success`);
+        this.franchiseService.deleteFranchise(franchise.id).then(res => {
+          this.deleteStores(franchise.id);
+          this.deleteJobs(franchise.id);
+          this.deleteUsers(franchise.id);
+          this.inactiveUserService.createInactiveUser(this.inactiveUser);
+          this.alertService.showSuccess(`Delete ${franchise.businessLegalName} success`);
+        }).catch(err => {
+          console.log(err);
+        });
       }
     });
+  }
+  deleteStores(franchiseId) {
+    this.storeService.deleteStoresByFranchiseId(franchiseId);
+  }
+  deleteJobs(franchiseId) {
+    this.jobService.deleteJobsByFranchiseId(franchiseId);
+  }
+  deleteUsers(franchiseId) {
+    this.userService.deleteUsersByFranchiseId(franchiseId);
   }
 }

@@ -85,7 +85,9 @@ export class AdminAddFranchisePage implements OnInit {
     if (this.addressId) {
       this.newFranchise.addressId = this.addressId;
     }
+    // conflict old data vs new data dateCreated.
     this.newFranchise.dateCreated = firebase.default.firestore.FieldValue.serverTimestamp();
+    this.newFranchise.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
     this.newFranchise.businessLegalName = this.addFranchiseForm.controls.legalBusinessName.value;
     this.newFranchise.corporateEmail = this.addFranchiseForm.controls.corporateEmail.value;
     this.newFranchise.dba = this.addFranchiseForm.controls.dba.value;
@@ -93,10 +95,10 @@ export class AdminAddFranchisePage implements OnInit {
     const newFranchise = await this.franchiseService.createFranchise(this.newFranchise);
     this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));
     this.alertService.showSuccess(`${this.newFranchise.businessLegalName} create success`)
-    this.router.navigate(['admin/admin-franchise-list'])
+    this.router.navigate(['admin/admin-franchise-list']);
    return this.newFranchise.id;
   } else {
-    this.alertService.showError('Please enter field')
+    this.alertService.showError('Please enter field');
   }
 
 }

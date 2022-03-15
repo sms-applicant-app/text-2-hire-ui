@@ -72,6 +72,20 @@ export class UserService {
       console.log('deleting user', resp);
     });
   }
-
+  deleteUsersByFranchiseId(franchiseId){
+    this.firestore.collection('users', ref => ref.where('franchiseId', '==', franchiseId)).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          console.log('Document not found! Try again!');
+        } else {
+          ss.docs.forEach(doc => {
+            this.message = '';
+            doc.ref.delete().then().catch(err => {
+              console.log('err', err);
+            });
+          });
+        }
+      });
+  }
 
 }

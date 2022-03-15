@@ -12,13 +12,14 @@ import {MatStepper} from '@angular/material/stepper';
 import {MatDialog} from "@angular/material/dialog";
 import { emailValidator, phoneValidator } from '../../shared/utils/app-validators';
 import { AlertService } from '../../shared/services/alert.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-admin-add-franchise',
   templateUrl: './admin-add-franchise.page.html',
   styleUrls: ['./admin-add-franchise.page.scss'],
-  providers: [ MatStepper]
+  providers: [ MatStepper, DatePipe]
 })
 export class AdminAddFranchisePage implements OnInit {
   addFranchiseForm: FormGroup;
@@ -47,6 +48,7 @@ export class AdminAddFranchisePage implements OnInit {
     public franchiseService: FranchiseService,
     public dialog: MatDialog,
     public alertService: AlertService,
+    public datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -86,7 +88,7 @@ export class AdminAddFranchisePage implements OnInit {
       this.newFranchise.addressId = this.addressId;
     }
     // conflict old data vs new data dateCreated.
-    this.newFranchise.dateCreated = firebase.default.firestore.FieldValue.serverTimestamp();
+    this.newFranchise.dateCreated = this.datePipe.transform(new Date(), 'MM-dd-yyyy');;
     this.newFranchise.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
     this.newFranchise.businessLegalName = this.addFranchiseForm.controls.legalBusinessName.value;
     this.newFranchise.corporateEmail = this.addFranchiseForm.controls.corporateEmail.value;

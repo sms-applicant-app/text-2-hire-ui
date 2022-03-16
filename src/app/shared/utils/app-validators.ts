@@ -1,7 +1,8 @@
 import { FormGroup, FormControl } from '@angular/forms';
 
 export function emailValidator(control: FormControl): { [key: string]: any } {
-  const emailRegexp = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+  const emailRegexp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // const emailRegexp = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
   if (control.value && !emailRegexp.test(control.value)) {
     return { invalidEmail: true };
   }
@@ -98,8 +99,8 @@ export function phoneValidator(
   if (!control.value) {
     return null;
   }
-
-  if (control.value.match('^((\\+-?)|0)?[0-9](?=.*?[-])?.{9,}$')) {
+  const regexUS = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+  if (control.value.match(regexUS)) {
     return null;
   } else {
     return { pattern: true };

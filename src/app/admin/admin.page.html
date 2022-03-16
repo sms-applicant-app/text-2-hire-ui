@@ -27,8 +27,8 @@
     </div>
   </div>
   <div class="card">
-    <div class="p-4">
-    <app-franchise-list></app-franchise-list>
+    <div class="p-4"  *ngIf="franchiseData && franchiseData.length > 0">
+    <app-franchise-list  [franchiseData]="franchiseData"></app-franchise-list>
     </div>
   </div>
 

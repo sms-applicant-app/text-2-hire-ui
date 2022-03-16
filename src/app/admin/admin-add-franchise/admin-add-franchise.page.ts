@@ -13,6 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
 import { emailValidator, phoneValidator } from '../../shared/utils/app-validators';
 import { AlertService } from '../../shared/services/alert.service';
 import { DatePipe } from '@angular/common';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class AdminAddFranchisePage implements OnInit {
     public franchiseService: FranchiseService,
     public dialog: MatDialog,
     public alertService: AlertService,
-    public datePipe: DatePipe
+    public datePipe: DatePipe,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -96,8 +98,10 @@ export class AdminAddFranchisePage implements OnInit {
     this.newFranchise.phoneNumber = this.addFranchiseForm.controls.corporatePhone.value;
     const newFranchise = await this.franchiseService.createFranchise(this.newFranchise);
     this.newFranchise.id = JSON.parse(localStorage.getItem('added-franchise'));
-    this.alertService.showSuccess(`${this.newFranchise.businessLegalName} create success`)
-    this.router.navigate(['admin/admin-franchise-list']);
+    this.alertService.showSuccess(`${this.newFranchise.businessLegalName} create success`);
+    // this.router.navigate(['admin/admin-franchise-list']);
+    this.navCtrl.pop();
+    // this.router.navigate(['admin']);
    return this.newFranchise.id;
   } else {
     this.alertService.showError('Please enter field');

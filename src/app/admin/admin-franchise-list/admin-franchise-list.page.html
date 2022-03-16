@@ -9,5 +9,5 @@
     <ion-icon name="chevron-back-outline"></ion-icon>
     Back
   </button>
-  <app-franchise-list></app-franchise-list>
+  <app-franchise-list *ngIf="franchiseData && franchiseData.length > 0" [franchiseData]="franchiseData"></app-franchise-list>
 </ion-content>

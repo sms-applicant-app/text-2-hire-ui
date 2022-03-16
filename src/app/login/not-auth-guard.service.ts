@@ -21,8 +21,8 @@ export class NotAuthGuardService implements CanActivate {
     let userData: any = localStorage.getItem('appUserData');
     if(userData) {
       userData = JSON.parse(userData);
-      if(userData.role == 'admin') {
-        this.router.navigate(['admin'])
+      if(userData.role === 'admin') {
+        this.router.navigate(['admin']);
       } else {
         this.router.navigate(['/store']);
       }

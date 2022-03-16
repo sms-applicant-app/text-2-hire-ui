@@ -1,5 +1,5 @@
 import { InactiveUser } from './../../../shared/models/inactiveUser';
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {FranchiseService} from '../../../shared/services/franchise.service';
 import {Franchisee} from '../../../shared/models/franchisee';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
@@ -22,14 +22,13 @@ import { JobService } from './../../../shared/services/job.service';
   templateUrl: './franchise-list.component.html',
   styleUrls: ['./franchise-list.component.scss'],
 })
-export class FranchiseListComponent implements OnInit {
+export class FranchiseListComponent implements OnInit, OnChanges  {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @Input() franchisee: Franchisee[];
+  @Input() franchiseData: Franchisee[];
   dataSource: MatTableDataSource<Franchisee>;
   displayColumns= ['businessLegalName', 'dateCreated', 'phoneNumber', 'corporateEmail', 'dba', 'actions'];
-  franchiseData: any = [];
   storeData: any = [];
   selectedFranchise: Franchisee = new Franchisee();
   displayRegistrationForm: boolean;
@@ -53,24 +52,11 @@ export class FranchiseListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getFranchisee();
     this.displayRegistrationForm = false;
   }
-  getFranchisee(){
-    this.franchiseData = [];
-    this.dbHelper.collectionWithIds$('franchisee', ref => ref.orderBy('createdDate', 'desc')).subscribe(data => {
-      if (data) {
-        this.franchiseData = data;
-        console.log('data', data);
-        this.franchiseData.forEach(franchise => {
-          // franchise.dateCreated = franchise.dateCreated.toDate();
-          franchise.createdDate = franchise.createdDate.toDate();
-        });
-        this.handleTable();
-      }
-    });
+  ngOnChanges(){
+    this.handleTable();
   }
-
   handleTable() {
     this.dataSource = new MatTableDataSource<Franchisee>(this.franchiseData);
     setTimeout(() => {
@@ -129,7 +115,7 @@ export class FranchiseListComponent implements OnInit {
 
   deleteFranchise(franchise) {
     console.log('franchise', franchise);
-    this.alertService.alertConfirm('Franchisee').then((data) => {
+    this.alertService.alertConfirm('franchisee and all relevant data this belong to this one?').then((data) => {
       if (data) {
         this.inactiveUser = {
           franchiseId: franchise.id,

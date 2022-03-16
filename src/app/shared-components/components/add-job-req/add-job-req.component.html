@@ -57,13 +57,22 @@
                 of Hires required</span>
 
             </ion-item>
-            <ion-item lines="full">
+            <!-- <ion-item lines="full">
               <ion-label position="stacked" required>Expiration Date *</ion-label>
               <ion-input clearInput type="text" formControlName="positionExpiration"></ion-input>
               <span class="field-err"
                 *ngIf="addJoblistingFrom.controls.positionExpiration.errors?.required && (addJoblistingFrom.controls.positionExpiration.dirty || addJoblistingFrom.controls.positionExpiration.touched)">Expiration
                 Date required</span>
 
+            </ion-item> -->
+            <ion-item lines="full" class="input-calendar">
+              <ion-label position="stacked" required>Expiration Date *</ion-label>
+              <input matInput [matDatepicker]="picker1" [disabled]="true" formControlName="positionExpiration">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+              <span class="field-err"
+                *ngIf="addJoblistingFrom.controls.positionExpiration.errors?.required && (addJoblistingFrom.controls.positionExpiration.dirty || addJoblistingFrom.controls.positionExpiration.touched)">Expiration
+                Date required</span>
             </ion-item>
             <ion-item lines="full">
               <ion-label position="stacked" required>Salary</ion-label>

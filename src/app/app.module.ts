@@ -1,7 +1,7 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
+import { DatePipe } from '@angular/common';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
@@ -49,6 +49,7 @@ import { ToastrModule } from 'ngx-toastr';
     ToastrModule.forRoot(),
   ],
   providers: [
+    DatePipe,
     AngularFirestoreModule,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
   bootstrap: [AppComponent],

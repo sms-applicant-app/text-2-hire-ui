@@ -49,3 +49,21 @@ app-add-on-board-packet, app-jobs-list, app-add-job-req {
   min-width: 100px !important;
 }
 
+.input-calendar {
+  position: relative;
+  ion-label {
+    margin-top: 10px !important;
+  }
+  .mat-datepicker-input {
+    border: none;
+    &:disabled {
+      color: black;
+      background: transparent;
+    }
+  }
+  .mat-datepicker-toggle {
+    position: absolute;
+    right: 0;
+    top: 20px;
+  }
+}

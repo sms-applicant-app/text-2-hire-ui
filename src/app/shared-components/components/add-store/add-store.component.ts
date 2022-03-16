@@ -23,7 +23,6 @@ import { phoneValidator } from '../../../shared/utils/app-validators';
 import { AuthService } from '../../../shared/services/auth.service';
 
 
-
 @Component({
   selector: 'app-add-store',
   templateUrl: './add-store.component.html',
@@ -78,7 +77,6 @@ export class AddStoreComponent implements OnInit {
     public alertService: AlertService,
     public modalController: ModalController,
     public authService: AuthService,
-
   ) { }
 
   ngOnInit() {
@@ -208,31 +206,39 @@ export class AddStoreComponent implements OnInit {
   }
   addStore(stepper: MatStepper){
     if (this.addStoreForm.valid) {
-      this.createDate();
-    // this.createStoreUniqueId();
-      this.newStore.franchiseId = this.franchiseId;
-      this.newStore.storeName = this.addStoreForm.controls.storeName.value;
-      this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
-      if (this.addressAdded && this.addressAdded.addressId) {
-        this.newStore.addressId = this.addressAdded.addressId;
-      }
-      else {
-        this.newStore.addressId = this.addressId;
-      }
-      this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
-      this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
-      this.storeService.createStore(this.newStore).then((objId: string) =>{
-        this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
-        this.newGeneratedStoreId.storeId = this.storeId;
-        this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
-        this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
-        if ( this.isAdminDashBoard === false) {
-          this.onStoreAddedSub.next({
-            id: objId,
-            ...this.newStore
+      this.userService.getUserById(this.userId).subscribe(res => {
+        if (res) {
+          console.log('res', res);
+          this.createDate();
+          this.newStore.franchiseId = this.franchiseId;
+          this.newStore.storeName = this.addStoreForm.controls.storeName.value;
+          this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;
+          if (this.addressAdded && this.addressAdded.addressId) {
+            this.newStore.addressId = this.addressAdded.addressId;
+          }
+          else {
+            this.newStore.addressId = this.addressId;
+          }
+          this.newStore.storeId = this.newGeneratedStoreId.generatedStoreId;
+          this.newStore.createdDate = firebase.default.firestore.FieldValue.serverTimestamp();
+          this.storeService.createStore(this.newStore).then((objId: string) =>{
+            this.storeId = JSON.parse(localStorage.getItem('added-storeId'));
+            this.newGeneratedStoreId.storeId = this.storeId;
+            this.newGeneratedStoreId.createdAt = firebase.default.firestore.FieldValue.serverTimestamp();
+            this.storeService.addGeneratedStoreId(this.newGeneratedStoreId).then();
+            if ( this.isAdminDashBoard === false) {
+              this.onStoreAddedSub.next({
+                id: objId,
+                ...this.newStore
+              });
+            }
+            this.closeModal();
           });
+        } else {
+          this.closeModal();
+          this.alertService.showError('User has been delete');
+          this.authService.SignOut();
         }
-        this.closeModal();
       });
     } else {
       this.alertService.showError('Please add Name or Phone Store');

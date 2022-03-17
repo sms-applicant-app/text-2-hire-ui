@@ -19,15 +19,16 @@ export class UserService {
   ) {
   }
 
-  getUserById(id): Observable<any> {
+  getFranchiseeById(id): Observable<any> {
     console.log(id);
-    return this.firestore.doc(`users/${id}`).valueChanges().pipe(take(1));
+    //return this.firestore.doc(`franchisee/${id}`).valueChanges().pipe(take(1));
+    return this.firestore.doc(`users/${id}`).valueChanges();
   }
   getUsersByFranchise(franchiseId){
-    return this.firestore.collection('user', ref => ref.where(`${franchiseId}`, '==', franchiseId )).get()
+    return this.firestore.collection('users', ref => ref.where(`${franchiseId}`, '==', franchiseId )).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
-          this.message = 'Document not found! Try again!';
+          this.message = 'No Users for franchise!';
         } else {
           ss.docs.forEach(doc => {
             this.message = '';

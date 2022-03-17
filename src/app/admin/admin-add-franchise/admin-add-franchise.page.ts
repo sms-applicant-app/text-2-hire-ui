@@ -122,7 +122,9 @@ export class AdminAddFranchisePage implements OnInit {
     if(userRole === 'franchisee'){
       this.router.navigate(['franchise/list-stores']);
     }
-    this.router.navigate(['admin/admin-franchise-list']);
+    if(userRole === 'admin'){
+      this.router.navigate(['admin/admin-franchise-list']);
+    }
   }
 
   createUserForFranchise(){

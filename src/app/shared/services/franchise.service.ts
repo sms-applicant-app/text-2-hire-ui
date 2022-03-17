@@ -35,7 +35,7 @@ export class FranchiseService {
   getStoreByFranchiseId(id) {
    return this.firestore.collection('store', ref => ref.where('franchiseId', '==', id)).get();
   }
-  getFranchiseById(id): Observable<any>{
+  getFranchiseById(id){
     return this.dbHelper.doc$(`franchisee/${id}`);
   }
  async createFranchise(franchise: Franchisee): Promise<any>{

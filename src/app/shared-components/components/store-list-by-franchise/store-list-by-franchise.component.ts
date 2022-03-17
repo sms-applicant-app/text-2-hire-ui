@@ -41,7 +41,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   seeStores: boolean;
   seePositions: boolean;
   seeApplicants: boolean;
-
+  appUserData: any;
   constructor(public dbHelper: FirestoreHelperService,
               public firestore: AngularFirestore,
               public userService: UserService,
@@ -58,12 +58,11 @@ export class StoreListByFranchiseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    console.log('incoming franchise id and user data ', this.franchiseId, this.userData);
-    if(this.userData.role === Role.admin){
+    this.appUserData = JSON.parse(localStorage.getItem('appUserData'));
+    if(this.appUserData.role === Role.admin){
       this.getStoresByFranchise();
     } else {
-      this.getListOfStoresForTheFranchise();
+      this.getListOfStoresBasedOnUser();
     }
     this.seeStores = true;
     this.seeApplicants = false;
@@ -101,11 +100,10 @@ export class StoreListByFranchiseComponent implements OnInit {
     });
     return await getPositionModal.present();
   }
-  async getListOfStoresForTheFranchise(){
-   await this.firestore.doc(`users/${this.userId}`).get().subscribe((doc )=>{
-     console.log('user', doc.data());
+  async getListOfStoresBasedOnUser(){
+   await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
-      this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.franchiseId)).get()
+      this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
         .subscribe(stores =>{
           this.listStore = [];
           if (stores.docs.length === 0){

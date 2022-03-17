@@ -11,7 +11,7 @@ export class Franchisee extends User {
   dateCreated: any;
   createdDate: any;
   jobTitle: string;
-  userId: string;
+  franchiseOwner: User;
   dba: string;
   store: Store[] = [];
 }

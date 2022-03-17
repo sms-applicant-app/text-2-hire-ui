@@ -9,7 +9,6 @@ import {Role} from '../../../shared/models/role';
 import { AlertService } from './../../../shared/services/alert.service';
 import { toastMess } from '../../../shared/constants/messages';
 import { emailValidator, phoneValidator, validatedURL } from '../../../shared/utils/app-validators';
-import {StoreHiringManager} from "../../../shared/models/store-manager";
 
 @Component({
   selector: 'app-register-user',
@@ -28,9 +27,8 @@ export class RegisterUserComponent implements OnInit {
   eRole = Role;
   userId: string;
   latestDate: string;
-  storeManagerRegistrationForm: FormGroup;
+  registrationForm: FormGroup;
   userAdded: boolean;
-  newStoreHiringManager: StoreHiringManager = new StoreHiringManager();
   isRegisteringStoreManager: boolean;
   constructor(
     public datePipe: DatePipe,
@@ -48,7 +46,7 @@ export class RegisterUserComponent implements OnInit {
       password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 
     });
-    this.storeManagerRegistrationForm = this.fb.group({
+    this.registrationForm = this.fb.group({
       fullName: ['', Validators.required],
       phoneNumber: ['', Validators.compose([Validators.required, phoneValidator])],
       calendarLink: ['', Validators.compose([ validatedURL])],
@@ -60,7 +58,7 @@ export class RegisterUserComponent implements OnInit {
   }
 
   validatedURL(control: FormControl): { [key: string]: any } {
-    const role = this.storeManagerRegistrationForm.controls.role.value;
+    const role = this.registrationForm.controls.role.value;
     if (role === Role.hiringManager) {
       if (!control.value) {
         return { required: true };
@@ -85,24 +83,24 @@ export class RegisterUserComponent implements OnInit {
     return this.latestDate;
   }
   registerStoreManagerUser(){
-    if (this.userForm.valid && this.storeManagerRegistrationForm.valid) {
+    if (this.userForm.valid && this.registrationForm.valid) {
       this.createDate();
       this.newUser.email = this.userForm.controls.email.value;
       const password = this.userForm.controls.password.value;
       this.userId = this.newUser.email;
       this.authService.RegisterUser(this.newUser.email, password).then(u=>{
-        this.newStoreHiringManager.fullName = this.storeManagerRegistrationForm.controls.fullName.value;
-        this.newStoreHiringManager.email = this.userForm.controls.email.value;
-        this.newStoreHiringManager.phoneNumber = this.storeManagerRegistrationForm.controls.phoneNumber.value;
-        this.newStoreHiringManager.role = this.storeManagerRegistrationForm.controls.role.value;
-        if (this.newStoreHiringManager.role === 'hiringManager') {
-          this.newStoreHiringManager.calendlyLink = this.storeManagerRegistrationForm.controls.calendarLink.value;
+        this.newUser.fullName = this.registrationForm.controls.fullName.value;
+        this.newUser.email = this.userForm.controls.email.value;
+        this.newUser.phoneNumber = this.registrationForm.controls.phoneNumber.value;
+        this.newUser.role = this.registrationForm.controls.role.value;
+        if (this.newUser.role === 'hiringManager') {
+          this.newUser.calendlyLink = this.registrationForm.controls.calendarLink.value;
         }
-        this.newStoreHiringManager.dateCreated = this.latestDate;
-        this.newStoreHiringManager.franchiseId = this.franchiseId;
-        this.newStoreHiringManager.storeIds = this.isRegisteringStoreManager? this.storeId: null;
-        this.dbHelper.set(`users/${this.userId}`, this.newStoreHiringManager);
-        this.alertService.showSuccess(toastMess.CREATE_STORE_HIRING_MANAGER);
+        this.newUser.dateCreated = this.latestDate;
+        this.newUser.franchiseId = this.franchiseId;
+        this.newUser.storeIds = this.isRegisteringStoreManager? this.storeId: null;
+        this.dbHelper.set(`users/${this.userId}`, this.newUser);
+        this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
         this.authService.SendVerificationMail();
         this.userAdded = true;
         this.sendUserMessage();
@@ -110,7 +108,7 @@ export class RegisterUserComponent implements OnInit {
         this.alertService.showError(toastMess.CREATE_FAILED);
       });
     } else {
-      this.alertService.showError('Please enter missing fields in red');
+      this.alertService.showError('Please enter field');
     }
   }
   registerFranchiseOwner(){
@@ -119,15 +117,15 @@ export class RegisterUserComponent implements OnInit {
     const password = this.userForm.controls.password.value;
     this.authService.RegisterUser(this.newUser.email, password).then(u=>{
       console.log('registered user', u);
-      const franchiseOwner ={
-        firstName: this.storeManagerRegistrationForm.controls.firstName.value,
-        lastName: this.storeManagerRegistrationForm.controls.lastName.value,
+      const user ={
+        firstName: this.registrationForm.controls.firstName.value,
+        lastName: this.registrationForm.controls.lastName.value,
         email: this.userForm.controls.email.value,
-        role: this.storeManagerRegistrationForm.controls.role.value,
-        phoneNumber: this.storeManagerRegistrationForm.controls.phoneNumber.value,
+        role: this.registrationForm.controls.role.value,
+        phoneNumber: this.registrationForm.controls.phoneNumber.value,
         dateCreated: this.latestDate
       };
-      this.dbHelper.set(`users/${this.userId}`, franchiseOwner);
+      this.dbHelper.set(`users/${this.userId}`, user);
       this.authService.SendVerificationMail();
       this.userAdded = true;
     });

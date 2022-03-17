@@ -20,7 +20,9 @@ export class FirestoreHelperService {
 
   /*get data*/
   doc$<T>(ref: DocPredicate<T>): Observable<T> {
-    return this.doc(ref).snapshotChanges().pipe(map( doc =>doc.payload.data() as T));
+    return this.doc(ref).snapshotChanges().pipe(map(doc => {
+      return doc.payload.data() as T;
+    }));
   }
   col$<T>(ref: CollectionPredicate<T>, queryFn?): Observable<T[]>{
     return this.col(ref, queryFn).snapshotChanges().pipe(map(docs => {
@@ -42,11 +44,11 @@ export class FirestoreHelperService {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
   set<T>(ref: DocPredicate<T>, data: any) {
-    const timestamp = this.timestamp;
+    //const timestamp = this.timestamp;
     return this.doc(ref).set({
       ...data,
-      updatedAt: timestamp,
-      createdAt: timestamp
+     /* updatedAt: timestamp,
+      createdAt: timestamp*/
     }, {merge: true});
   }
   update<T>(ref: DocPredicate<T>, data: any){

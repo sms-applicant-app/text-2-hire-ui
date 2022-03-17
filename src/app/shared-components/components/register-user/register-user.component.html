@@ -17,20 +17,20 @@
       </div>
     </div>
   </form>
-  <form [formGroup]="storeManagerRegistrationForm">
+  <form [formGroup]="registrationForm">
     <div class="form-row">
       <div class="col-6">
         <ion-item class="mb-3" lines="full">
           <ion-label position="stacked" required>Full Name</ion-label>
           <ion-input clearInput type="text" formControlName="fullName" required></ion-input>
-          <span class="field-err" *ngIf="storeManagerRegistrationForm.controls.fullName.errors?.required && (storeManagerRegistrationForm.controls.fullName.dirty || storeManagerRegistrationForm.controls.fullName.touched)">Full Name required</span>
+          <span class="field-err" *ngIf="registrationForm.controls.fullName.errors?.required && (registrationForm.controls.fullName.dirty || registrationForm.controls.fullName.touched)">Full Name required</span>
         </ion-item>
       </div>
       <div class="col-6">
         <ion-item lines="full" class="mb-3">
           <ion-label position="stacked" required>Phone Number</ion-label>
           <ion-input clearInput type="phoneNumber" formControlName="phoneNumber" required placeholder="Enter Phone Number"></ion-input>
-          <span class="field-err" *ngIf="storeManagerRegistrationForm.controls.phoneNumber.errors?.required && (storeManagerRegistrationForm.controls.phoneNumber.dirty || storeManagerRegistrationForm.controls.phoneNumber.touched)">Phone Number required</span>
+          <span class="field-err" *ngIf="registrationForm.controls.phoneNumber.errors?.required && (registrationForm.controls.phoneNumber.dirty || registrationForm.controls.phoneNumber.touched)">Phone Number required</span>
         </ion-item>
       </div>
       <div class="col-6">
@@ -46,12 +46,12 @@
           </ion-select>
         </ion-item>
       </div>
-      <div *ngIf="storeManagerRegistrationForm.controls.role.value === 'hiringManager'" class="col-6">
+      <div *ngIf="registrationForm.controls.role.value === 'hiringManager'" class="col-6">
         <ion-item lines="full" class="mb-3">
           <ion-label position="stacked" required>Calendly link</ion-label>
           <ion-input clearInput type="url" formControlName="calendarLink" required placeholder="Enter Calendly Link"></ion-input>
-          <span class="field-err" *ngIf="storeManagerRegistrationForm.controls.calendarLink.errors?.required && (storeManagerRegistrationForm.controls.calendarLink.dirty || storeManagerRegistrationForm.controls.calendarLink.touched)">Calendly Link required</span>
-          <span class="field-err" *ngIf="storeManagerRegistrationForm.controls.calendarLink.errors?.pattern && (storeManagerRegistrationForm.controls.calendarLink.dirty || storeManagerRegistrationForm.controls.calendarLink.touched)">Calendly Link Invalid</span>
+          <span class="field-err" *ngIf="registrationForm.controls.calendarLink.errors?.required && (registrationForm.controls.calendarLink.dirty || registrationForm.controls.calendarLink.touched)">Calendly Link required</span>
+          <span class="field-err" *ngIf="registrationForm.controls.calendarLink.errors?.pattern && (registrationForm.controls.calendarLink.dirty || registrationForm.controls.calendarLink.touched)">Calendly Link Invalid</span>
         </ion-item>
       </div>
   </div>

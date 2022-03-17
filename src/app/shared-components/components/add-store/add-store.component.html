@@ -69,7 +69,7 @@
         </div>
       </div>
       <div *ngIf="addingNewUser">
-        <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId"
+        <app-register-user (addedUserEvent)="receiveUserMessage($event, stepper)" [franchiseId]="franchiseId"
           [storeId]="storeId"></app-register-user>
       </div>
       <div class="d-flex flex-row justify-content-end mt-4">

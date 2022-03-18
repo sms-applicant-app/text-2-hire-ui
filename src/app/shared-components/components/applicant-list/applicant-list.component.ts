@@ -60,7 +60,9 @@ export class ApplicantListComponent implements OnInit {
     //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
     this.storeData = this.store;
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
-    this.getHiringManager();
+    this.getHiringManager().then(data =>{
+      console.log(data, 'from hm');
+    });
     this.getApplicantsByJobId(this.positionId);
     this.getPositionDetail();
     this.isSubmitted = false;
@@ -117,7 +119,8 @@ export class ApplicantListComponent implements OnInit {
 
   }
 
-  getHiringManager(){
+  async getHiringManager(){
+    console.log('this.positionData', this.selectedStore);
     return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {

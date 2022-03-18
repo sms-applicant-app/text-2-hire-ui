@@ -1,7 +1,6 @@
 {
   "hosting": {
     "public": "www",
-    "site": "sms-applicant-management-app",
     "ignore": [
       "firebase.json",
       "**/.*",

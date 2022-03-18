@@ -1,13 +1,13 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyCx4HAn42sjJa942eQa7UUpuYBNCA5QJv8',
-    authDomain: 'sms-applicant-management-app.firebaseapp.com',
-    databaseURL: 'https://sms-applicant-management-app.firebaseio.com',
-    projectId: 'sms-applicant-management-app',
-    storageBucket: 'sms-applicant-management-app.appspot.com',
-    messagingSenderId: '267560423861',
-    appId: '1:267560423861:web:3acbde1934ab34b48649fc',
-    measurementId: 'G-14K9SPV948'
+    apiKey: 'AIzaSyDFInwHdCRduaiMI9BC6xjBu2zsh47SJHY',
+    authDomain: 'hirenow-prod.firebaseapp.com',
+    projectId: 'hirenow-prod',
+    databaseURL: 'https://hirenow-prod.firebaseio.com',
+    storageBucket: 'hirenow-prod.appspot.com',
+    messagingSenderId: '124065266819',
+    appId: '1:124065266819:web:83c9bdc66909388e93afb6',
+    measurementId: 'G-R8CKXH0M5F'
   }
 };

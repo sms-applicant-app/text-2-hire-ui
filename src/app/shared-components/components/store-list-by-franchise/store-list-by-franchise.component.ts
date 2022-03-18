@@ -103,7 +103,7 @@ export class StoreListByFranchiseComponent implements OnInit {
   async getListOfStoresBasedOnUser(){
    await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();
-      this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.userData.franchiseId)).get()
+      this.firestore.collection('store', ref => ref.where('franchiseId', '==', this.appUserData.franchiseId)).get()
         .subscribe(stores =>{
           this.listStore = [];
           if (stores.docs.length === 0){

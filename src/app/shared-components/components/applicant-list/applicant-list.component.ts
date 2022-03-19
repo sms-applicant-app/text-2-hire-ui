@@ -158,6 +158,7 @@ export class ApplicantListComponent implements OnInit {
           });
         } else {
           this.applicantService.updateApplicant(email, {status: action} );
+          this.alertService.showSuccess('Interview Request sent to', applicantName);
         }
       });
 

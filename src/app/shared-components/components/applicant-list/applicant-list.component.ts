@@ -57,12 +57,10 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-    //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
-    this.storeData = this.store;
+
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();
     this.getApplicantsByJobId(this.positionId);
-    this.getPositionDetail();
     this.isSubmitted = false;
     this.actionsFrom = this.fb.group({
       actions: ['', [Validators.required]],
@@ -73,13 +71,6 @@ export class ApplicantListComponent implements OnInit {
     this.control = this.actionsFrom.get('tableRows') as FormArray;
   }
 
-  getPositionDetail() {
-    this.jobService.getJobDetails(this.positionId).subscribe((data: any) => {
-      if (data) {
-        this.positionDetails = data;
-      }
-    });
-  }
 
   submitForm(applicant) {
     if (this.actionsFrom.valid) {
@@ -94,6 +85,7 @@ export class ApplicantListComponent implements OnInit {
         this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
         }
       if(action === 'hireApplicant') {
+        console.log('Selected store to send on boarding links', this.selectedStore);
         this.getApplicantAndSendOnboardingLinks(applicant, this.selectedStore);
       }
     } else {
@@ -118,7 +110,8 @@ export class ApplicantListComponent implements OnInit {
   }
 
   getHiringManager(){
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
+    console.log('get hiring manager ', this.selectedStore.storeHiringManger);
+    return this.firestore.collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager).where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           console.log('Document not found! Try again!');
@@ -131,19 +124,19 @@ export class ApplicantListComponent implements OnInit {
       });
   }
     getApplicantAndSendCalendarLink(applicant, store, action){
-      console.log('applicant data ', applicant, 'store data',store);
+      console.log('applicant data ', applicant, 'store data',store.jobTitle);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
-      const jobTitle = this.positionDetails.jobTitle;
+      const jobTitle = store.jobTitle;
       const hiringManagerName = this.hiringMangerData.fullName;
       console.log('hiringManagerName', hiringManagerName);
       const storeName = store.storeName;
       console.log('storeName', store.storeName);
-      //TODO get franchise name from userAppData @powergate delete this todo when completed
+      //TODO the franchise sign up flow needs to be added so we can grab the legal business name
       const franchiseName = 'ACME';
-      const calendarLink = this.hiringMangerData.calendarLink;
+      const calendarLink = this.hiringMangerData.calendlyLink;
 
       //    applicantName,
       //       storeName,
@@ -200,13 +193,16 @@ export class ApplicantListComponent implements OnInit {
     return await applicantDetails.present();
   }
   async addNewHire(applicant, storeData){
-    // add onboarding packages
-    console.log('applicant', applicant, storeData);
+   const store = this.selectedStore;
+   const hiringManager = this.hiringMangerData;
+    console.log('applicant', applicant, store, hiringManager);
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
-        applicant
+        applicant,
+        store,
+        hiringManager
       }
     });
     return await addNewHireModal.present();

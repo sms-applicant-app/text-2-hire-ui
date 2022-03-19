@@ -130,7 +130,7 @@ export class ApplicantListComponent implements OnInit {
       const phoneNumber = applicant.applicant.phoneNumber;
       const positionId = this.positionId;
       const jobTitle = store.jobTitle;
-      const hiringManagerName = this.hiringMangerData.fullName;
+      const hiringManagerName = store.hiringManagersName;
       console.log('hiringManagerName', hiringManagerName);
       const storeName = store.storeName;
       console.log('storeName', store.storeName);

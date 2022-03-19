@@ -37,7 +37,7 @@ export class AppComponent implements OnInit{
   ngOnInit() {
     this.authService.appUserData = JSON.parse(localStorage.getItem('appUserData'));
     // recheck franchise owner active status
-    if(this.authService.appUserData && this.authService.appUserData.franchiseId) { 
+    if(this.authService.appUserData && this.authService.appUserData.franchiseId) {
       this.franchiseService.getFranchiseById(this.authService.appUserData.franchiseId).pipe(take(1)).subscribe((franchise: any) => {
         // check franchise status
         if(franchise && franchise.isActive === false) {
@@ -61,11 +61,7 @@ export class AppComponent implements OnInit{
   }
 
   goToPage(url: string) {
-    if(url === '/logout') {
-      this.authService.SignOut();
-    } else {
-      this.router.navigate([url]);
-    }
+    this.router.navigate(['logout']);
   }
   goProfile() {
     this.router.navigate(['profile']);

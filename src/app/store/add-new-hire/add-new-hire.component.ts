@@ -20,16 +20,18 @@ import {ModalController} from '@ionic/angular';
 export class AddNewHireComponent implements OnInit {
   @Input() applicant: any;
   @Input() store: any;
+  @Input() hiringManager: any;
   storeId: string;
-
+  startDateForm: FormGroup;
   positionAppliedForId: string;
+  onBoardingPackageId: string;
   onBoardingPackages: any = [];
   dataSource: MatTableDataSource<Applicant>;
   customFormsAdded: boolean;
   formNames: any = [];
   customForms: FormGroup;
   fileUpload: FileUpload;
-  constructor( 
+  constructor(
     public dbHelper: FirestoreHelperService,
     public storeService: StoreService,
     public smsService: SmsService,
@@ -38,10 +40,11 @@ export class AddNewHireComponent implements OnInit {
     public fb: FormBuilder,
     public alertService: AlertService,
     public modalController: ModalController,
+
     ) { }
 
   ngOnInit() {
-    console.log('incoming applicant', this.applicant, 'incoming store', this.store);
+    console.log('incoming applicant', this.applicant, 'incoming store', this.store, 'incoming hiring manager', this.hiringManager);
     this.storeId = this.applicant.applicant.storeId;
     this.positionAppliedForId = this.applicant.positionId;
     //this.getListOfOnboardingPackages();
@@ -49,6 +52,9 @@ export class AddNewHireComponent implements OnInit {
     this.customFormsAdded = false;
     this.customForms = this.fb.group({
       onBoardingPackageName: this.fb.array([])
+    });
+    this.startDateForm = this.fb.group({
+      startDate: ['']
     });
   }
   //get list of onboarding packages for store
@@ -83,14 +89,17 @@ export class AddNewHireComponent implements OnInit {
   }
   sendOnboardingLinkToApplicant(applicant) {
     // send applicant id to sms service
-    const onBoadingUid = applicant.applicant.applicantId;
-    console.log('applicant', applicant);
     const onBoardingPackagesSelected = this.onBoardingPackages.filter(p => p.isChecked === true);
     if(onBoardingPackagesSelected.length === 0) {
       this.alertService.showError('Please choose at least one onboarding package');
       return;
     }
-
+    onBoardingPackagesSelected.forEach(o =>{
+      console.log('onboarded selected',o.id);
+      this.onBoardingPackageId = o.id;
+    });
+    const urlToOnboardingLinks = `https://applicant.hirenow.us/onboarding/${this.onBoardingPackageId}/${this.applicant.id}`;
+    console.log('onboard link', urlToOnboardingLinks, onBoardingPackagesSelected);
     let customForms: Array<CustomForms> = [];
     let isW4 = false;
     let isI9 = false;
@@ -102,15 +111,15 @@ export class AddNewHireComponent implements OnInit {
           formUrl: p.packages.w4,
           name: 'W-4 Employee With Holding Certificate'
         });
-        isW4 = true
+        isW4 = true;
       }
 
       if(p.packages.i9 && !isI9) {
         customForms.push({
           formUrl: p.packages.i9,
-          name: 'Employment Eligibility Verification'
+          name: ' I9 - Employment Eligibility Verification'
         });
-        isI9 = true
+        isI9 = true;
       }
 
       if(p.packages.stateW4 && !isstateW4) {
@@ -118,7 +127,7 @@ export class AddNewHireComponent implements OnInit {
           formUrl: p.packages.stateW4,
           name: 'MO W-4 Employee Withholding Certificate (certificate as in its an award to have with holdings)'
         });
-        isstateW4 = true
+        isstateW4 = true;
       }
 
       if(p.packages.customForms && p.packages.customForms instanceof Array) {
@@ -131,7 +140,7 @@ export class AddNewHireComponent implements OnInit {
     if (customFormsAdded && customFormsAdded?.length > 0) {
       customForms = customForms.concat(customFormsAdded.map(f => new CustomForms(f.name, f.url)));
     }
-
+    const startDate = this.startDateForm.controls.startDate.value;
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     console.log('customForms', customForms);
     this.firestore.collection('applicant').doc(applicant.id)
@@ -139,10 +148,10 @@ export class AddNewHireComponent implements OnInit {
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();
-       this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, onBoadingUid, 'Jimmy Johns', 'Brandon','3145995164', '12/01/2021' ).subscribe(data =>{
+       this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, urlToOnboardingLinks, this.store.storeName, this.store.hiringManagerName,this.hiringManager.phoneNumber, startDate ).subscribe(data =>{
           console.log(data);
        });
-       alert('applicant id:' + onBoadingUid);
+
     });
   }
 

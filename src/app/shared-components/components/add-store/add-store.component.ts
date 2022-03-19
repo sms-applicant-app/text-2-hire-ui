@@ -206,9 +206,6 @@ export class AddStoreComponent implements OnInit {
   }
   addStore(stepper: MatStepper){
     if (this.addStoreForm.valid) {
-      this.userService.getUserById(this.userId).subscribe(res => {
-        if (res) {
-          console.log('res', res);
           this.createDate();
           this.newStore.franchiseId = this.franchiseId;
           this.newStore.storeName = this.addStoreForm.controls.storeName.value;
@@ -236,13 +233,8 @@ export class AddStoreComponent implements OnInit {
           });
         } else {
           this.closeModal();
-          this.alertService.showError('User has been delete');
-          this.authService.SignOut();
+          this.alertService.showError('User was not retrieved');
         }
-      });
-    } else {
-      this.alertService.showError('Please add Name or Phone Store');
-    }
   }
   closeModal() {
     this.modalController

@@ -84,7 +84,7 @@ export class LoginPage implements OnInit {
   createRegisterForm() {
     this.registrationForm = this.fb.group(
       {
-        firstName: ['', Validators.required],
+        fullName: ['', Validators.required],
         email: ['', [Validators.required, emailValidator]],
         phoneNumber: ['', [Validators.required, phoneValidator]],
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -132,7 +132,7 @@ export class LoginPage implements OnInit {
       this.authService.RegisterUser(this.newUser.email, password.value).then(u => {
         this.userId = this.registrationForm.controls.email.value;
         const user = {
-          firstName: this.registrationForm.controls.firstName.value,
+          fullName: this.registrationForm.controls.fullName.value,
           email: this.registrationForm.controls.email.value,
           role: 'franchisee',
           phoneNumber: this.registrationForm.controls.phoneNumber.value,

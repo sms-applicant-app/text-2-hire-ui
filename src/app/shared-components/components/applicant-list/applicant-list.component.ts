@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Role } from './../../../shared/models/role';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {Applicant} from '../../../shared/models/applicant';
 import {ApplicantService} from '../../../shared/services/applicant.service';
@@ -13,6 +14,8 @@ import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.
 import {AlertService} from '../../../shared/services/alert.service';
 import { JobService } from './../../../shared/services/job.service';
 import { UserService } from './../../../shared/services/user.service';
+import { FranchiseService } from './../../../shared/services/franchise.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 
 @Component({
@@ -21,7 +24,7 @@ import { UserService } from './../../../shared/services/user.service';
   styleUrls: ['./applicant-list.component.scss'],
 
 })
-export class ApplicantListComponent implements OnInit {
+export class ApplicantListComponent implements OnInit, OnDestroy {
   @Input() positionId: string;
   @Input() positionData: any;
   @Output() messageEvent = new EventEmitter<any>();
@@ -39,17 +42,22 @@ export class ApplicantListComponent implements OnInit {
   positionDetails: any;
   control: FormArray;
   hiringMangerData: any;
+  franchiseDataSub: Subscription = new Subscription();
+  franchiseData: any;
+  franchiseName: string;
   selectedStore: any;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
-  constructor(public fb: FormBuilder,
-              public applicantService: ApplicantService,
-              public firestore: AngularFirestore,
-              public dbHelper: FirestoreHelperService,
-              public smsService: SmsService,
-              public modalController: ModalController,
-              public alertService: AlertService,
-              public jobService: JobService,
-              public useService: UserService
+  constructor(
+    public fb: FormBuilder,
+    public applicantService: ApplicantService,
+    public firestore: AngularFirestore,
+    public dbHelper: FirestoreHelperService,
+    public smsService: SmsService,
+    public modalController: ModalController,
+    public alertService: AlertService,
+    public jobService: JobService,
+    public userService: UserService,
+    public franchiseService: FranchiseService
   ) { }
 
   ngOnInit() {
@@ -57,12 +65,12 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-    //TODO Bugfix store object not passed in to component @powergate delete this todo when completed
     this.storeData = this.store;
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();
     this.getApplicantsByJobId(this.positionId);
     this.getPositionDetail();
+    this.getFranchiseeByApplicant(this.selectedStore.franchiseId);
     this.isSubmitted = false;
     this.actionsFrom = this.fb.group({
       actions: ['', [Validators.required]],
@@ -72,7 +80,9 @@ export class ApplicantListComponent implements OnInit {
   ngAfterOnInit(){
     this.control = this.actionsFrom.get('tableRows') as FormArray;
   }
-
+  ngOnDestroy(): void {
+    this.franchiseDataSub.unsubscribe();
+  }
   getPositionDetail() {
     this.jobService.getJobDetails(this.positionId).subscribe((data: any) => {
       if (data) {
@@ -117,48 +127,63 @@ export class ApplicantListComponent implements OnInit {
 
   }
 
-  getHiringManager(){
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId ).where('role', '==', 'hiringManager')).get()
-      .subscribe(ss => {
-        if (ss.docs.length === 0) {
-          console.log('Document not found! Try again!');
-        } else {
-          ss.docs.forEach(doc => {
-            this.hiringMangerData = doc.data();
-            console.log('retrieved hiring manager',this.hiringMangerData);
-          });
-        }
-      });
+  getUserDetail(franchiseId) {
+    this.userService.getFranchiseUserByFranchiseId(franchiseId).subscribe(res => {
+      if (res) {
+        res.docs.forEach(doc => {
+          const userData = doc.data() as any;
+          this.franchiseName = userData.fullName || userData.firstName;
+        });
+      }
+    });
   }
-    getApplicantAndSendCalendarLink(applicant, store, action){
-      console.log('applicant data ', applicant, 'store data',store);
-      const email = applicant.applicant.email;
-      const applicantName = applicant.applicant.name;
-      const phoneNumber = applicant.applicant.phoneNumber;
-      const positionId = this.positionId;
-      const jobTitle = this.positionDetails.jobTitle;
-      const hiringManagerName = this.hiringMangerData.fullName;
-      console.log('hiringManagerName', hiringManagerName);
-      const storeName = store.storeName;
-      console.log('storeName', store.storeName);
-      //TODO get franchise name from userAppData @powergate delete this todo when completed
-      const franchiseName = 'ACME';
-      const calendarLink = this.hiringMangerData.calendarLink;
 
-      //    applicantName,
-      //       storeName,
-      //       franchiseName,
-      //       hiringManagerName,
-      //       jobTitle,
-      //       calendarLink
-      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
+  getFranchiseeByApplicant(franchiseId) {
+    this.franchiseDataSub = this.franchiseService.getFranchiseById(franchiseId).subscribe((res: any) => {
+       if (res) {
+          this.franchiseName = res.businessLegalName;
+       } else {
+         this.getUserDetail(franchiseId);
+       }
+     });
+  }
+  getHiringManager(){
+    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId )
+    .where('role', '==', Role.hiringManager))
+    .get()
+    .subscribe(ss => {
+      if (ss.docs.length === 0) {
+        console.log('Document not found! Try again!');
+      } else {
+        ss.docs.forEach(doc => {
+          this.hiringMangerData = doc.data();
+        });
+      }
+      return;
+    });
+  }
+  getApplicantAndSendCalendarLink(applicant, store, action){
+    console.log('applicant data ', applicant, 'store data',store);
+    const email = applicant.applicant.email;
+    const applicantName = applicant.applicant.name;
+    const phoneNumber = applicant.applicant.phoneNumber;
+    const jobTitle = this.positionDetails.jobTitle;
+    let hiringManagerName: string;
+    let calendarLink;
+    if (this.hiringMangerData) {
+      hiringManagerName = this.hiringMangerData.firstName || this.hiringMangerData.fullName;
+      calendarLink = this.hiringMangerData.calendarLink;
+    }
+    const storeName = store.storeName;
+    this.smsService.requestInterview(applicantName, storeName, this.franchiseName, hiringManagerName, jobTitle, phoneNumber, calendarLink)
+      .subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
             autoClose: false,
             keepAfterRouteChange: false
           };
-          console.log('trigger alert', data.errorType);
+          console.log('trigger alert', data.errorMessage);
           this.applicantService.updateApplicant(email, {status: 'Last Message Failed'} );
           this.alertService.onAlert('default-alert').subscribe(m =>{
             console.log('where is my alert?', m, data.errorMessage);
@@ -166,9 +191,8 @@ export class ApplicantListComponent implements OnInit {
         } else {
           this.applicantService.updateApplicant(email, {status: action} );
         }
-      });
-
-    }
+    });
+  }
   // get applicants by job
   getApplicantsByJobId(positionId){
       this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
@@ -206,7 +230,8 @@ export class ApplicantListComponent implements OnInit {
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
-        applicant
+        applicant,
+        storeData
       }
     });
     return await addNewHireModal.present();
@@ -224,10 +249,4 @@ export class ApplicantListComponent implements OnInit {
           .dismiss()
           .then();
   }
-  // deleteApplicant(applicantDelete) {
-  //   this.alertService.alertConfirm('store').then((data) => {
-
-  //   });
-  // }
-
 }

@@ -1,8 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {OnboardingService} from "../../shared/services/onboarding.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {Applicant} from "../../shared/models/applicant";
+import { Role } from './../../shared/models/role';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import {AngularFirestore} from '@angular/fire/firestore';
+import {ModalController} from '@ionic/angular';
+import {MatTableDataSource} from "@angular/material/table";
+
+import {OnboardingService} from "../../shared/services/onboarding.service";
+import {Applicant} from "../../shared/models/applicant";
 import {FileUpload} from "../../shared/models/file-upload";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SmsService} from "../../shared/services/sms.service";
@@ -10,16 +15,19 @@ import {StoreService} from "../../shared/services/store.service";
 import {FirestoreHelperService} from "../../shared/firestore-helper.service";
 import { AlertService } from '../../shared/services/alert.service';
 import { CustomForms } from '../../shared/models/onBoardPacket';
-import {ModalController} from '@ionic/angular';
+import { FranchiseService } from './../../shared/services/franchise.service';
+import { AuthService } from './../../shared/services/auth.service';
+import { UserService } from './../../shared/services/user.service';
+import { JobService } from './../../shared/services/job.service';
 
 @Component({
   selector: 'app-add-new-hire',
   templateUrl: './add-new-hire.component.html',
   styleUrls: ['./add-new-hire.component.scss'],
 })
-export class AddNewHireComponent implements OnInit {
+export class AddNewHireComponent implements OnInit, OnDestroy {
   @Input() applicant: any;
-  @Input() store: any;
+  @Input() storeData: any;
   storeId: string;
 
   positionAppliedForId: string;
@@ -29,7 +37,15 @@ export class AddNewHireComponent implements OnInit {
   formNames: any = [];
   customForms: FormGroup;
   fileUpload: FileUpload;
-  constructor( 
+  startDate: any;
+  userData: any = [];
+  franchiseDataSub: Subscription = new Subscription();
+  franchiseName: string;
+  hiringManagersName: string;
+  jobData: any = [];
+  role: string;
+  constructor(
+    public authService: AuthService,
     public dbHelper: FirestoreHelperService,
     public storeService: StoreService,
     public smsService: SmsService,
@@ -38,18 +54,29 @@ export class AddNewHireComponent implements OnInit {
     public fb: FormBuilder,
     public alertService: AlertService,
     public modalController: ModalController,
+    public datepipe: DatePipe,
+    public franchiseService: FranchiseService,
+    public userService: UserService,
+    public jobService: JobService
     ) { }
 
   ngOnInit() {
-    console.log('incoming applicant', this.applicant, 'incoming store', this.store);
+    console.log('incoming applicant', this.applicant);
     this.storeId = this.applicant.applicant.storeId;
     this.positionAppliedForId = this.applicant.positionId;
-    //this.getListOfOnboardingPackages();
+    this.userData = JSON.parse(localStorage.getItem('appUserData'));
+    // get franchise detail by franchiee or user role franchisee
+    this.getFranchiseeByApplicant(this.applicant.applicant.franchiseId);
+    const jobId = this.applicant.applicant.jobId ? this.applicant.applicant.jobId : this.applicant.applicant.positionId;
+    this.getJobDetail(jobId);
     this.getOnboardingPacketsByStoreId(this.storeId);
     this.customFormsAdded = false;
     this.customForms = this.fb.group({
       onBoardingPackageName: this.fb.array([])
     });
+  }
+  ngOnDestroy(): void {
+    this.franchiseDataSub.unsubscribe();
   }
   //get list of onboarding packages for store
   getListOfOnboardingPackages(){
@@ -62,6 +89,43 @@ export class AddNewHireComponent implements OnInit {
     console.log(this.onBoardingPackages);
   }
 
+  getUserDetail(franchiseId) {
+    this.userService.getFranchiseUserByFranchiseId(franchiseId).subscribe(res => {
+      if (res) {
+        res.docs.forEach(doc => {
+          const userData = doc.data() as any;
+          this.franchiseName = userData.fullName || userData.firstName;
+        });
+      }
+    });
+  }
+
+  getFranchiseeByApplicant(franchiseId) {
+    this.franchiseDataSub = this.franchiseService.getFranchiseById(franchiseId).subscribe((res: any) => {
+       if (res) {
+          this.franchiseName = res.businessLegalName;
+       } else {
+         this.getUserDetail(franchiseId);
+       }
+     });
+  }
+
+  getJobDetail(jobId) {
+    this.jobService.getJobDetails(jobId).subscribe((data: any) => {
+      if (data) {
+        this.jobData = data;
+        this.getHiringManager(this.jobData.hiringManagerId);
+      }
+    });
+  }
+
+  getHiringManager(email) {
+    this.userService.getUserById(email).subscribe(res => {
+      if (res) {
+        this.hiringManagersName = res.fullName || res.firstName;
+      }
+    });
+  }
 
   getOnboardingPacketsByStoreId(storeId){
     this.firestore.collection('onboardPackages', ref => ref.where('storeId', '==', `${storeId}`)).get()
@@ -82,9 +146,9 @@ export class AddNewHireComponent implements OnInit {
 
   }
   sendOnboardingLinkToApplicant(applicant) {
+    this.startDate = this.datepipe.transform(this.startDate, 'dd-MM-yyyy');
     // send applicant id to sms service
     const onBoadingUid = applicant.applicant.applicantId;
-    console.log('applicant', applicant);
     const onBoardingPackagesSelected = this.onBoardingPackages.filter(p => p.isChecked === true);
     if(onBoardingPackagesSelected.length === 0) {
       this.alertService.showError('Please choose at least one onboarding package');
@@ -139,9 +203,18 @@ export class AddNewHireComponent implements OnInit {
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();
-       this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, onBoadingUid, 'Jimmy Johns', 'Brandon','3145995164', '12/01/2021' ).subscribe(data =>{
+        this.smsService.sendNewHireForms(
+          applicant.applicant.name,
+          applicant.applicant.phoneNumber,
+          onBoadingUid,
+          this.franchiseName,
+          this.hiringManagersName,
+          this.storeData.storePhoneNumber,
+          this.startDate
+        )
+      .subscribe(data =>{
           console.log(data);
-       });
+      });
        alert('applicant id:' + onBoadingUid);
     });
   }

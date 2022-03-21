@@ -28,6 +28,7 @@ import { JobService } from './../../shared/services/job.service';
 export class AddNewHireComponent implements OnInit, OnDestroy {
   @Input() applicant: any;
   @Input() storeData: any;
+  @Input() hiringMangerData: any;
   storeId: string;
 
   positionAppliedForId: string;
@@ -65,10 +66,7 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
     this.storeId = this.applicant.applicant.storeId;
     this.positionAppliedForId = this.applicant.positionId;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
-    // get franchise detail by franchiee or user role franchisee
     this.getFranchiseeByApplicant(this.applicant.applicant.franchiseId);
-    const jobId = this.applicant.applicant.jobId ? this.applicant.applicant.jobId : this.applicant.applicant.positionId;
-    this.getJobDetail(jobId);
     this.getOnboardingPacketsByStoreId(this.storeId);
     this.customFormsAdded = false;
     this.customForms = this.fb.group({
@@ -82,11 +80,6 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
   getListOfOnboardingPackages(){
     const storeId = this.storeId;
    this.onBoardingPackages = this.onBoardingService.getAllOnboardingPackagesByStoreId(storeId);
-   /*
-   this.onBoardingPackages.forEach(data =>{
-     console.log('onbaording packages',data);
-   });*/
-    console.log(this.onBoardingPackages);
   }
 
   getUserDetail(franchiseId) {
@@ -108,23 +101,6 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
          this.getUserDetail(franchiseId);
        }
      });
-  }
-
-  getJobDetail(jobId) {
-    this.jobService.getJobDetails(jobId).subscribe((data: any) => {
-      if (data) {
-        this.jobData = data;
-        this.getHiringManager(this.jobData.hiringManagerId);
-      }
-    });
-  }
-
-  getHiringManager(email) {
-    this.userService.getUserById(email).subscribe(res => {
-      if (res) {
-        this.hiringManagersName = res.fullName || res.firstName;
-      }
-    });
   }
 
   getOnboardingPacketsByStoreId(storeId){
@@ -197,7 +173,7 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
     }
 
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
-    console.log('customForms', customForms);
+    const hiringManagersName = this.storeData.hiringManagersName ? this.storeData.hiringManagersName : (this.hiringMangerData.firstName || this.hiringMangerData.fullName);
     this.firestore.collection('applicant').doc(applicant.id)
       .set({customForms: customForms}, {merge: true})
       .then(() => {
@@ -208,7 +184,7 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
           applicant.applicant.phoneNumber,
           onBoadingUid,
           this.franchiseName,
-          this.hiringManagersName,
+          hiringManagersName,
           this.storeData.storePhoneNumber,
           this.startDate
         )

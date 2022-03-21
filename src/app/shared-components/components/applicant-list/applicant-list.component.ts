@@ -39,7 +39,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   touchedRows: any;
   applicantId: string;
   applicantRetrieved: boolean;
-  positionDetails: any;
   control: FormArray;
   hiringMangerData: any;
   franchiseDataSub: Subscription = new Subscription();
@@ -69,7 +68,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();
     this.getApplicantsByJobId(this.positionId);
-    this.getPositionDetail();
     this.getFranchiseeByApplicant(this.selectedStore.franchiseId);
     this.isSubmitted = false;
     this.actionsFrom = this.fb.group({
@@ -82,13 +80,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.franchiseDataSub.unsubscribe();
-  }
-  getPositionDetail() {
-    this.jobService.getJobDetails(this.positionId).subscribe((data: any) => {
-      if (data) {
-        this.positionDetails = data;
-      }
-    });
   }
 
   submitForm(applicant) {
@@ -167,11 +158,10 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     const email = applicant.applicant.email;
     const applicantName = applicant.applicant.name;
     const phoneNumber = applicant.applicant.phoneNumber;
-    const jobTitle = this.positionDetails.jobTitle;
-    let hiringManagerName: string;
+    const jobTitle = this.positionData.jobTitle;
+    const hiringManagerName = this.positionData.hiringManagersName;
     let calendarLink;
     if (this.hiringMangerData) {
-      hiringManagerName = this.hiringMangerData.firstName || this.hiringMangerData.fullName;
       calendarLink = this.hiringMangerData.calendarLink;
     }
     const storeName = store.storeName;
@@ -224,14 +214,15 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     return await applicantDetails.present();
   }
   async addNewHire(applicant, storeData){
-    // add onboarding packages
-    console.log('applicant', applicant, storeData);
+    console.log('data pass addNewHire', applicant, storeData, this.hiringMangerData);
+    const hiringMangerData = this.hiringMangerData;
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
         applicant,
-        storeData
+        storeData,
+        hiringMangerData
       }
     });
     return await addNewHireModal.present();

@@ -19,6 +19,7 @@ import { FranchiseService } from './../../shared/services/franchise.service';
 import { AuthService } from './../../shared/services/auth.service';
 import { UserService } from './../../shared/services/user.service';
 import { JobService } from './../../shared/services/job.service';
+import { ApplicantStatus } from './../../shared/models/applicant-status';
 
 @Component({
   selector: 'app-add-new-hire',
@@ -45,6 +46,7 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
   hiringManagersName: string;
   jobData: any = [];
   role: string;
+  applicantStatus = ApplicantStatus;
   constructor(
     public authService: AuthService,
     public dbHelper: FirestoreHelperService,
@@ -175,7 +177,7 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     const hiringManagersName = this.storeData.hiringManagersName ? this.storeData.hiringManagersName : (this.hiringMangerData.firstName || this.hiringMangerData.fullName);
     this.firestore.collection('applicant').doc(applicant.id)
-      .set({customForms: customForms}, {merge: true})
+      .set({customForms: customForms, status: this.applicantStatus.applicantApplied}, {merge: true}) //confirm status applicant.
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();

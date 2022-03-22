@@ -16,8 +16,6 @@ import { JobService } from './../../../shared/services/job.service';
 import { UserService } from './../../../shared/services/user.service';
 import { FranchiseService } from './../../../shared/services/franchise.service';
 import { Subscription } from 'rxjs/internal/Subscription';
-
-
 @Component({
   selector: 'app-applicant-list',
   templateUrl: './applicant-list.component.html',
@@ -29,7 +27,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   @Input() positionData: any;
   @Output() messageEvent = new EventEmitter<any>();
   @Input() store: any;
-  applicantStatus: ApplicantStatus;
   applicants: any = [];
   dataSource: MatTableDataSource<Applicant>;
   actionsFrom: FormGroup;
@@ -46,6 +43,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   franchiseName: string;
   selectedStore: any;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
+  applicantStatus = ApplicantStatus;
   constructor(
     public fb: FormBuilder,
     public applicantService: ApplicantService,
@@ -110,12 +108,12 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   }
   getApplicantAndBringUpInterviewNotesModal(applicant, action){
       // route hiring manger to new hire page
-      const email = applicant.email;
+      const email = applicant.applicant.email;
       console.log('Hire Applicant', applicant);
       this.applicantDetails(applicant).then(data =>{
         console.log('display new hire modal');
       });
-
+      this.applicantService.updateApplicant(email, {status: action} );
   }
 
   getUserDetail(franchiseId) {
@@ -180,6 +178,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
           });
         } else {
           this.applicantService.updateApplicant(email, {status: action} );
+          this.alertService.showSuccess(`Updated applicant ${applicantName} with status ${action}`);
         }
     });
   }

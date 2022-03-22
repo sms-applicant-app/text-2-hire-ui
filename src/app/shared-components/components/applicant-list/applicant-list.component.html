@@ -46,11 +46,11 @@
             <form [formGroup]="actionsFrom">
               <select formControlName="actions" class="form-select">
                 <option value="" selected>Applicant Next Steps</option>
-                <option value="scheduleInterview">Schedule Interview</option>
-                <option value="interviewApplicant">Interview Applicant</option>
-                <option value="hireApplicant">Hire Applicant</option>
-                <option value="onBoardComplete">OnBoard Complete</option>
-                <option value="applicantDeclined">Decline Applicant</option>
+                <option [selected]="a.applicant.status === 'scheduleInterview'" value="scheduleInterview">Schedule Interview</option>
+                <option [selected]="a.applicant.status === 'interviewApplicant'" value="interviewApplicant">Interview Applicant</option>
+                <option [selected]="a.applicant.status === 'hireApplicant'" value="hireApplicant">Hire Applicant</option>
+                <option value="applicantStatus.onboardingComplete">OnBoard Complete</option>
+                <option value="applicantStatus.applicantDeclined">Decline Applicant</option>
               </select>
             </form>
           </td>

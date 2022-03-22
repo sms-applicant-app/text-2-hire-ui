@@ -177,7 +177,7 @@ export class AddNewHireComponent implements OnInit, OnDestroy {
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     const hiringManagersName = this.storeData.hiringManagersName ? this.storeData.hiringManagersName : (this.hiringMangerData.firstName || this.hiringMangerData.fullName);
     this.firestore.collection('applicant').doc(applicant.id)
-      .set({customForms: customForms, status: this.applicantStatus.applicantApplied}, {merge: true}) //confirm status applicant.
+      .set({customForms: customForms, status: this.applicantStatus.pendingOnboarding}, {merge: true})
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();

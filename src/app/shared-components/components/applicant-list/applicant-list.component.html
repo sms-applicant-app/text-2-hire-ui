@@ -2,7 +2,7 @@
 
 <div class="container-fluid">
   <div class="modal-header">
-    <p class="modal-title">Applicants for <span *ngIf="positionDetails">{{positionDetails.jobTitle}}</span></p>
+    <p class="modal-title">Applicants for <span *ngIf="positionData">{{positionData.jobTitle}}</span></p>
     <button class="btn btn-clear close-modal" (click)="sendMessageGoBackToJobsList()">
       <ion-icon name="close-outline"></ion-icon>
     </button>
@@ -48,7 +48,7 @@
                 <option value="" selected>Applicant Next Steps</option>
                 <option [selected]="a.applicant.status === 'scheduleInterview'" value="scheduleInterview">Schedule Interview</option>
                 <option [selected]="a.applicant.status === 'interviewApplicant'" value="interviewApplicant">Interview Applicant</option>
-                <option [selected]="a.applicant.status === 'hireApplicant'" value="hireApplicant">Hire Applicant</option>
+                <option [selected]="a.applicant.status === 'applicantApplied'" value="applicantApplied">Hire Applicant</option>
                 <option value="applicantStatus.onboardingComplete">OnBoard Complete</option>
                 <option value="applicantStatus.applicantDeclined">Decline Applicant</option>
               </select>

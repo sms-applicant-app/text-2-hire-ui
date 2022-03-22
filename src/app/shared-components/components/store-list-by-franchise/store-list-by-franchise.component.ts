@@ -18,6 +18,7 @@ import { Role } from './../../../shared/models/role';
 import { FranchiseService } from './../../../shared/services/franchise.service';
 import { StoreService } from './../../../shared/services/store.service';
 import { JobsListComponent } from './../jobs-list/jobs-list.component';
+import { StoreDetailComponent } from '../store-detail/store-detail.component';
 @Component({
   selector: 'app-store-list-by-franchise',
   templateUrl: './store-list-by-franchise.component.html',
@@ -87,11 +88,11 @@ export class StoreListByFranchiseComponent implements OnInit {
       }
     });
   }
-  async getPositionsForStore(storeId, storeName, storeData){
+  async storeDetail(storeId, storeName, storeData){
     this.seePositions = true;
     localStorage.setItem('selectedStoreData', JSON.stringify(storeData));
     const getPositionModal = await this.modalController.create({
-      component: JobsListComponent,
+      component: StoreDetailComponent,
       swipeToClose: true,
       componentProps: {
         storeId,

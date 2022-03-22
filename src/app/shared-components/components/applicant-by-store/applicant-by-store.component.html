@@ -1,0 +1,39 @@
+
+
+<div class="container-fluid">
+  <p *ngIf="applicantData.length <= 0" class="text-center text-warning bold">No Applicants for this store</p>
+  <div></div>
+  <div *ngIf="applicantData.length" class="card-body">
+    <div class="table-responsive">
+      <table class="table align-middle gs-0 gy-4">
+        <thead>
+        <tr class="fw-bolder text-muted bg-light">
+          <th class="ps-4 rounded-start">Name</th>
+          <th class="ps-4 rounded-start">Schedule Status</th>
+          <th class="ps-4 rounded-start">Phone Number</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of applicantData" >
+            <td>
+              <div class="d-flex align-items-center">
+                <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.name}}</p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.applicant.status}}</p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.applicant.phoneNumber}}</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

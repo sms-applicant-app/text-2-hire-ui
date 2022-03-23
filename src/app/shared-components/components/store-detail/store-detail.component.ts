@@ -15,6 +15,7 @@ import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from './../../../shared/services/alert.service';
 import { Role } from './../../../shared/models/role';
 import { AddApplicantComponent } from '../add-applicant/add-applicant.component';
+import { AddJobStepComponent } from './../add-job-step/add-job-step.component';
 
 @Component({
   selector: 'app-store-detail',
@@ -139,7 +140,36 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   sendJobsFranchiseIdMessage(){
     this.messageEvent.emit(this.franchiseId);
   }
-  async addJobRec(){
+  // async addJobRec(){
+  //   let franchiseId;
+  //   if (this.userRole === Role.hiringManager) {
+  //     franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+  //   } else {
+  //     franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
+  //   }
+  //   const storeId = this.storeId;
+  //   const onJobAddedSub = new Subject<JobListing>();
+  //   const addJobRec = await this.modalController.create({
+  //     component: AddJobReqComponent,
+  //     swipeToClose: true,
+  //     componentProps: {
+  //       franchiseId,
+  //       storeId,
+  //       onJobAddedSub
+  //     }
+  //   });
+  //   onJobAddedSub.subscribe((newJob: any) => {
+  //     this.jobs.unshift({id: newJob.id, position: newJob});
+  //   });
+
+  //   addJobRec.onDidDismiss().then(data => {
+  //     onJobAddedSub.unsubscribe();
+  //   });
+
+  //   return await addJobRec.present();
+  // }
+  async addJobStep(){
+    this.closeModal();
     let franchiseId;
     if (this.userRole === Role.hiringManager) {
       franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
@@ -147,22 +177,13 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
       franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
     }
     const storeId = this.storeId;
-    const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
-      component: AddJobReqComponent,
+      component: AddJobStepComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
         storeId,
-        onJobAddedSub
       }
-    });
-    onJobAddedSub.subscribe((newJob: any) => {
-      this.jobs.unshift({id: newJob.id, position: newJob});
-    });
-
-    addJobRec.onDidDismiss().then(data => {
-      onJobAddedSub.unsubscribe();
     });
 
     return await addJobRec.present();

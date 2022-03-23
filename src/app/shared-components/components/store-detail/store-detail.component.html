@@ -32,7 +32,7 @@
             </div>
             <div class="col-6">
               <div class="d-flex flex-row justify-content-end">
-                <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
+                <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobStep()">Add Position</button>
                 <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
               </div>
             </div>
@@ -71,13 +71,16 @@
                 </td>
                 <td>
                   <div class="d-flex flex-shrink-0">
-                    <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id, job.position)" >
-                      <ion-icon class="font-24" name="eye-outline"></ion-icon>
+                    <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id, job.position)" title="View Detail" >
+                      <ion-icon class="font-24" name="eye-outline" ariaHidden="true"></ion-icon>
                     </button>
                     <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="addApplicant(job)" >
-                      <ion-icon class="font-24" name="person-add-outline"></ion-icon>
+                      <ion-icon class="font-24" name="person-add-outline" ariaLabel="Add Applicant"></ion-icon>
                     </button>
-                    <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)" >
+                    <!-- <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="copyJob(job)" aria-label="Clone Job">
+                      <ion-icon class="font-24" name="copy-outline"></ion-icon>
+                    </button> -->
+                    <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)">
                       <ion-icon class="font-24" name="trash-outline"></ion-icon>
                     </button>
                   </div>

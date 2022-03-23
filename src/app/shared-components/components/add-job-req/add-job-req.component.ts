@@ -21,6 +21,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 export class AddJobReqComponent implements OnInit {
   @Input() storeId: string;
   @Input() franchiseId: string;
+  @Input() jobData: any;
   // franchiseId: string;
   newJobListing: JobPosting = new JobPosting();
   addJoblistingFrom: FormGroup;
@@ -50,6 +51,29 @@ export class AddJobReqComponent implements OnInit {
     this.initJobsDetailsForm();
     this.getOnboardingPackages();
     this.userId = JSON.parse(localStorage.getItem('user')).email;
+    if (this.jobData) {
+      if(this.jobData.position.positionExpiration && typeof this.jobData.position.positionExpiration != 'string') {
+        this.jobData.position.positionExpiration = this.jobData.position.positionExpiration.toDate();
+      }
+      this.addJoblistingFrom.patchValue({
+        recNumber: this.jobData.position.recNumber,
+        jobTitle: this.jobData.position.jobTitle,
+        location: this.jobData.position.addressId,
+        jobType: this.jobData.position.jobType,
+        onboardingPackage: this.jobData.position.onboardingPackageId,
+        numberOfOpenSlots: this.jobData.position.numberOfOpenSlots,
+        shortJobDescription: this.jobData.position.shortJobDescription,
+        positionExpiration: this.jobData.position.positionExpiration,
+        companyWebsite: this.jobData.position.companyWebsite,
+        salary: this.jobData.position.salary,
+       });
+      this.jobDetailsFrom.patchValue({
+        fullDescription: this.jobData.position.jobDescription,
+        benefits: this.jobData.position.benefits,
+        specialNotes: this.jobData.position.specialNotes,
+        qualifications: this.jobData.position.qualifications,
+      });
+    }
   }
   initAddJobForm(){
     this.addJoblistingFrom = this.fb.group({
@@ -59,7 +83,7 @@ export class AddJobReqComponent implements OnInit {
       jobType: [''],
       onboardingPackage: [''],
       numberOfOpenSlots: ['', Validators.required],
-      shortDescription: ['', Validators.required],
+      shortJobDescription: ['', Validators.required],
       positionExpiration: [{value: '', disabled: true}, Validators.required],
       companyWebsite: [''],
       salary: ['']
@@ -107,7 +131,6 @@ export class AddJobReqComponent implements OnInit {
       this.userService.getUserById(this.userId).subscribe(resp => {
         if (resp) {
           const storeId = this.storeId;
-          const date = this.datepipe.transform(this.addJoblistingFrom.controls.positionExpiration.value, 'dd-MM-yyyy');
           if (storeId) {
             this.newJobListing.storeId = this.storeId.toString();
           } else {
@@ -128,8 +151,8 @@ export class AddJobReqComponent implements OnInit {
           this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
           this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;
           this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
-          this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
-          this.newJobListing.positionExpiration = date;
+          this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortJobDescription.value;
+          this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
           this.newJobListing.onboardingPackageId = this.addJoblistingFrom.controls.onboardingPackage.value;
           if (this.newJobListing.onboardingPackageId) {
             const packageData = this.onboardingPackagesData.find(c=> c.id === this.newJobListing.onboardingPackageId) as any;

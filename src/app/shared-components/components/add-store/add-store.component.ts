@@ -181,10 +181,12 @@ export class AddStoreComponent implements OnInit {
    * @param $event
    */
   receiveUserMessage($event, stepper: MatStepper){
-    this.newUserHiringManagerData = $event;
-    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
-    this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
-    stepper.next();
+    if ($event) {
+      this.newUserHiringManagerData = $event;
+      this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+      this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
+      stepper.next();
+    }
   }
   /**
    *

@@ -1,0 +1,63 @@
+
+<div class="modal-header" *ngIf="userData.role === 'franchisee'">
+  <p class="modal-title">Add Job</p>
+  <button class="btn btn-clear close-modal" (click)="closeModal()">
+    <ion-icon name="close-outline"></ion-icon>
+  </button>
+</div>
+<div class="container-fluid height-100">
+  <div class="pl-3 pr-3">
+    <form [formGroup]="chooseStepForm">
+      <mat-radio-group aria-label="Select an option" formControlName="chooseStep">
+        <mat-radio-button value="createNew" name="chooseStep" class="mr-4">Create New Position</mat-radio-button>
+        <mat-radio-button value="copy" name="chooseStep">Copy From Previous Position</mat-radio-button>
+      </mat-radio-group>
+      <button mat-button color="primary" (click)="handledSelect()">Next</button>
+    </form>
+   
+
+    <div *ngIf="stepCopy" class="table-responsive" [ngClass]="{'table-default': userData.role !== 'hiringManager'}">
+      <p *ngIf="jobs.length <= 0">No Jobs for this Store Yet</p>
+      <table *ngIf="jobs.length" class="table align-middle gs-0 gy-4">
+        <thead>
+        <tr class="fw-bolder text-muted bg-light">
+          <th class="ps-4 rounded-start">Job Title</th>
+          <th class="ps-4 rounded-start">Location</th>
+          <th class="ps-4 rounded-start">Position Active</th>
+          <th class="ps-4 rounded-start">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobs">
+            <td>
+              <div class="d-flex align-items-center">
+                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.jobTitle}}</a>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.addressId}}</a>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{job.position.positionOpen}}</a>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex flex-shrink-0">
+                <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="copyJob(job)" aria-label="Clone Job">
+                  <ion-icon class="font-24" name="copy-outline"></ion-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+

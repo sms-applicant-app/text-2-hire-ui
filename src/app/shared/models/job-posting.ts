@@ -14,7 +14,7 @@ export class JobPosting {
   hiringManagerId: string;
   companyWebsite?: string;
   salary?: string;
-  positionExpiration?: string;
+  positionExpiration?: Date;
   franchiseId: string;
   qualifications?: string;
   specialNotes?: string;

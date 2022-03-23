@@ -29,6 +29,7 @@ import { UploadListFormComponent } from './components/upload-list-file/upload-li
 import { StoreDetailComponent } from './components/store-detail/store-detail.component';
 import { ApplicantByStoreComponent } from './components/applicant-by-store/applicant-by-store.component';
 import { AddApplicantComponent } from './components/add-applicant/add-applicant.component';
+import { AddJobStepComponent } from './components/add-job-step/add-job-step.component';
 
 @NgModule({
   declarations:
@@ -57,6 +58,7 @@ import { AddApplicantComponent } from './components/add-applicant/add-applicant.
       StoreDetailComponent,
       ApplicantByStoreComponent,
       AddApplicantComponent,
+      AddJobStepComponent
     ],
   imports: [
     CommonModule,

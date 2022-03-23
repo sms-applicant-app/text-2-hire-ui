@@ -103,7 +103,7 @@ export class ApplicantListComponent implements OnInit {
   getApplicantAndBringUpInterviewNotesModal(applicant, action){
       console.log('appliacant at interview',applicant);
       this.closeModal();
-     this.router.navigateByUrl(`store/store-interview/${applicant.id}`).then(err=>{console.log(err);});
+     this.router.navigateByUrl(`store/store-interview/${applicant.id}`).catch(err=>{console.log(err);});
 
   }
 

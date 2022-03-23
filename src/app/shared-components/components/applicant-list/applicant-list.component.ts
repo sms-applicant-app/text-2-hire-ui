@@ -11,15 +11,15 @@ import {ModalController} from '@ionic/angular';
 import {AddNewHireComponent} from '../../../store/add-new-hire/add-new-hire.component';
 import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
 import {AlertService} from '../../../shared/services/alert.service';
-import { JobService } from './../../../shared/services/job.service';
-import { UserService } from './../../../shared/services/user.service';
+import { JobService } from '../../../shared/services/job.service';
+import { UserService } from '../../../shared/services/user.service';
+import {Router, RouterModule} from "@angular/router";
 
 
 @Component({
   selector: 'app-applicant-list',
   templateUrl: './applicant-list.component.html',
   styleUrls: ['./applicant-list.component.scss'],
-
 })
 export class ApplicantListComponent implements OnInit {
   @Input() positionId: string;
@@ -49,7 +49,8 @@ export class ApplicantListComponent implements OnInit {
               public modalController: ModalController,
               public alertService: AlertService,
               public jobService: JobService,
-              public useService: UserService
+              public useService: UserService,
+              public router: Router
   ) { }
 
   ngOnInit() {
@@ -57,7 +58,7 @@ export class ApplicantListComponent implements OnInit {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-
+    console.log('incoming position data', this.positionData);
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();
     this.getApplicantsByJobId(this.positionId);
@@ -100,12 +101,9 @@ export class ApplicantListComponent implements OnInit {
     });
   }
   getApplicantAndBringUpInterviewNotesModal(applicant, action){
-      // route hiring manger to new hire page
-      const email = applicant.email;
-      console.log('Hire Applicant', applicant);
-      this.applicantDetails(applicant).then(data =>{
-        console.log('display new hire modal');
-      });
+      console.log('appliacant at interview',applicant);
+      this.closeModal();
+     this.router.navigateByUrl(`store/store-interview/${applicant.id}`).then(err=>{console.log(err);});
 
   }
 
@@ -124,12 +122,10 @@ export class ApplicantListComponent implements OnInit {
       });
   }
     getApplicantAndSendCalendarLink(applicant, store, action){
-      console.log('applicant data ', applicant, 'store data',store.jobTitle);
+      console.log('applicant data ', applicant, 'store data',store);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
-      const positionId = this.positionId;
-      const jobTitle = store.jobTitle;
       const hiringManagerName = store.hiringManagersName;
       console.log('hiringManagerName', hiringManagerName);
       const storeName = store.storeName;
@@ -144,7 +140,7 @@ export class ApplicantListComponent implements OnInit {
       //       hiringManagerName,
       //       jobTitle,
       //       calendarLink
-      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
+      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,this.positionData.jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
@@ -184,6 +180,7 @@ export class ApplicantListComponent implements OnInit {
   }
 
   async applicantDetails(applicant){
+    //TODO change to route interviewer to store/store-interview page
     const applicantDetails = await this.modalController.create({
       component: ApplicantDetailsComponent,
       swipeToClose: true,

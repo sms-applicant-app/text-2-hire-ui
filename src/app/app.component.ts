@@ -60,7 +60,7 @@ export class AppComponent implements OnInit{
     return await addFranchise.present();
   }
 
-  goToPage(url: string) {
+  goToPage() {
     this.router.navigate(['logout']);
   }
   goProfile() {

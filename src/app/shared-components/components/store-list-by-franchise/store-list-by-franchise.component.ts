@@ -13,11 +13,11 @@ import {AddJobReqComponent} from '../add-job-req/add-job-req.component';
 import {ModalController} from '@ionic/angular';
 import * as uuid from 'uuid';
 import {AddStoreComponent} from "../add-store/add-store.component";
-import { AlertService } from './../../../shared/services/alert.service';
-import { Role } from './../../../shared/models/role';
-import { FranchiseService } from './../../../shared/services/franchise.service';
-import { StoreService } from './../../../shared/services/store.service';
-import { JobsListComponent } from './../jobs-list/jobs-list.component';
+import { AlertService } from '../../../shared/services/alert.service';
+import { Role } from '../../../shared/models/role';
+import { FranchiseService } from '../../../shared/services/franchise.service';
+import { StoreService } from '../../../shared/services/store.service';
+import { JobsListComponent } from '../jobs-list/jobs-list.component';
 @Component({
   selector: 'app-store-list-by-franchise',
   templateUrl: './store-list-by-franchise.component.html',

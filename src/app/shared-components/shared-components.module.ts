@@ -26,6 +26,7 @@ import {ApplicantDetailsComponent} from "./components/applicant-details/applican
 import {ApplicantTableRowComponent} from "./components/applicant-table-row/applicant-table-row.component";
 import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on-board-packet.component";
 import { UploadListFormComponent } from './components/upload-list-file/upload-list-form.component';
+import {EditPositionComponent} from "./components/edit-position/edit-position.component";
 
 @NgModule({
   declarations:
@@ -50,7 +51,8 @@ import { UploadListFormComponent } from './components/upload-list-file/upload-li
       AddFranchiseComponent,
       ApplicantTableRowComponent,
       AddOnBoardPacketComponent,
-      UploadListFormComponent
+      UploadListFormComponent,
+      EditPositionComponent
     ],
   imports: [
     CommonModule,

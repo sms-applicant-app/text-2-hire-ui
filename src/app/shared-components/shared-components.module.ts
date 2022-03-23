@@ -28,6 +28,7 @@ import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on
 import { UploadListFormComponent } from './components/upload-list-file/upload-list-form.component';
 import { StoreDetailComponent } from './components/store-detail/store-detail.component';
 import { ApplicantByStoreComponent } from './components/applicant-by-store/applicant-by-store.component';
+import { AddApplicantComponent } from './components/add-applicant/add-applicant.component';
 
 @NgModule({
   declarations:
@@ -54,7 +55,8 @@ import { ApplicantByStoreComponent } from './components/applicant-by-store/appli
       AddOnBoardPacketComponent,
       UploadListFormComponent,
       StoreDetailComponent,
-      ApplicantByStoreComponent
+      ApplicantByStoreComponent,
+      AddApplicantComponent,
     ],
   imports: [
     CommonModule,

@@ -14,7 +14,7 @@ import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-pac
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from './../../../shared/services/alert.service';
 import { Role } from './../../../shared/models/role';
-import {Applicant} from '../../../shared/models/applicant';
+import { AddApplicantComponent } from '../add-applicant/add-applicant.component';
 
 @Component({
   selector: 'app-store-detail',
@@ -97,9 +97,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
         } else {
           jobs.forEach(job =>{
             this.jobData = job.data();
-            console.log('====================================');
-            console.log('this.jobData', this.jobData);
-            console.log('====================================');
             const positionId = job.id;
             this.jobs.push({id: positionId, position: this.jobData});
             this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
@@ -219,6 +216,17 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
           });
         }
       });
+  }
+
+  async addApplicant(job) {
+    const createAddApplicant = await this.modalController.create({
+      component: AddApplicantComponent,
+      swipeToClose: true,
+      componentProps: {
+        job,
+      }
+    });
+    return await createAddApplicant.present();
   }
 
   deletePosition(jobDelete){

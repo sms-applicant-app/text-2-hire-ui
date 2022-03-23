@@ -1,0 +1,35 @@
+
+<div class="modal-header">
+  <p class="modal-title">Add Applicant</p>
+  <button class="btn btn-clear close-modal" (click)="closeModal()">
+    <ion-icon name="close-outline"></ion-icon>
+  </button>
+</div>
+<div class="container p-4">
+  <form [formGroup]="addApplicantForm" >
+    <div class="col-lg-7 col-sm-12">
+      <ion-item>
+        <ion-label position="stacked" >Name</ion-label>
+        <ion-input clearInput formControlName="name"></ion-input>
+        <span class="field-err"
+        *ngIf="addApplicantForm.controls.name.errors?.required && (addApplicantForm.controls.name.dirty || addApplicantForm.controls.name.touched)">Name is required</span>
+      </ion-item>
+    </div>
+    <div class="col-lg-7 col-sm-12">
+      <ion-item>
+        <ion-label position="stacked" >Email</ion-label>
+        <ion-input clearInput formControlName="email"></ion-input>
+        <span class="field-err"
+        *ngIf="addApplicantForm.controls.email.errors?.required && (addApplicantForm.controls.email.dirty || addApplicantForm.controls.email.touched)">Email is required</span>
+      </ion-item>
+    </div>
+    <div class=" col-lg-7 col-sm-12">
+      <ion-item>
+        <ion-label position="stacked">Phone number</ion-label>
+        <ion-input clearInput formControlName="phone"></ion-input>
+        <span class="field-err" *ngIf="addApplicantForm.controls.phone.errors?.required && (addApplicantForm.controls.phone.dirty || addApplicantForm.controls.phone.touched)">Phone number is required</span>
+      </ion-item>
+    </div>
+  </form>
+  <button (click)="addApplicant()" mat-raised-button color="primary" class="mt-4">Add Applicant</button>
+</div>

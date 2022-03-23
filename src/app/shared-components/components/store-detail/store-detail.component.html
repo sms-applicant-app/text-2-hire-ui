@@ -1,39 +1,41 @@
 
+<div class="modal-header" *ngIf="userRole === 'franchisee'">
+  <p class="modal-title">Store Details</p>
+  <button class="btn btn-clear close-modal" (click)="closeModal()">
+    <ion-icon name="close-outline"></ion-icon>
+  </button>
+</div>
 <mat-tab-group>
   <mat-tab label="All Applicant of Store">
     <app-applicant-by-store [applicantsByStore]="applicantsByStore" [isHired]="false"></app-applicant-by-store>
   </mat-tab>
   <mat-tab label="List Postion">
-    <div class="container-fluid height-100">
-      <div class="modal-header" *ngIf="userRole === 'franchisee'">
-        <p class="modal-title">Get Positions By Store</p>
-        <button class="btn btn-clear close-modal" (click)="closeModal()">
-          <ion-icon name="close-outline"></ion-icon>
-        </button>
-      </div>
+    <div class="container-fluid height-100" *ngIf="!viewApplicants">
       <div class="pl-3 pr-3">
-        <div class="p-0 mb-2 row">
+        <div class="p-0 mb-2 mt-2 row">
           <div *ngIf="(!storeId || !selectedStoreId) && userRole === 'hiringManager'">
             <h3 class="card-title justify-content-evenly flex-column">
               <span class="card-label fw-bolder fs-3 mb-1">Please choose store</span>
             </h3>
           </div>
           <div *ngIf="storeId || selectedStoreId" class="row">
-            <div class="col-6">
+            <div class="col-3">
               <h3 class="card-title justify-content-evenly flex-column">
                 <span class="card-label fw-bolder fs-3 mb-1">Positions for:</span> {{storeName}}
               </h3>
             </div>
-            <div class="col-6">
+            <div class="col-3">
               <h3 class="card-title justify-content-evenly flex-column">
                 <span class="card-label fw-bolder fs-3 mb-1">Store Id to Text:</span>
                 <span>{{storeId ? storeId : selectedStoreId}}</span>
               </h3>
             </div>
-          </div>
-          <div class="d-flex flex-row">
-            <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
-            <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
+            <div class="col-6">
+              <div class="d-flex flex-row justify-content-end">
+                <button class="mr-4" mat-raised-button color="primary" [disabled]="!storeId" (click)="addJobRec()">Add Position</button>
+                <button mat-raised-button color="primary" [disabled]="!storeId" (click)="createOnboardingPacket()">Create Onboard Package</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="table-responsive" [ngClass]="{'table-default': userRole !== 'hiringManager'}">
@@ -72,6 +74,9 @@
                     <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="getApplicants(job.id, job.position)" >
                       <ion-icon class="font-24" name="eye-outline"></ion-icon>
                     </button>
+                    <button mat-icon-button color="primary" class="text-center cursor-pointer mr-3" (click)="addApplicant(job)" >
+                      <ion-icon class="font-24" name="person-add-outline"></ion-icon>
+                    </button>
                     <button mat-icon-button color="warn" class="text-center cursor-pointer" (click)="deletePosition(job)" >
                       <ion-icon class="font-24" name="trash-outline"></ion-icon>
                     </button>
@@ -82,6 +87,9 @@
           </table>
         </div>
       </div>
+    </div>
+    <div *ngIf="viewApplicants">
+      <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>
     </div>
   </mat-tab>
   <mat-tab label="Applicant Hired">

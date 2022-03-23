@@ -67,10 +67,12 @@ export class AppComponent implements OnInit{
     this.router.navigate(['profile']);
   }
   getUserRole(){
-    const appUserData = JSON.parse(localStorage.getItem('appUserData'));
-    return appUserData?.role;
+    const role = JSON.parse(localStorage.getItem('appUserData')).role;
+    console.log('user role', role);
+    return role;
   }
   getUserRoleName(){
+    // @ts-ignore
     return roles[`${this.authService.appUserData?.role}`];
   }
 

@@ -62,7 +62,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     this.actionsFrom = this.fb.group({
       tableRows: this.fb.array([])
     });
-    this.storeData = this.store;
+
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     this.getHiringManager();
     this.getApplicantsByJobId(this.positionId);
@@ -92,6 +92,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
         this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
         }
       if(action === 'hireApplicant') {
+        console.log('Selected store to send on boarding links', this.selectedStore);
         this.getApplicantAndSendOnboardingLinks(applicant, this.selectedStore);
       }
     } else {
@@ -135,19 +136,18 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
      });
   }
   getHiringManager(){
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.positionData.hiringManagerId )
-    .where('role', '==', Role.hiringManager))
-    .get()
-    .subscribe(ss => {
-      if (ss.docs.length === 0) {
-        console.log('Document not found! Try again!');
-      } else {
-        ss.docs.forEach(doc => {
-          this.hiringMangerData = doc.data();
-        });
-      }
-      return;
-    });
+    console.log('get hiring manager ', this.selectedStore.storeHiringManger);
+    return this.firestore.collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager).where('role', '==', 'hiringManager')).get()
+      .subscribe(ss => {
+        if (ss.docs.length === 0) {
+          console.log('Document not found! Try again!');
+        } else {
+          ss.docs.forEach(doc => {
+            this.hiringMangerData = doc.data();
+            console.log('retrieved hiring manager',this.hiringMangerData);
+          });
+        }
+      });
   }
   getApplicantAndSendCalendarLink(applicant, store, action){
     console.log('applicant data ', applicant, 'store data',store);
@@ -209,15 +209,16 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     return await applicantDetails.present();
   }
   async addNewHire(applicant, storeData){
-    console.log('data pass addNewHire', applicant, storeData, this.hiringMangerData);
-    const hiringMangerData = this.hiringMangerData;
+   const store = this.selectedStore;
+   const hiringManager = this.hiringMangerData;
+    console.log('applicant', applicant, store, hiringManager);
     const addNewHireModal = await this.modalController.create({
       component: AddNewHireComponent,
       swipeToClose: true,
       componentProps: {
         applicant,
-        storeData,
-        hiringMangerData
+        store,
+        hiringManager
       }
     });
     return await addNewHireModal.present();

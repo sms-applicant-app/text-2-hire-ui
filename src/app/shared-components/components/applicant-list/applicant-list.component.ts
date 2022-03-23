@@ -89,7 +89,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
         }
       if(action === 'interviewApplicant'){
         // route to a notes/ applicant details
-        console.log('Interviewing applicant', applicant);
         this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
         }
       if(action === 'hireApplicant') {
@@ -109,11 +108,10 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   getApplicantAndBringUpInterviewNotesModal(applicant, action){
       // route hiring manger to new hire page
       const email = applicant.applicant.email;
-      console.log('Hire Applicant', applicant);
       this.applicantDetails(applicant).then(data =>{
         console.log('display new hire modal');
       });
-      this.applicantService.updateApplicant(email, {status: action} );
+      this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested} );
   }
 
   getUserDetail(franchiseId) {
@@ -173,11 +171,9 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
           };
           console.log('trigger alert', data.errorMessage);
           this.applicantService.updateApplicant(email, {status: 'Last Message Failed'} );
-          this.alertService.onAlert('default-alert').subscribe(m =>{
-            console.log('where is my alert?', m, data.errorMessage);
-          });
+          this.alertService.showError(data.errorMessage);
         } else {
-          this.applicantService.updateApplicant(email, {status: action} );
+          this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewScheduled} );
           this.alertService.showSuccess(`Updated applicant ${applicantName} with status ${action}`);
         }
     });

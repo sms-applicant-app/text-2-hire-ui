@@ -222,19 +222,27 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   }
 
   getApplicantsByStoreId(storeId){
-    this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).get()
-      .subscribe( applicant =>{
-        this.applicantsByStore = [];
-        if (applicant.docs.length === 0){
-          console.log('no applicants for that position');
-        } else {
-          applicant.forEach( a =>{
-            const app = a.data();
-            const id = a.id;
-            this.applicantsByStore.push({id, applicant: app });
-          });
-        }
-      });
+    this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).valueChanges()
+    .subscribe(applicant =>{
+      if(applicant && applicant.length > 0) {
+        applicant.forEach( a =>{
+          this.applicantsByStore = applicant;
+        });
+      }
+          // this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).get()
+    //   .subscribe( applicant =>{
+    //     this.applicantsByStore = [];
+    //     if (applicant.docs.length === 0){
+    //       console.log('no applicants for that position');
+    //     } else {
+    //       applicant.forEach( a =>{
+    //         const app = a.data();
+    //         const id = a.id;
+    //         this.applicantsByStore.push({id, applicant: app });
+    //       });
+    //     }
+    //   });
+    });
   }
 
   async addApplicant(job) {

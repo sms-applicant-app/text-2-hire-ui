@@ -49,7 +49,7 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
   }
   ngOnChanges(): void {
     if (this.isHired) {
-      this.applicantData = this.applicantsByStore.filter(a => a.applicant.status === ApplicantStatus.pendingOnboarding);
+      this.applicantData = this.applicantsByStore.filter(a => a.status === ApplicantStatus.pendingOnboarding);
     } else {
       this.applicantData = this.applicantsByStore;
     }

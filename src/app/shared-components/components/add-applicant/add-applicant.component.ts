@@ -67,18 +67,24 @@ export class AddApplicantComponent implements OnInit, OnDestroy {
       this.newApplicant.status = ApplicantStatus.applicantApplied;
       this.newApplicant.applicantId = this.firestore.createId();
       // check email used
-      this.getApplicantSub = this.applicantService.getApplicantById(formValue.email).subscribe(res => {
-        if (res) {
-          this.alertService.showError('Email has been used');
-          return;
-        }
-        this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(data =>{
-          this.alertService.showSuccess(`Create success new applicant ${formValue.email}`);
-          this.closeModal();
-        }).catch(err => {
-          this.alertService.showError(err);
-        });
+      this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(data =>{
+        this.alertService.showSuccess(`Create success new applicant ${formValue.email}`);
+        this.closeModal();
+      }).catch(err => {
+        this.alertService.showError(err);
       });
+      // this.getApplicantSub = this.applicantService.getApplicantById(formValue.email).subscribe(res => {
+      //   if (res) {
+      //     this.alertService.showError('Email has been used');
+      //     return;
+      //   }
+      //   this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(data =>{
+      //     this.alertService.showSuccess(`Create success new applicant ${formValue.email}`);
+      //     this.closeModal();
+      //   }).catch(err => {
+      //     this.alertService.showError(err);
+      //   });
+      // });
     } else {
       this.alertService.showError(toastMess.INVALID_FORM);
     }

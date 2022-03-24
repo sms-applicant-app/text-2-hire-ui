@@ -25,9 +25,11 @@ import { Subscription } from 'rxjs/internal/Subscription';
 export class ApplicantListComponent implements OnInit, OnDestroy {
   @Input() positionId: string;
   @Input() positionData: any;
+  // @Input() applicants: any;
   @Output() messageEvent = new EventEmitter<any>();
   @Input() store: any;
   applicants: any = [];
+  applicantsSub: Subscription = new Subscription();
   dataSource: MatTableDataSource<Applicant>;
   actionsFrom: FormGroup;
   applicantData: any;
@@ -64,7 +66,9 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     });
 
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
-    this.getHiringManager();
+    if (this.selectedStore.storeHiringManager) {
+      this.getHiringManager();
+    }
     this.getApplicantsByJobId(this.positionId);
     this.getFranchiseeByApplicant(this.selectedStore.franchiseId);
     this.isSubmitted = false;
@@ -78,6 +82,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.franchiseDataSub.unsubscribe();
+    this.applicantsSub.unsubscribe();
   }
 
   submitForm(applicant) {
@@ -136,7 +141,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
      });
   }
   getHiringManager(){
-    console.log('get hiring manager ', this.selectedStore.storeHiringManger);
+    console.log('get hiring manager ', this.selectedStore.storeHiringManager);
     return this.firestore.collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager).where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
@@ -180,22 +185,19 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   }
   // get applicants by job
   getApplicantsByJobId(positionId){
-      this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
-        .subscribe( applicant =>{
-          this.applicants = [];
-          if (applicant.docs.length === 0){
-            console.log('no applicants for that position');
-          } else {
-            applicant.forEach( a =>{
-              const app = a.data();
-              const id = a.id;
-              this.applicants.push({id, applicant: app });
-              this.dataSource = new MatTableDataSource<Applicant>(this.applicants);
-            });
-            console.log(this.applicants);
-          }
-        });
-
+    this.applicantsSub = this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
+      .subscribe( applicant =>{
+        this.applicants = [];
+        if (applicant.docs.length === 0){
+          console.log('no applicants for that position');
+        } else {
+          applicant.forEach( a =>{
+            const app = a.data();
+            const id = a.id;
+            this.applicants.push({id, applicant: app });
+          });
+        }
+      });
   }
 
   async applicantDetails(applicant){

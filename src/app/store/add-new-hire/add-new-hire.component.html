@@ -105,7 +105,7 @@
                 <form [formGroup]="startDateForm">
                   <ion-item lines="full" class="input-calendar">
                     <ion-label position="stacked" required>Start Date *</ion-label>
-                    <input matInput [matDatepicker]="picker1" [disabled]="true" formControlName="startDate">
+                    <input [min]="minDate" matInput [matDatepicker]="picker1" [disabled]="true" formControlName="startDate">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1 disabled="false"></mat-datepicker>
                     <span class="field-err"

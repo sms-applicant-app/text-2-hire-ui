@@ -33,6 +33,7 @@ export class AddNewHireComponent implements OnInit {
   customForms: FormGroup;
   fileUpload: FileUpload;
   applicantStatus = ApplicantStatus;
+  minDate = new Date();
   constructor(
     public dbHelper: FirestoreHelperService,
     public storeService: StoreService,
@@ -145,7 +146,7 @@ export class AddNewHireComponent implements OnInit {
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();
-       this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, urlToOnboardingLinks, this.store.storeName, this.store.hiringManagerName,this.hiringManager.phoneNumber, startDate ).subscribe(data =>{
+        this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, urlToOnboardingLinks, this.store.storeName, this.store.hiringManagerName,this.hiringManager.phoneNumber, startDate ).subscribe(data =>{
           console.log(data);
        });
 

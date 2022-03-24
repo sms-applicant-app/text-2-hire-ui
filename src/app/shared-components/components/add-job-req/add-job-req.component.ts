@@ -32,6 +32,7 @@ export class AddJobReqComponent implements OnInit {
   onboardingPackageId: string;
   hiringManagerId: string;
   onJobAddedSub: Subject<JobPosting>;
+  minDate = new Date();
   private userData: any;
   private userId: string;
   private storeData: any;

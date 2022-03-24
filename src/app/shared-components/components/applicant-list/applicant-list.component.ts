@@ -61,9 +61,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.touchedRows = [];
-    this.actionsFrom = this.fb.group({
-      tableRows: this.fb.array([])
-    });
 
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
     if (this.selectedStore.storeHiringManager) {
@@ -72,29 +69,31 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     this.getApplicantsByJobId(this.positionId);
     this.getFranchiseeByApplicant(this.selectedStore.franchiseId);
     this.isSubmitted = false;
-    this.actionsFrom = this.fb.group({
-      actions: ['', [Validators.required]],
-    });
     this.applicantRetrieved = false;
+    this.initForm();
   }
   ngAfterOnInit(){
-    this.control = this.actionsFrom.get('tableRows') as FormArray;
   }
   ngOnDestroy(): void {
     this.franchiseDataSub.unsubscribe();
     this.applicantsSub.unsubscribe();
   }
 
+  initForm() {
+    this.actionsFrom = this.fb.group({
+      actions: ['', [Validators.required]],
+    });
+  }
+
   submitForm(applicant) {
-    if (this.actionsFrom.valid) {
-      const action = this.actionsFrom.controls.actions.value;
-      console.log(applicant, action);
+    if (applicant.actionStatus) {
+      const action = applicant.actionStatus;
       if (action === 'scheduleInterview'){
-          this.getApplicantAndSendCalendarLink(applicant, this.selectedStore, action);
+          this.getApplicantAndSendCalendarLink(applicant, this.selectedStore);
         }
       if(action === 'interviewApplicant'){
         // route to a notes/ applicant details
-        this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
+        this.getApplicantAndBringUpInterviewNotesModal(applicant);
         }
       if(action === 'hireApplicant') {
         console.log('Selected store to send on boarding links', this.selectedStore);
@@ -111,7 +110,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
 
     });
   }
-  getApplicantAndBringUpInterviewNotesModal(applicant, action){
+  getApplicantAndBringUpInterviewNotesModal(applicant){
       // route hiring manger to new hire page
       const email = applicant.applicant.email;
       this.applicantDetails(applicant).then(data =>{
@@ -154,7 +153,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
         }
       });
   }
-  getApplicantAndSendCalendarLink(applicant, store, action){
+  getApplicantAndSendCalendarLink(applicant, store){
     console.log('applicant data ', applicant, 'store data',store);
     const email = applicant.applicant.email;
     const applicantName = applicant.applicant.name;
@@ -179,7 +178,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
           this.alertService.showError(data.errorMessage);
         } else {
           this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewScheduled} );
-          this.alertService.showSuccess(`Updated applicant ${applicantName} with status ${action}`);
+          this.alertService.showSuccess(`Updated applicant ${applicantName} with status ${ApplicantStatus.interviewScheduled}`);
         }
     });
   }
@@ -192,9 +191,10 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
           console.log('no applicants for that position');
         } else {
           applicant.forEach( a =>{
-            const app = a.data();
+            const app = a.data() as any;
             const id = a.id;
-            this.applicants.push({id, applicant: app });
+            this.applicants.push({id, applicant: app, actionStatus: this.getActionStatus(app.status)});
+            console.log('this.applicants', this.applicants);
           });
         }
       });
@@ -237,5 +237,18 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
       this.modalController
           .dismiss()
           .then();
+  }
+
+  getActionStatus(status: ApplicantStatus){
+    switch (status) {
+      case ApplicantStatus.interviewScheduled:
+        return 'scheduleInterview';
+        case ApplicantStatus.interviewRequested:
+          return 'interviewApplicant';
+        case ApplicantStatus.pendingOnboarding:
+          return 'hireApplicant';
+      default:
+      return '';
+    }
   }
 }

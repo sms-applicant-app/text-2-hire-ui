@@ -43,16 +43,14 @@
             </div>
           </td>
           <td>
-            <form [formGroup]="actionsFrom">
-              <select formControlName="actions" class="form-select">
-                <option value="" selected>Applicant Next Steps</option>
-                <option [selected]="a.applicant.status === 'interviewScheduled'" value="scheduleInterview">Schedule Interview</option>
-                <option [selected]="a.applicant.status === 'interviewRequested'" value="interviewApplicant">Interview Applicant</option>
-                <option [selected]="a.applicant.status === 'pendingOnboarding'" value="hireApplicant">Hire Applicant</option>
-                <option value="applicantStatus.onboardingComplete">OnBoard Complete</option>
-                <option value="applicantStatus.applicantDeclined">Decline Applicant</option>
-              </select>
-            </form>
+            <select class="form-select" [(ngModel)]="a.actionStatus">
+              <option value="" selected>Applicant Next Steps</option>
+              <option value="scheduleInterview">Schedule Interview</option> 
+              <option value="interviewApplicant">Interview Applicant</option>
+              <option value="hireApplicant">Hire Applicant</option>
+              <option value="onboardingComplete">OnBoard Complete</option>
+              <option value="applicantDeclined">Decline Applicant</option>
+            </select>
           </td>
           <td>
             <div>

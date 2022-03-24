@@ -17,6 +17,7 @@ import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-pac
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from './../../../shared/services/alert.service';
 import { Role } from './../../../shared/models/role';
+import { AddJobStepComponent } from '../add-job-step/add-job-step.component';
 
 @Component({
   selector: 'app-jobs-list',
@@ -157,6 +158,27 @@ export class JobsListComponent implements OnInit {
 
     addJobRec.onDidDismiss().then(data => {
       onJobAddedSub.unsubscribe();
+    });
+
+    return await addJobRec.present();
+  }
+
+  async addJobStep(){
+    // this.closeModal();
+    let franchiseId;
+    if (this.userRole === Role.hiringManager) {
+      franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
+    } else {
+      franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
+    }
+    const storeId = this.storeId;
+    const addJobRec = await this.modalController.create({
+      component: AddJobStepComponent,
+      swipeToClose: true,
+      componentProps: {
+        franchiseId,
+        storeId,
+      }
     });
 
     return await addJobRec.present();

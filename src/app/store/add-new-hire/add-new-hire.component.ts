@@ -11,6 +11,7 @@ import { AlertService } from '../../shared/services/alert.service';
 import { CustomForms } from '../../shared/models/onBoardPacket';
 import {ModalController} from '@ionic/angular';
 import { ApplicantStatus } from './../../shared/models/applicant-status';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-add-new-hire',

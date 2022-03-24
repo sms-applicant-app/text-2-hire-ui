@@ -1,3 +1,4 @@
+import { StoreService } from './../../../shared/services/store.service';
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
@@ -33,6 +34,7 @@ export class AddJobReqComponent implements OnInit {
   onJobAddedSub: Subject<JobPosting>;
   private userData: any;
   private userId: string;
+  private storeData: any;
   constructor(
     public fb: FormBuilder,
     public firestore: AngularFirestore,
@@ -43,7 +45,8 @@ export class AddJobReqComponent implements OnInit {
     public onboardingService: OnboardingService,
     public userService: UserService,
     public authService: AuthService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    public storeService: StoreService
     ) { }
 
   ngOnInit() {
@@ -73,6 +76,17 @@ export class AddJobReqComponent implements OnInit {
         specialNotes: this.jobData.position.specialNotes,
         qualifications: this.jobData.position.qualifications,
       });
+    }
+    if (this.storeId) {
+      this.newJobListing.storeId = this.storeId.toString();
+      this.storeService.getStoreByGeneratedStoreId(this.storeId).subscribe((data: any)=>{
+        if(data && data.length > 0) {
+          this.storeData = data[0];
+        }
+      });
+    } else {
+      this.storeData = localStorage.getItem('selectedStore');
+      this.storeId = this.storeData.storeId;
     }
   }
   initAddJobForm(){
@@ -130,13 +144,7 @@ export class AddJobReqComponent implements OnInit {
     if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
       this.userService.getUserById(this.userId).subscribe(resp => {
         if (resp) {
-          const storeId = this.storeId;
-          if (storeId) {
-            this.newJobListing.storeId = this.storeId.toString();
-          } else {
-            const selectedStore = localStorage.getItem('selectedStore');
-            this.newJobListing.storeId = selectedStore;
-          }
+          this.newJobListing.storeId = this.storeId;
           this.newJobListing.franchiseId = this.franchiseId;
           this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
           this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
@@ -146,7 +154,7 @@ export class AddJobReqComponent implements OnInit {
           this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
           this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
           this.newJobListing.positionOpen = true;
-          this.newJobListing.hiringManagerId = JSON.parse(localStorage.getItem('user')).email;
+          this.newJobListing.hiringManagerId = this.storeData.storeHiringManager;
           this.newJobListing.benefits = this.jobDetailsFrom.controls.benefits.value;
           this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
           this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;

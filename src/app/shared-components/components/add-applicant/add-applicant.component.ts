@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
@@ -26,6 +26,7 @@ export class AddApplicantComponent implements OnInit, OnDestroy {
   addApplicantForm: FormGroup;
   newApplicant = new Applicant();
   getApplicantSub = new Subscription();
+  applicantsByStoreSub: Subject<any>;
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -66,10 +67,16 @@ export class AddApplicantComponent implements OnInit, OnDestroy {
       this.newApplicant.franchiseId = this.job.position.franchiseId;
       this.newApplicant.status = ApplicantStatus.applicantApplied;
       this.newApplicant.applicantId = this.firestore.createId();
-      // check email used
-      this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(data =>{
+      this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(res =>{
         this.alertService.showSuccess(`Create success new applicant ${formValue.email}`);
         this.closeModal();
+        const data = {
+          id: this.newApplicant.email,
+          ...this.newApplicant
+        };
+        this.applicantsByStoreSub.next({
+          ...data
+        });
       }).catch(err => {
         this.alertService.showError(err);
       });

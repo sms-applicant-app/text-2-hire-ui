@@ -36,7 +36,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   positionId: string;
   applicants: any = [];
   applicantsByStore: any = [];
-  applicantsByStoreSub: Subscription = new Subscription();
   storeName: string;
   selectedStoreId: string;
   viewApplicants: boolean;
@@ -70,7 +69,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.jobsSub.unsubscribe();
-    this.applicantsByStoreSub.unsubscribe();
   }
 
   getJobsByFranchiseId(){
@@ -224,7 +222,7 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   }
 
   getApplicantsByStoreId(storeId){
-    this.applicantsByStoreSub = this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).get()
+    this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).get()
       .subscribe( applicant =>{
         this.applicantsByStore = [];
         if (applicant.docs.length === 0){
@@ -240,13 +238,24 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   }
 
   async addApplicant(job) {
+    const applicantsByStoreSub = new Subject<any>();
     const createAddApplicant = await this.modalController.create({
       component: AddApplicantComponent,
       swipeToClose: true,
       componentProps: {
         job,
+        applicantsByStoreSub
       }
     });
+    applicantsByStoreSub.subscribe((newApplicant: any) => {
+      console.log('newApplicant', newApplicant);
+      this.applicantsByStore.unshift({id: newApplicant.id, applicant: newApplicant});
+    });
+
+    createAddApplicant.onDidDismiss().then(data => {
+      applicantsByStoreSub.unsubscribe();
+    });
+
     return await createAddApplicant.present();
   }
 

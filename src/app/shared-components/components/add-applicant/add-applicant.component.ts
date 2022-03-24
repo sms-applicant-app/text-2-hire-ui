@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
 import {DatePipe} from "@angular/common";
@@ -20,10 +21,11 @@ import { toastMess } from '../../../shared/constants/messages';
   templateUrl: './add-applicant.component.html',
   styleUrls: ['./add-applicant.component.scss'],
 })
-export class AddApplicantComponent implements OnInit {
+export class AddApplicantComponent implements OnInit, OnDestroy {
   @Input() job: any;
   addApplicantForm: FormGroup;
   newApplicant = new Applicant();
+  getApplicantSub = new Subscription();
   constructor(
     public dbHelper: FirestoreHelperService,
     public datePipe: DatePipe,
@@ -41,7 +43,9 @@ export class AddApplicantComponent implements OnInit {
     this.initForm();
     console.log('job', this.job);
   }
-
+  ngOnDestroy(): void {
+    this.getApplicantSub.unsubscribe();
+  }
   initForm() {
     this.addApplicantForm = this.fb.group({
       name: ['', Validators.required],
@@ -63,19 +67,20 @@ export class AddApplicantComponent implements OnInit {
       this.newApplicant.status = ApplicantStatus.applicantApplied;
       this.newApplicant.applicantId = this.firestore.createId();
       // check email used
-      this.applicantService.getApplicantById(formValue.email).subscribe(res => {
+      this.getApplicantSub = this.applicantService.getApplicantById(formValue.email).subscribe(res => {
         if (res) {
           this.alertService.showError('Email has been used');
           return;
-        } else {
-          this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(data =>{
-            this.alertService.showSuccess(`Create success new applicant ${formValue.email}`);
-            this.closeModal();
-          }).catch(err => {
-            this.alertService.showError(err);
-          });
         }
+        this.dbHelper.set(`applicant/${formValue.email}`, this.newApplicant).then(data =>{
+          this.alertService.showSuccess(`Create success new applicant ${formValue.email}`);
+          this.closeModal();
+        }).catch(err => {
+          this.alertService.showError(err);
+        });
       });
+    } else {
+      this.alertService.showError(toastMess.INVALID_FORM);
     }
   }
 

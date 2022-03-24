@@ -11,6 +11,9 @@ const toastMess = {
   CREATE_ONBOARD_SUCCESS: 'Create onboard package success',
   CREATE_ONBOARD_FAILED: 'Create onboard package failed',
   UPLOAD_FILE_FAILED: 'Upload file failed',
+
+  INVALID_FORM: 'Please enter field',
+
 }
 
 export { toastMess };

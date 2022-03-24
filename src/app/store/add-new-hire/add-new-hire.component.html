@@ -79,7 +79,7 @@
           </div>
         </div>
       </mat-step>
-      <mat-step label="">
+      <!-- <mat-step label="">
         <div class="row">
           <div class="col-4">
             <ion-item lines="full" class="input-calendar">
@@ -93,32 +93,32 @@
             <button mat-stroked-button matStepperNext color="primary">Next</button>
           </div>
         </div>
-      </mat-step>
+      </mat-step> -->
       <mat-step>
         <div class="card shadow-sm">
           <div class="card-header">
             <h3 class="card-title">Select Start Date and Send Onboarding forms to {{applicant.applicant.name}}</h3>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-4">
-                  <form [formGroup]="startDateForm">
-                    <ion-item lines="full" class="input-calendar">
-                      <ion-label position="stacked" required>Start Date *</ion-label>
-                      <input matInput [matDatepicker]="picker1" [disabled]="true" formControlName="startDate">
-                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                      <mat-datepicker #picker1 disabled="false"></mat-datepicker>
-                      <span class="field-err"
-                            *ngIf="startDateForm.controls.startDate.errors?.required && (startDateForm.controls.startDate.dirty || startDateForm.controls.startDate.touched)">Start
-                Date required</span>
-                    </ion-item>
-                  </form>
-                </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <form [formGroup]="startDateForm">
+                  <ion-item lines="full" class="input-calendar">
+                    <ion-label position="stacked" required>Start Date *</ion-label>
+                    <input matInput [matDatepicker]="picker1" [disabled]="true" formControlName="startDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                    <span class="field-err"
+                          *ngIf="startDateForm.controls.startDate.errors?.required && (startDateForm.controls.startDate.dirty || startDateForm.controls.startDate.touched)">Start
+              Date required</span>
+                  </ion-item>
+                </form>
               </div>
+            </div>
 
-            </div>
-            <div class="card-toolbar">
-              <button (click)="sendOnboardingLinkToApplicant(applicant)" mat-raised-button color="primary" matStepperNext>Send Package</button>
-            </div>
+          </div>
+          <div class="card-toolbar">
+            <button (click)="sendOnboardingLinkToApplicant(applicant)" mat-raised-button color="primary" matStepperNext>Send Package</button>
           </div>
         </div>
       </mat-step>

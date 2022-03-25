@@ -70,7 +70,7 @@ export class AddJobReqComponent implements OnInit {
         positionExpiration: this.jobData.position.positionExpiration,
         companyWebsite: this.jobData.position.companyWebsite,
         salary: this.jobData.position.salary,
-        salaryUnit: this.jobData.position.salaryUnit,
+        salaryUnit: this.jobData.position.salaryUnit ? this.jobData.position.salaryUnit : '',
        });
       this.jobDetailsFrom.patchValue({
         fullDescription: this.jobData.position.jobDescription,
@@ -153,8 +153,17 @@ export class AddJobReqComponent implements OnInit {
           this.newJobListing.jobTitle = this.addJoblistingFrom.controls.jobTitle.value;
           this.newJobListing.addressId = this.addJoblistingFrom.controls.location.value;
           this.newJobListing.companyWebsite = this.addJoblistingFrom.controls.companyWebsite.value;
-          this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
-          this.newJobListing.salaryUnit = this.addJoblistingFrom.controls.salaryUnit.value;
+          if (!this.addJoblistingFrom.controls.salary.value) {
+            this.newJobListing.salaryUnit = '';
+          } else {
+            if (this.addJoblistingFrom.controls.salaryUnit.value === '') {
+              this.alertService.showError('Please enter field salary unit');
+              return;
+            } else {
+              this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
+              this.newJobListing.salaryUnit = this.addJoblistingFrom.controls.salaryUnit.value;
+            }
+          }
           this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
           this.newJobListing.positionOpen = true;
           this.newJobListing.hiringManagerId = this.storeData.storeHiringManager;

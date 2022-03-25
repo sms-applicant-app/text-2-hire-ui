@@ -13,12 +13,13 @@ import {AddJobReqComponent} from '../add-job-req/add-job-req.component';
 import {ModalController} from '@ionic/angular';
 import * as uuid from 'uuid';
 import {AddStoreComponent} from "../add-store/add-store.component";
-import { AlertService } from './../../../shared/services/alert.service';
-import { Role } from './../../../shared/models/role';
-import { FranchiseService } from './../../../shared/services/franchise.service';
-import { StoreService } from './../../../shared/services/store.service';
-import { JobsListComponent } from './../jobs-list/jobs-list.component';
+import { AlertService } from '../../../shared/services/alert.service';
+import { Role } from '../../../shared/models/role';
+import { FranchiseService } from '../../../shared/services/franchise.service';
+import { StoreService } from '../../../shared/services/store.service';
+import { JobsListComponent } from '../jobs-list/jobs-list.component';
 import { StoreDetailComponent } from '../store-detail/store-detail.component';
+
 @Component({
   selector: 'app-store-list-by-franchise',
   templateUrl: './store-list-by-franchise.component.html',
@@ -88,11 +89,11 @@ export class StoreListByFranchiseComponent implements OnInit {
       }
     });
   }
-  async storeDetail(storeId, storeName, storeData){
+  async getPositionsForStore(storeId, storeName, storeData){
     this.seePositions = true;
     localStorage.setItem('selectedStoreData', JSON.stringify(storeData));
     const getPositionModal = await this.modalController.create({
-      component: StoreDetailComponent,
+      component: JobsListComponent,
       swipeToClose: true,
       componentProps: {
         storeId,
@@ -101,6 +102,19 @@ export class StoreListByFranchiseComponent implements OnInit {
     });
     return await getPositionModal.present();
   }
+  async storeDetail(storeId, storeName, storeData){
+    this.seePositions = true;
+    localStorage.setItem('selectedStoreData', JSON.stringify(storeData));
+    const getPositionModal = await this.modalController.create({
+        component: StoreDetailComponent,
+        swipeToClose: true,
+        componentProps: {
+            storeId,
+            storeName,
+        }
+    });
+    return await getPositionModal.present();
+    }
   async getListOfStoresBasedOnUser(){
    await this.firestore.doc(`users/${this.userId}`).get().subscribe(doc =>{
       this.userData = doc.data();

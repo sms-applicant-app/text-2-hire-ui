@@ -16,16 +16,15 @@ import { JobService } from './../../../shared/services/job.service';
 import { UserService } from './../../../shared/services/user.service';
 import { FranchiseService } from './../../../shared/services/franchise.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import {Router, RouterModule} from "@angular/router";
 @Component({
   selector: 'app-applicant-list',
   templateUrl: './applicant-list.component.html',
   styleUrls: ['./applicant-list.component.scss'],
-
 })
 export class ApplicantListComponent implements OnInit, OnDestroy {
   @Input() positionId: string;
   @Input() positionData: any;
-  // @Input() applicants: any;
   @Output() messageEvent = new EventEmitter<any>();
   @Input() store: any;
   applicants: any = [];
@@ -46,17 +45,17 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   selectedStore: any;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
   applicantStatus = ApplicantStatus;
-  constructor(
-    public fb: FormBuilder,
-    public applicantService: ApplicantService,
-    public firestore: AngularFirestore,
-    public dbHelper: FirestoreHelperService,
-    public smsService: SmsService,
-    public modalController: ModalController,
-    public alertService: AlertService,
-    public jobService: JobService,
-    public userService: UserService,
-    public franchiseService: FranchiseService
+  constructor(public fb: FormBuilder,
+              public applicantService: ApplicantService,
+              public firestore: AngularFirestore,
+              public dbHelper: FirestoreHelperService,
+              public smsService: SmsService,
+              public modalController: ModalController,
+              public alertService: AlertService,
+              public jobService: JobService,
+              public useService: UserService,
+              public router: Router,
+              public franchiseService: FranchiseService
   ) { }
 
   ngOnInit() {
@@ -103,16 +102,23 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
 
     });
   }
-  getApplicantAndBringUpInterviewNotesModal(applicant){
-      // route hiring manger to new hire page
-      const email = applicant.applicant.email;
-      this.applicantDetails(applicant).then(data =>{
-        console.log('display new hire modal');
+  // getApplicantAndBringUpInterviewNotesModal(applicant){
+  //     const email = applicant.applicant.email;
+  //     this.applicantDetails(applicant).then(data =>{
+  //       console.log('display new hire modal');
+  //     });
+  //     this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested} );
+  // }
+  getApplicantAndBringUpInterviewNotesModal(applicant, action) {
+      console.log('appliacant at interview', applicant);
+      this.closeModal();
+      this.router.navigateByUrl(`store/store-interview/${applicant.id}`).catch(err => {
+          console.log(err);
       });
-      this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested} );
+      this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested});
   }
 
-  getUserDetail(franchiseId) {
+      getUserDetail(franchiseId) {
     this.userService.getFranchiseUserByFranchiseId(franchiseId).subscribe(res => {
       if (res) {
         res.docs.forEach(doc => {
@@ -146,20 +152,25 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
         }
       });
   }
-  getApplicantAndSendCalendarLink(applicant, store){
-    console.log('applicant data ', applicant, 'store data',store);
-    const email = applicant.applicant.email;
-    const applicantName = applicant.applicant.name;
-    const phoneNumber = applicant.applicant.phoneNumber;
-    const jobTitle = this.positionData.jobTitle;
-    const hiringManagerName = this.positionData.hiringManagersName;
-    let calendarLink;
-    if (this.hiringMangerData) {
-      calendarLink = this.hiringMangerData.calendarLink;
-    }
-    const storeName = store.storeName;
-    this.smsService.requestInterview(applicantName, storeName, this.franchiseName, hiringManagerName, jobTitle, phoneNumber, calendarLink)
-      .subscribe((data: any) =>{
+    getApplicantAndSendCalendarLink(applicant, store){
+      console.log('applicant data ', applicant, 'store data',store);
+      const email = applicant.applicant.email;
+      const applicantName = applicant.applicant.name;
+      const phoneNumber = applicant.applicant.phoneNumber;
+      const hiringManagerName = store.hiringManagersName;
+      const storeName = store.storeName;
+      //TODO the franchise sign up flow needs to be added so we can grab the legal business name
+        let calendarLink;
+        if (this.hiringMangerData) {
+            calendarLink = this.hiringMangerData.calendarLink;
+        }
+      //    applicantName,
+      //       storeName,
+      //       franchiseName,
+      //       hiringManagerName,
+      //       jobTitle,
+      //       calendarLink
+      this.smsService.requestInterview(applicantName,storeName, this.franchiseName, hiringManagerName,this.positionData.jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
@@ -194,6 +205,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   }
 
   async applicantDetails(applicant){
+    //TODO change to route interviewer to store/store-interview page
     const applicantDetails = await this.modalController.create({
       component: ApplicantDetailsComponent,
       swipeToClose: true,

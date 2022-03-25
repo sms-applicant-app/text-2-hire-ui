@@ -9,6 +9,7 @@
 
           <div *ngIf="authService.appUserData">
             <div><span>Role name:</span><span class="role-name"> {{getUserRoleName()}}</span></div>
+            <!--todo get franchise user role and display update profile-->
             <button class="mt-3" mat-stroked-button color="primary" (click)="goProfile()"  *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">Go profile</button>
             <div *ngIf="getUserRole() === 'hiringManager' && !isProfilePage">
               <app-stores-by-hiring-manager [storeManagerId] ="authService.appUserData?.email"></app-stores-by-hiring-manager>
@@ -19,7 +20,7 @@
           </div>
           <span *ngIf="authService.appUserData">
             <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-              <ion-item routerDirection="root" (click) ="goToPage(p.url)" lines="none" detail="false" routerLinkActive="selected">
+              <ion-item routerDirection="root" (click) ="goToPage()" lines="none" detail="false" routerLinkActive="selected">
                 <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>

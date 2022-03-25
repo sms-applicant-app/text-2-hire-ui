@@ -26,6 +26,7 @@ import {ApplicantDetailsComponent} from "./components/applicant-details/applican
 import {ApplicantTableRowComponent} from "./components/applicant-table-row/applicant-table-row.component";
 import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on-board-packet.component";
 import { UploadListFormComponent } from './components/upload-list-file/upload-list-form.component';
+import {EditPositionComponent} from "./components/edit-position/edit-position.component";
 import { StoreDetailComponent } from './components/store-detail/store-detail.component';
 import { ApplicantByStoreComponent } from './components/applicant-by-store/applicant-by-store.component';
 import { AddApplicantComponent } from './components/add-applicant/add-applicant.component';
@@ -59,6 +60,8 @@ import { AddJobStepComponent } from './components/add-job-step/add-job-step.comp
       ApplicantByStoreComponent,
       AddApplicantComponent,
       AddJobStepComponent
+      UploadListFormComponent,
+      EditPositionComponent
     ],
   imports: [
     CommonModule,

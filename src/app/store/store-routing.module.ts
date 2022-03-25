@@ -17,7 +17,7 @@ const routes: Routes = [
     loadChildren: () => import('./store-calendar/store-calendar.module').then( m => m.StoreCalendarPageModule)
   },
   {
-    path: 'store-interview',
+    path: 'store-interview/:applicantId',
     loadChildren: () => import('./store-interview/store-interview.module').then( m => m.StoreInterviewPageModule)
   },
 

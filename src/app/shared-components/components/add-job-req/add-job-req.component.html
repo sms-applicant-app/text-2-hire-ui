@@ -41,12 +41,6 @@
                 <option value="partTime">Part-Time</option>
               </select>
             </ion-item>
-            <ion-item lines="full">
-              <ion-textarea formControlName="shortJobDescription" placeholder="Enter short description..."></ion-textarea>
-              <span class="field-err"
-                *ngIf="addJoblistingFrom.controls.shortJobDescription.errors?.required && (addJoblistingFrom.controls.shortJobDescription.dirty || addJoblistingFrom.controls.shortJobDescription.touched)">Short
-                Description required</span>
-            </ion-item>
           </div>
           <div class="col-lg-6">
             <ion-item lines="full">
@@ -67,8 +61,20 @@
                 Date required</span>
             </ion-item>
             <ion-item lines="full">
-              <ion-label position="stacked" required>Salary</ion-label>
-              <ion-input clearInput type="text" formControlName="salary"></ion-input>
+              <ion-label position="stacked" required>Rate of pay</ion-label>
+              <div class="d-flex flex-row align-items-center">
+                <div class="pr-2">
+                  <span>$</span>
+                </div>
+                <ion-input clearInput type="number" formControlName="salary" style="width: 200px;"></ion-input>
+                <select class="form-select pl-0" formControlName="salaryUnit" type="select" style="width: 150px;">
+                  <option value="">Please choose rate of pay</option>
+                  <option value="perHour">Per Hour</option>
+                  <option value="perDay">Per Day</option>
+                  <option value="perYear">Per Year</option>
+                </select>
+              </div>
+              
             </ion-item>
             <ion-item lines="full">
               <ion-label position="stacked" required>Company WebSite</ion-label>
@@ -77,7 +83,7 @@
             <ion-item appearance="fill">
               <ion-label position="stacked">Select Onboarding Package</ion-label>
               <select class="form-select pl-0" formControlName="onboardingPackage" type="select">
-                <option value="" *ngIf="onboardingPackagesData.length === 0">No onboarding package</option>
+                <option value="">No onboarding package</option>
                 <option [value]="package.id" *ngFor="let package of onboardingPackagesData">
                   {{package.name}}
                 </option>

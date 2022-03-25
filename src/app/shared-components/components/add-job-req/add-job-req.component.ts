@@ -1,8 +1,9 @@
+import { pipe } from 'rxjs';
 import { StoreService } from './../../../shared/services/store.service';
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatCurrency } from '@angular/common';
 
 import {JobPosting} from '../../../shared/models/job-posting';
 import {AngularFirestore} from '@angular/fire/firestore';
@@ -66,10 +67,10 @@ export class AddJobReqComponent implements OnInit {
         jobType: this.jobData.position.jobType,
         onboardingPackage: this.jobData.position.onboardingPackageId,
         numberOfOpenSlots: this.jobData.position.numberOfOpenSlots,
-        shortJobDescription: this.jobData.position.shortJobDescription,
         positionExpiration: this.jobData.position.positionExpiration,
         companyWebsite: this.jobData.position.companyWebsite,
         salary: this.jobData.position.salary,
+        salaryUnit: this.jobData.position.salaryUnit,
        });
       this.jobDetailsFrom.patchValue({
         fullDescription: this.jobData.position.jobDescription,
@@ -98,10 +99,10 @@ export class AddJobReqComponent implements OnInit {
       jobType: [''],
       onboardingPackage: [''],
       numberOfOpenSlots: ['', Validators.required],
-      shortJobDescription: ['', Validators.required],
       positionExpiration: [{value: '', disabled: true}, Validators.required],
       companyWebsite: [''],
-      salary: ['']
+      salary: [''],
+      salaryUnit: ['']
     });
   }
   initJobsDetailsForm(){
@@ -153,6 +154,7 @@ export class AddJobReqComponent implements OnInit {
           this.newJobListing.addressId = this.addJoblistingFrom.controls.location.value;
           this.newJobListing.companyWebsite = this.addJoblistingFrom.controls.companyWebsite.value;
           this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
+          this.newJobListing.salaryUnit = this.addJoblistingFrom.controls.salaryUnit.value;
           this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
           this.newJobListing.positionOpen = true;
           this.newJobListing.hiringManagerId = this.storeData.storeHiringManager;
@@ -160,7 +162,6 @@ export class AddJobReqComponent implements OnInit {
           this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
           this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;
           this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
-          this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortJobDescription.value;
           this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
           this.newJobListing.onboardingPackageId = this.addJoblistingFrom.controls.onboardingPackage.value;
           if (this.newJobListing.onboardingPackageId) {

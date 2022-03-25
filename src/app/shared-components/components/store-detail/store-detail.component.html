@@ -6,9 +6,6 @@
   </button>
 </div>
 <mat-tab-group>
-  <mat-tab label="All Applicant of Store">
-    <app-applicant-by-store [applicantsByStore]="applicantsByStore" [isHired]="false"></app-applicant-by-store>
-  </mat-tab>
   <mat-tab label="List Postion">
     <div class="container-fluid height-100" *ngIf="!viewApplicants">
       <div class="pl-3 pr-3">
@@ -94,6 +91,9 @@
     <div *ngIf="viewApplicants">
       <app-applicant-list (messageEvent)="receiveNavigationMessage($event)" [positionId]="positionId" [positionData]="jobData"></app-applicant-list>
     </div>
+  </mat-tab>
+  <mat-tab label="All Applicant of Store">
+    <app-applicant-by-store [applicantsByStore]="applicantsByStore" [isHired]="false"></app-applicant-by-store>
   </mat-tab>
   <mat-tab label="Applicant Hired">
     <app-applicant-by-store [applicantsByStore]="applicantsByStore" [isHired]="true"></app-applicant-by-store>

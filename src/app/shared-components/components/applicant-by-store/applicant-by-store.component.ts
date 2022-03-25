@@ -1,8 +1,5 @@
-import { filter } from 'rxjs/operators';
 import { ApplicantStatus } from './../../../shared/models/applicant-status';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {Applicant} from '../../../shared/models/applicant';
 import {ApplicantService} from '../../../shared/services/applicant.service';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
@@ -24,14 +21,13 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
   @Input() applicantsByStore: any;
   @Input() isHired: boolean;
   applicants: any = [];
-  dataSource: MatTableDataSource<Applicant>;
   actionsFrom: FormGroup;
   applicantData: any;
   applicantRetrieved: boolean;
   control: FormArray;
   selectedStore: any;
-  displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
   viewData = [];
+  hiringMangerData: any;
   constructor(
     public fb: FormBuilder,
     public applicantService: ApplicantService,
@@ -42,7 +38,8 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
     public alertService: AlertService,
     public jobService: JobService,
     public userService: UserService,
-    public franchiseService: FranchiseService
+    public franchiseService: FranchiseService,
+
   ) { }
 
   ngOnInit() {
@@ -51,7 +48,7 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
     if (this.isHired) {
       this.applicantData = this.applicantsByStore.filter(a => a.status === ApplicantStatus.pendingOnboarding);
     } else {
-      this.applicantData = this.applicantsByStore;
+      this.getData();
     }
   }
   async applicantDetails(applicant){
@@ -67,4 +64,24 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
   closeModal() {
     this.modalController.dismiss().then();
   }
+
+  async getData(){
+    let groupNumber = 1;
+    const sortData = this.applicantsByStore.sort((a,b) => a.jobId.localeCompare(b.jobId));
+    this.applicantData = Object.assign([], sortData);
+    await this.applicantData.forEach((app, index) => {
+      if(index !== 0){
+        if (app.jobId === sortData[index- 1].jobId) {
+          groupNumber++;
+        } else {
+          groupNumber = 1;
+        }
+      }
+      this.applicantData[index] = {
+        groupNumber,
+        ...app
+      };
+    });
+  }
+
 }

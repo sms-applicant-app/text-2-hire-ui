@@ -138,34 +138,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
   sendJobsFranchiseIdMessage(){
     this.messageEvent.emit(this.franchiseId);
   }
-  // async addJobRec(){
-  //   let franchiseId;
-  //   if (this.userRole === Role.hiringManager) {
-  //     franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
-  //   } else {
-  //     franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
-  //   }
-  //   const storeId = this.storeId;
-  //   const onJobAddedSub = new Subject<JobListing>();
-  //   const addJobRec = await this.modalController.create({
-  //     component: AddJobReqComponent,
-  //     swipeToClose: true,
-  //     componentProps: {
-  //       franchiseId,
-  //       storeId,
-  //       onJobAddedSub
-  //     }
-  //   });
-  //   onJobAddedSub.subscribe((newJob: any) => {
-  //     this.jobs.unshift({id: newJob.id, position: newJob});
-  //   });
-
-  //   addJobRec.onDidDismiss().then(data => {
-  //     onJobAddedSub.unsubscribe();
-  //   });
-
-  //   return await addJobRec.present();
-  // }
   async addJobStep(){
     this.closeModal();
     let franchiseId;
@@ -229,19 +201,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
           this.applicantsByStore = applicant;
         });
       }
-          // this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).get()
-    //   .subscribe( applicant =>{
-    //     this.applicantsByStore = [];
-    //     if (applicant.docs.length === 0){
-    //       console.log('no applicants for that position');
-    //     } else {
-    //       applicant.forEach( a =>{
-    //         const app = a.data();
-    //         const id = a.id;
-    //         this.applicantsByStore.push({id, applicant: app });
-    //       });
-    //     }
-    //   });
     });
   }
 

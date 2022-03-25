@@ -14,19 +14,20 @@
         </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let a of applicantData" >
+          <tr *ngFor="let a of applicantData" style="position: relative;">
             <td>
-              <div class="d-flex align-items-center">
+              <p class="mb-0" style="top: 0; position: absolute;" *ngIf="a.groupNumber == 1">{{a.jobId}}</p>
+              <div class="d-flex align-items-center ml-3 mt-1">
                 <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.name}}</p>
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center mt-1">
                 <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.status}}</p>
               </div>
             </td>
             <td>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center mt-1">
                 <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.phoneNumber}}</p>
               </div>
             </td>

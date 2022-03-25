@@ -70,19 +70,12 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
     this.getFranchiseeByApplicant(this.selectedStore.franchiseId);
     this.isSubmitted = false;
     this.applicantRetrieved = false;
-    this.initForm();
   }
   ngAfterOnInit(){
   }
   ngOnDestroy(): void {
     this.franchiseDataSub.unsubscribe();
     this.applicantsSub.unsubscribe();
-  }
-
-  initForm() {
-    this.actionsFrom = this.fb.group({
-      actions: ['', [Validators.required]],
-    });
   }
 
   submitForm(applicant) {

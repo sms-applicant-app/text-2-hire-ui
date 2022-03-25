@@ -114,8 +114,11 @@ export class AddStoreComponent implements OnInit {
     this.addingNewUser = true;
   }
 
-  receiveAddressMessage($event){
-    this.addressAdded = $event;
+  receiveAddressMessage($event, stepper: MatStepper){
+    if ($event) {
+      this.addressAdded = $event;
+      stepper.next();
+    }
   }
 
   selectionChange(e) {

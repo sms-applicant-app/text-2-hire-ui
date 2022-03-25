@@ -11,6 +11,7 @@ import {AlertService} from '../../../shared/services/alert.service';
 import { JobService } from './../../../shared/services/job.service';
 import { UserService } from './../../../shared/services/user.service';
 import { FranchiseService } from './../../../shared/services/franchise.service';
+import { json } from 'express';
 @Component({
   selector: 'app-applicant-by-store',
   templateUrl: './applicant-by-store.component.html',
@@ -20,6 +21,7 @@ import { FranchiseService } from './../../../shared/services/franchise.service';
 export class ApplicantByStoreComponent implements OnInit, OnChanges {
   @Input() applicantsByStore: any;
   @Input() isHired: boolean;
+  @Input() jobs: any;
   applicants: any = [];
   actionsFrom: FormGroup;
   applicantData: any;
@@ -45,6 +47,7 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
   ngOnChanges(): void {
+    console.log('jobs', this.jobs);
     if (this.isHired) {
       this.applicantData = this.applicantsByStore.filter(a => a.status === ApplicantStatus.pendingOnboarding);
     } else {
@@ -67,6 +70,7 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
 
   async getData(){
     let groupNumber = 1;
+    let jobTitle = '';
     const sortData = this.applicantsByStore.sort((a,b) => a.jobId.localeCompare(b.jobId));
     this.applicantData = Object.assign([], sortData);
     await this.applicantData.forEach((app, index) => {
@@ -77,10 +81,16 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
           groupNumber = 1;
         }
       }
-      this.applicantData[index] = {
-        groupNumber,
-        ...app
-      };
+      this.jobs.forEach(job => {
+        if (job.id === app.jobId) {
+          jobTitle = job.position.jobTitle;
+          this.applicantData[index] = {
+            groupNumber,
+            jobTitle,
+            ...app
+          };
+        }
+      });
     });
   }
 

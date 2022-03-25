@@ -52,7 +52,7 @@
 
             </ion-item>
             <ion-item lines="full" class="input-calendar">
-              <ion-label position="stacked" required>Expiration Date *</ion-label>
+              <ion-label position="stacked" required>Expiration Date</ion-label>
               <input [min]="minDate" matInput [matDatepicker]="picker1" [disabled]="true" formControlName="positionExpiration">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1 disabled="false"></mat-datepicker>
@@ -92,7 +92,7 @@
           </div>
           <div class="col-md-12">
             <div class="d-flex flex-row justify-content-end">
-              <button mat-stroked-button matStepperPrevious class="mr-4">Back</button>
+              <button mat-stroked-button class="mr-4" (click)="closeModal()">Back</button>
               <button mat-raised-button color="primary" [disabled]="addJoblistingFrom.invalid" matStepperNext>Next</button>
             </div>
           </div>

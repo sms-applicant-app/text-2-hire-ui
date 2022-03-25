@@ -53,7 +53,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
               public modalController: ModalController,
               public alertService: AlertService,
               public jobService: JobService,
-              public useService: UserService,
+              public userService: UserService,
               public router: Router,
               public franchiseService: FranchiseService
   ) { }
@@ -109,8 +109,8 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   //     });
   //     this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested} );
   // }
-  getApplicantAndBringUpInterviewNotesModal(applicant, action) {
-      console.log('appliacant at interview', applicant);
+  getApplicantAndBringUpInterviewNotesModal(applicant) {
+      const email = applicant.applicant.email;
       this.closeModal();
       this.router.navigateByUrl(`store/store-interview/${applicant.id}`).catch(err => {
           console.log(err);
@@ -118,7 +118,7 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
       this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested});
   }
 
-      getUserDetail(franchiseId) {
+  getUserDetail(franchiseId) {
     this.userService.getFranchiseUserByFranchiseId(franchiseId).subscribe(res => {
       if (res) {
         res.docs.forEach(doc => {
@@ -140,7 +140,9 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
   }
   getHiringManager(){
     console.log('get hiring manager ', this.selectedStore.storeHiringManager);
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager).where('role', '==', 'hiringManager')).get()
+    return this.firestore
+    .collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager)
+    .where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           console.log('Document not found! Try again!');

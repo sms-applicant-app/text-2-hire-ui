@@ -98,7 +98,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
             this.jobData = job.data();
             const positionId = job.id;
             this.jobs.push({id: positionId, position: this.jobData});
-            this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }
       });

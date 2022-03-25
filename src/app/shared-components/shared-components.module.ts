@@ -59,8 +59,7 @@ import { AddJobStepComponent } from './components/add-job-step/add-job-step.comp
       StoreDetailComponent,
       ApplicantByStoreComponent,
       AddApplicantComponent,
-      AddJobStepComponent
-      UploadListFormComponent,
+      AddJobStepComponent,
       EditPositionComponent
     ],
   imports: [

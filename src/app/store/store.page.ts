@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, ChangeDetectorRef } from '@angular/core';
 import {FranchiseService} from '../shared/services/franchise.service';
 import {AddStoreComponent} from '../shared-components/components/add-store/add-store.component';
 import {ModalController} from '@ionic/angular';
@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../shared/services/user.service';
 import {AuthService} from '../shared/services/auth.service';
 import {Observable} from 'rxjs';
+import { JobService } from '../shared/services/job.service';
 
 @Component({
   selector: 'app-store',
@@ -19,7 +20,7 @@ import {Observable} from 'rxjs';
 })
 export class StorePage implements OnInit {
   franchiseId: string;
-  storeId: string;
+  selectedStore: any = [];
   storeHiringManger: string;
   storesData: any = [];
   userId: string;
@@ -28,7 +29,7 @@ export class StorePage implements OnInit {
   dataSource: MatTableDataSource<Store>;
   userData: any;
   state$: Observable<any>;
-
+  applicantsByStore: any = [];
   constructor(public franchiseService: FranchiseService,
               public modelController: ModalController,
               public storeService: StoreService,
@@ -36,47 +37,44 @@ export class StorePage implements OnInit {
               public router: Router,
               public userService: UserService,
               public authService: AuthService,
-              public activatedRoute: ActivatedRoute
+              public activatedRoute: ActivatedRoute,
+              public jobService: JobService,
+              public changeDetectorRef: ChangeDetectorRef
   ) {
 
   }
 
   ngOnInit() {
-
+    this.jobService.dataSub.subscribe(data => {
+      if(data){
+        this.getApplicantsByStoreId(data);
+      }
+    });
   }
   ionViewWillEnter(){
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
     this.franchiseId = this.userData.franchiseId;
     if(this.userData.role === 'hiringManager'){
-      console.log('im a hiring manager');
       this.role = 'hiringManager';
     }
     if (this.userData.role === 'franchisee'){
-      console.log('im a franchise owner', this.franchiseId);
       this.role = 'franchisee';
     }
     this.getAllFranchiseStoresById();
   }
   getAllFranchiseStoresById(){
-  console.log('franchise id', this.franchiseId);
-  if(!this.franchiseId) return;
-   this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
+    console.log('franchise id', this.franchiseId);
+    if (!this.franchiseId) {return;} ;
+    this.storesData = this.franchiseService.getStoreByFranchiseById(this.franchiseId);
   }
 
-  async addJobRec(){
-    const franchiseId = this.franchiseId;
-    const storeId = this.storeId;
-    console.log('display add Job Model');
-    const addJobRec = await this.modelController.create({
-      component: AddJobReqComponent,
-      swipeToClose: true,
-      componentProps: {
-        franchiseId,
-        storeId
+  getApplicantsByStoreId(storeId){
+    this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).valueChanges()
+    .subscribe(applicant =>{
+      if(applicant) {
+        this.applicantsByStore = applicant;
+        this.changeDetectorRef.detectChanges();
       }
     });
-    return await addJobRec.present();
   }
-  
-  
 }

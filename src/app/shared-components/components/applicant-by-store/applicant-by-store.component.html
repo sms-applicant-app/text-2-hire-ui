@@ -11,6 +11,7 @@
           <th class="ps-4 rounded-start">Name</th>
           <th class="ps-4 rounded-start">Schedule Status</th>
           <th class="ps-4 rounded-start">Phone Number</th>
+          <th *ngIf="isHired" class="ps-4 rounded-start">Start Date</th>
         </tr>
         </thead>
         <tbody>
@@ -29,6 +30,12 @@
             <td>
               <div class="d-flex align-items-center mt-1">
                 <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.phoneNumber}}</p>
+              </div>
+            </td>
+            <td *ngIf="isHired">
+              <div class="d-flex align-items-center mt-1">
+                <p class="text-dark fw-bolder text-hover-primary fs-6" *ngIf="a.startDate">{{a.startDate | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="!a.startDate">Start date null</p>
               </div>
             </td>
           </tr>

@@ -88,7 +88,8 @@ import { AddJobStepComponent } from './components/add-job-step/add-job-step.comp
         StoresByHiringManagerComponent,
         AddFranchiseComponent,
         ApplicantTableRowComponent,
-        UploadListFormComponent
+        UploadListFormComponent,
+        ApplicantByStoreComponent
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

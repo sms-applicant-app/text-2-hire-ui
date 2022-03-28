@@ -142,7 +142,7 @@ export class AddNewHireComponent implements OnInit {
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     console.log('customForms', customForms);
     this.firestore.collection('applicant').doc(applicant.id)
-      .set({customForms: customForms, status: this.applicantStatus.pendingOnboarding}, {merge: true})
+      .set({customForms: customForms, status: this.applicantStatus.pendingOnboarding, startDate}, {merge: true})
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();

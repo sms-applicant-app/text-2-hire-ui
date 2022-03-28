@@ -47,9 +47,13 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
   ngOnChanges(): void {
-    console.log('jobs', this.jobs);
     if (this.isHired) {
       this.applicantData = this.applicantsByStore.filter(a => a.status === ApplicantStatus.pendingOnboarding);
+      this.applicantData.forEach(data => {
+        if (data.startDate) {
+          data.startDate = data.startDate.toDate();
+        }
+      });
     } else {
       this.getData();
     }

@@ -57,8 +57,11 @@ export class AddJobReqComponent implements OnInit {
     this.getOnboardingPackages();
     this.userId = JSON.parse(localStorage.getItem('user')).email;
     if (this.jobData) {
+      let positionExpiration: any;
       if(this.jobData.position.positionExpiration && typeof this.jobData.position.positionExpiration != 'string') {
-        this.jobData.position.positionExpiration = this.jobData.position.positionExpiration.toDate();
+        positionExpiration = this.jobData.position.positionExpiration.toDate();
+      } else {
+        positionExpiration = this.jobData.position.positionExpiration;
       }
       this.addJoblistingFrom.patchValue({
         recNumber: this.jobData.position.recNumber,
@@ -67,7 +70,7 @@ export class AddJobReqComponent implements OnInit {
         jobType: this.jobData.position.jobType,
         onboardingPackage: this.jobData.position.onboardingPackageId,
         numberOfOpenSlots: this.jobData.position.numberOfOpenSlots,
-        positionExpiration: this.jobData.position.positionExpiration,
+        positionExpiration,
         companyWebsite: this.jobData.position.companyWebsite,
         salary: this.jobData.position.salary,
         salaryUnit: this.jobData.position.salaryUnit ? this.jobData.position.salaryUnit : '',

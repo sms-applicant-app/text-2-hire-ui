@@ -1,6 +1,6 @@
 import { Validators } from '@angular/forms';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import {Router} from "@angular/router";
 import {JobService} from "../../../shared/services/job.service";
 import {AngularFirestore} from "@angular/fire/firestore";
@@ -19,6 +19,7 @@ import { AlertService } from '../../../shared/services/alert.service';
   styleUrls: ['./add-job-step.component.scss'],
 })
 export class AddJobStepComponent implements OnInit, OnDestroy {
+  onJobAddedSub: Subject<any>;
   @Input() franchiseId: string;
   @Input() storeId: string;
   jobs: any = [];
@@ -128,8 +129,12 @@ export class AddJobStepComponent implements OnInit, OnDestroy {
         onJobAddedSub
       }
     });
+
     onJobAddedSub.subscribe((newJob: any) => {
       this.jobs.unshift({id: newJob.id, position: newJob});
+      if(this.onJobAddedSub) {
+        this.onJobAddedSub.next({id: newJob.id, position: newJob});
+      }
     });
 
     addJobRec.onDidDismiss().then(data => {
@@ -160,8 +165,12 @@ export class AddJobStepComponent implements OnInit, OnDestroy {
         onJobAddedSub,
       }
     });
+
     onJobAddedSub.subscribe((newJob: any) => {
       this.jobs.unshift({id: newJob.id, position: newJob});
+      if(this.onJobAddedSub) {
+        this.onJobAddedSub.next({id: newJob.id, position: newJob});
+      }
     });
 
     addJobRec.onDidDismiss().then(data => {

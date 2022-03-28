@@ -145,15 +145,24 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
       franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
     }
     const storeId = this.storeId;
+    const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
       component: AddJobStepComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
         storeId,
+        onJobAddedSub
       }
     });
 
+    onJobAddedSub.subscribe((newJob: any) => {
+      this.jobs.unshift(newJob);
+    });
+    
+    addJobRec.onDidDismiss().then(data => {
+      onJobAddedSub.unsubscribe();
+    });
     return await addJobRec.present();
   }
   newOnboardPage(){

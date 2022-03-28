@@ -205,7 +205,7 @@ export class AddJobReqComponent implements OnInit {
     }
   }
   closeModal() {
-    this.modalController.dismiss().then();
+    this.modalController.dismiss(true);
   }
   selectionChange(event){
 

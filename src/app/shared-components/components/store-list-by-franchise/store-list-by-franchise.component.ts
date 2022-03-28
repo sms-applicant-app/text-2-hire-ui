@@ -39,11 +39,12 @@ export class StoreListByFranchiseComponent implements OnInit {
   displayColumns = ['storeName'];
   userId: string;
   userData: any;
-  userRole: string;
+  userRole = Role;
   seeStores: boolean;
   seePositions: boolean;
   seeApplicants: boolean;
   appUserData: any;
+
   constructor(public dbHelper: FirestoreHelperService,
               public firestore: AngularFirestore,
               public userService: UserService,

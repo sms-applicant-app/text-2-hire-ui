@@ -1,17 +1,8 @@
-import { ApplicantStatus } from './../../../shared/models/applicant-status';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import {ApplicantService} from '../../../shared/services/applicant.service';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {SmsService} from '../../../shared/services/sms.service';
 import {ModalController} from '@ionic/angular';
 import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
 import {AlertService} from '../../../shared/services/alert.service';
-import { JobService } from './../../../shared/services/job.service';
-import { UserService } from './../../../shared/services/user.service';
-import { FranchiseService } from './../../../shared/services/franchise.service';
-import { json } from 'express';
+import { ApplicantStatus } from './../../../shared/models/applicant-status';
 @Component({
   selector: 'app-applicant-by-store',
   templateUrl: './applicant-by-store.component.html',
@@ -23,24 +14,12 @@ export class ApplicantByStoreComponent implements OnInit, OnChanges {
   @Input() isHired: boolean;
   @Input() jobs: any;
   applicants: any = [];
-  actionsFrom: FormGroup;
   applicantData: any;
-  applicantRetrieved: boolean;
-  control: FormArray;
   selectedStore: any;
-  viewData = [];
   hiringMangerData: any;
   constructor(
-    public fb: FormBuilder,
-    public applicantService: ApplicantService,
-    public firestore: AngularFirestore,
-    public dbHelper: FirestoreHelperService,
-    public smsService: SmsService,
     public modalController: ModalController,
     public alertService: AlertService,
-    public jobService: JobService,
-    public userService: UserService,
-    public franchiseService: FranchiseService,
 
   ) { }
 

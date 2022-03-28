@@ -138,7 +138,6 @@ export class StoreDetailComponent implements OnInit, OnDestroy {
     this.messageEvent.emit(this.franchiseId);
   }
   async addJobStep(){
-    this.closeModal();
     let franchiseId;
     if (this.userRole === Role.hiringManager) {
       franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;

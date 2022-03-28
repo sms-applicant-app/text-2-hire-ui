@@ -134,6 +134,11 @@ export class AddJobStepComponent implements OnInit, OnDestroy {
 
     addJobRec.onDidDismiss().then(data => {
       onJobAddedSub.unsubscribe();
+      if (data.data) {
+        setTimeout(() => {
+          this.closeModal();
+        }, 500);
+      }
     });
 
     return await addJobRec.present();
@@ -161,13 +166,18 @@ export class AddJobStepComponent implements OnInit, OnDestroy {
 
     addJobRec.onDidDismiss().then(data => {
       onJobAddedSub.unsubscribe();
+      if (data.data) {
+        setTimeout(() => {
+          this.closeModal();
+        }, 500);
+      }
     });
 
     return await addJobRec.present();
   }
 
   closeModal() {
-    this.modalController.dismiss().then();
+    this.modalController.dismiss();
   }
 
   updatePosition(id){

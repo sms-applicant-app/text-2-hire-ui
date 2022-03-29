@@ -19,7 +19,6 @@ import { AlertService } from '../../../shared/services/alert.service';
   styleUrls: ['./add-job-step.component.scss'],
 })
 export class AddJobStepComponent implements OnInit, OnDestroy {
-  onJobAddedSub: Subject<any>;
   @Input() franchiseId: string;
   @Input() storeId: string;
   jobs: any = [];
@@ -34,6 +33,7 @@ export class AddJobStepComponent implements OnInit, OnDestroy {
   displayColumns = ['jobId', 'title','status', 'location', 'actions'];
   chooseStepForm: FormGroup;
   stepCopy: boolean;
+  onJobAddedSub: Subject<any>;
   constructor(
     public jobService: JobService,
     public firestore: AngularFirestore,

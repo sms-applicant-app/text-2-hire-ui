@@ -67,3 +67,7 @@ app-add-on-board-packet, app-jobs-list, app-add-job-req {
     top: 20px;
   }
 }
+
+app-store-detail.ion-page, app-add-applicant.ion-page {
+  justify-content: flex-start;
+}

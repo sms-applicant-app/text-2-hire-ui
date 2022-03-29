@@ -1,41 +1,41 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import {Router} from "@angular/router";
 import {FileUploadService} from "../../../shared/services/file-upload.service";
-import {map, take} from "rxjs/operators";
 import {JobService} from "../../../shared/services/job.service";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {MatTableDataSource} from "@angular/material/table";
-import {Store} from "../../../shared/models/store";
 import {JobListing} from "../../../shared/models/job-listing";
 import {AddJobReqComponent} from "../add-job-req/add-job-req.component";
 import {ModalController} from "@ionic/angular";
-import {BehaviorSubject, Observable, pipe, Subject} from "rxjs";
+import { Subscription, Subject} from "rxjs";
 import {ApplicantService} from "../../../shared/services/applicant.service";
 import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
-import {CreateNewHirePackageComponent} from "../create-new-hire-package/create-new-hire-package.component";
 import {AddOnBoardPacketComponent} from "../add-on-board-packet/add-on-board-packet.component";
 import {StoreService} from "../../../shared/services/store.service";
 import { AlertService } from './../../../shared/services/alert.service';
 import { Role } from './../../../shared/models/role';
-import { AddJobStepComponent } from '../add-job-step/add-job-step.component';
+import { AddApplicantComponent } from '../add-applicant/add-applicant.component';
+import { AddJobStepComponent } from './../add-job-step/add-job-step.component';
 
 @Component({
-  selector: 'app-jobs-list',
-  templateUrl: './jobs-list.component.html',
-  styleUrls: ['./jobs-list.component.scss'],
+  selector: 'app-store-detail',
+  templateUrl: './store-detail.component.html',
+  styleUrls: ['./store-detail.component.scss'],
 })
-export class JobsListComponent implements OnInit {
+export class StoreDetailComponent implements OnInit, OnDestroy {
   @Input() franchiseId: string;
   @Input() storeId: string;
   @Output() messageEvent = new EventEmitter<any>();
   fileUploads?: any[];
   jobs: any = [];
+  jobsSub: Subscription = new Subscription();
   jobData: any;
   userData: any;
   userRole: string;
   subscription: any;
   positionId: string;
   applicants: any = [];
+  applicantsByStore: any = [];
   storeName: string;
   selectedStoreId: string;
   viewApplicants: boolean;
@@ -58,13 +58,17 @@ export class JobsListComponent implements OnInit {
     this.viewApplicants = false;
     this.userData = JSON.parse(localStorage.getItem('appUserData'));
    // if user role is hiring manager get jobs by storeId
-   this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
+    this.userRole = JSON.parse(localStorage.getItem('appUserData')).role;
     if (this.userRole === 'hiringManager'){
       this.getJobsByStoreId();
     } else {
       this.getJobsForFranchise(this.storeId);
+      this.getApplicantsByStoreId(this.storeId);
     }
-   this.sendJobsFranchiseIdMessage();
+    this.sendJobsFranchiseIdMessage();
+  }
+  ngOnDestroy(): void {
+    this.jobsSub.unsubscribe();
   }
 
   getJobsByFranchiseId(){
@@ -84,7 +88,7 @@ export class JobsListComponent implements OnInit {
       });
   }
   getJobsForFranchise(storeId){
-    this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
+   this.jobsSub = this.firestore.collection('jobs', ref => ref.where('storeId', '==', `${storeId}`)).get()
       .subscribe(jobs =>{
         this.jobs = [];
         if(jobs.docs.length === 0){
@@ -94,7 +98,6 @@ export class JobsListComponent implements OnInit {
             this.jobData = job.data();
             const positionId = job.id;
             this.jobs.push({id: positionId, position: this.jobData});
-            this.dataSource = new MatTableDataSource<JobListing>(this.jobs);
           });
         }
       });
@@ -134,7 +137,7 @@ export class JobsListComponent implements OnInit {
   sendJobsFranchiseIdMessage(){
     this.messageEvent.emit(this.franchiseId);
   }
-  async addJobRec(){
+  async addJobStep(){
     let franchiseId;
     if (this.userRole === Role.hiringManager) {
       franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
@@ -144,7 +147,7 @@ export class JobsListComponent implements OnInit {
     const storeId = this.storeId;
     const onJobAddedSub = new Subject<JobListing>();
     const addJobRec = await this.modalController.create({
-      component: AddJobReqComponent,
+      component: AddJobStepComponent,
       swipeToClose: true,
       componentProps: {
         franchiseId,
@@ -152,35 +155,14 @@ export class JobsListComponent implements OnInit {
         onJobAddedSub
       }
     });
-    onJobAddedSub.subscribe((newJob: any) => {
-      this.jobs.unshift({id: newJob.id, position: newJob});
-    });
 
+    onJobAddedSub.subscribe((newJob: any) => {
+      this.jobs.unshift(newJob);
+    });
+    
     addJobRec.onDidDismiss().then(data => {
       onJobAddedSub.unsubscribe();
     });
-
-    return await addJobRec.present();
-  }
-
-  async addJobStep(){
-    // this.closeModal();
-    let franchiseId;
-    if (this.userRole === Role.hiringManager) {
-      franchiseId = JSON.parse(localStorage.getItem('appUserData')).franchiseId;
-    } else {
-      franchiseId = JSON.parse(localStorage.getItem('selectedStoreData')).franchiseId;
-    }
-    const storeId = this.storeId;
-    const addJobRec = await this.modalController.create({
-      component: AddJobStepComponent,
-      swipeToClose: true,
-      componentProps: {
-        franchiseId,
-        storeId,
-      }
-    });
-
     return await addJobRec.present();
   }
   newOnboardPage(){
@@ -216,6 +198,39 @@ export class JobsListComponent implements OnInit {
          });
         }
       });
+  }
+
+  getApplicantsByStoreId(storeId){
+    this.firestore.collection('applicant', ref => ref.where('storeId', '==', `${storeId}`)).valueChanges()
+    .subscribe(applicant =>{
+      if(applicant && applicant.length > 0) {
+        applicant.forEach( a =>{
+          this.applicantsByStore = applicant;
+        });
+      }
+    });
+  }
+
+  async addApplicant(job) {
+    const applicantsByStoreSub = new Subject<any>();
+    const createAddApplicant = await this.modalController.create({
+      component: AddApplicantComponent,
+      swipeToClose: true,
+      componentProps: {
+        job,
+        applicantsByStoreSub
+      }
+    });
+    applicantsByStoreSub.subscribe((newApplicant: any) => {
+      console.log('newApplicant', newApplicant);
+      this.applicantsByStore.unshift({id: newApplicant.id, applicant: newApplicant});
+    });
+
+    createAddApplicant.onDidDismiss().then(data => {
+      applicantsByStoreSub.unsubscribe();
+    });
+
+    return await createAddApplicant.present();
   }
 
   deletePosition(jobDelete){

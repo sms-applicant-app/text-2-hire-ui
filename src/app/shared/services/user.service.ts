@@ -1,3 +1,4 @@
+import { Role } from './../models/role';
 import { take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {FirestoreHelperService} from "../firestore-helper.service";
@@ -36,6 +37,11 @@ export class UserService {
           });
         }
       });
+  }
+
+  getFranchiseUserByFranchiseId(franchiseId){
+    return this.firestore.collection('users', ref => ref.where('franchiseId', '==', franchiseId )
+    .where('role', '==', Role.franchisee )).get().pipe(take(1));
   }
 
   getUserByStore(storeId){

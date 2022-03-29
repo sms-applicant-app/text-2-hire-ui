@@ -2,19 +2,19 @@
 
 <div class="container-fluid">
   <div class="modal-header">
-    <p class="modal-title">Applicants for <span *ngIf="positionDetails">{{positionDetails.jobTitle}}</span></p>
+    <p class="modal-title" style="font-size: 18px;">Applicants for <span *ngIf="positionData">{{positionData.jobTitle}}</span></p>
     <button class="btn btn-clear close-modal" (click)="sendMessageGoBackToJobsList()">
       <ion-icon name="close-outline"></ion-icon>
     </button>
   </div>
   <div class="">
-    <p class="mb-4 mt-4">Using the drop downs, select actions to be performed for each applicant. The applicants selected with the checkbox will perform the actions when submit is pressed</p>
+    <p class="m-1">Using the drop downs, select actions to be performed for each applicant. The applicants selected with the checkbox will perform the actions when submit is pressed</p>
   </div>
 
   <p *ngIf="applicants.length <= 0" class="text-center text-warning bold">No Applicants for this position</p>
   <div></div>
-  <div *ngIf="applicants.length" class="card-body">
-    <div class="table-responsive">
+  <div *ngIf="applicants.length" class="card-body pt-0">
+    <div class="table-responsive" style="height: 300px;">
       <table class="table align-middle gs-0 gy-4">
         <thead>
         <tr class="fw-bolder text-muted bg-light">
@@ -43,22 +43,18 @@
             </div>
           </td>
           <td>
-            <form [formGroup]="actionsFrom">
-              <select formControlName="actions" class="form-select">
-                <option value="" selected>Applicant Next Steps</option>
-                <option value="scheduleInterview">Schedule Interview</option>
-                <option value="interviewApplicant">Interview Applicant</option>
-                <option value="hireApplicant">Hire Applicant</option>
-                <option value="onBoardComplete">OnBoard Complete</option>
-                <option value="applicantDeclined">Decline Applicant</option>
-              </select>
-            </form>
+            <select class="form-select" [(ngModel)]="a.actionStatus">
+              <option value="" selected>Applicant Next Steps</option>
+              <option value="scheduleInterview">Schedule Interview</option> 
+              <option value="interviewApplicant">Interview Applicant</option>
+              <option value="hireApplicant">Hire Applicant</option>
+              <option value="onboardingComplete">OnBoard Complete</option>
+              <option value="applicantDeclined">Decline Applicant</option>
+            </select>
           </td>
           <td>
             <div>
               <button mat-raised-button color="primary" class="mr-3" (click)="submitForm(a)">Update</button>
-              <!-- <button mat-raised-button>Notes</button> -->
-              <!-- <button mat-raised-button color="warn" (click)="deleteApplicant(a)">Delete</button> -->
             </div>
           </td>
         </tr>

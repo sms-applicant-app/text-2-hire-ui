@@ -114,8 +114,11 @@ export class AddStoreComponent implements OnInit {
     this.addingNewUser = true;
   }
 
-  receiveAddressMessage($event){
-    this.addressAdded = $event;
+  receiveAddressMessage($event, stepper: MatStepper){
+    if ($event) {
+      this.addressAdded = $event;
+      stepper.next();
+    }
   }
 
   selectionChange(e) {
@@ -180,12 +183,13 @@ export class AddStoreComponent implements OnInit {
    * Add new hiring manager
    * @param $event
    */
-  receiveUserMessage($event){
-    this.newUserHiringManagerData = $event;
-    console.log('user added', this.newUserHiringManagerData);
-    this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
-    this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
-    console.log('adding new manager',this.newStore);
+  receiveUserMessage($event, stepper: MatStepper){
+    if ($event) {
+      this.newUserHiringManagerData = $event;
+      this.newStore.storeHiringManager = this.newUserHiringManagerData.email;
+      this.newStore.hiringManagersName = this.newUserHiringManagerData.fullName;
+      stepper.next();
+    }
   }
   /**
    *

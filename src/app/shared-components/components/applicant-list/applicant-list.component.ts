@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Role } from './../../../shared/models/role';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {Applicant} from '../../../shared/models/applicant';
 import {ApplicantService} from '../../../shared/services/applicant.service';
@@ -11,23 +12,23 @@ import {ModalController} from '@ionic/angular';
 import {AddNewHireComponent} from '../../../store/add-new-hire/add-new-hire.component';
 import {ApplicantDetailsComponent} from '../applicant-details/applicant-details.component';
 import {AlertService} from '../../../shared/services/alert.service';
-import { JobService } from '../../../shared/services/job.service';
-import { UserService } from '../../../shared/services/user.service';
+import { JobService } from './../../../shared/services/job.service';
+import { UserService } from './../../../shared/services/user.service';
+import { FranchiseService } from './../../../shared/services/franchise.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 import {Router, RouterModule} from "@angular/router";
-
-
 @Component({
   selector: 'app-applicant-list',
   templateUrl: './applicant-list.component.html',
   styleUrls: ['./applicant-list.component.scss'],
 })
-export class ApplicantListComponent implements OnInit {
+export class ApplicantListComponent implements OnInit, OnDestroy {
   @Input() positionId: string;
   @Input() positionData: any;
   @Output() messageEvent = new EventEmitter<any>();
   @Input() store: any;
-  applicantStatus: ApplicantStatus;
   applicants: any = [];
+  applicantsSub: Subscription = new Subscription();
   dataSource: MatTableDataSource<Applicant>;
   actionsFrom: FormGroup;
   applicantData: any;
@@ -36,11 +37,14 @@ export class ApplicantListComponent implements OnInit {
   touchedRows: any;
   applicantId: string;
   applicantRetrieved: boolean;
-  positionDetails: any;
   control: FormArray;
   hiringMangerData: any;
+  franchiseDataSub: Subscription = new Subscription();
+  franchiseData: any;
+  franchiseName: string;
   selectedStore: any;
   displayColumns = ['applicantName', 'position','status', 'phoneNumber', 'actions'];
+  applicantStatus = ApplicantStatus;
   constructor(public fb: FormBuilder,
               public applicantService: ApplicantService,
               public firestore: AngularFirestore,
@@ -49,41 +53,39 @@ export class ApplicantListComponent implements OnInit {
               public modalController: ModalController,
               public alertService: AlertService,
               public jobService: JobService,
-              public useService: UserService,
-              public router: Router
+              public userService: UserService,
+              public router: Router,
+              public franchiseService: FranchiseService
   ) { }
 
   ngOnInit() {
     this.touchedRows = [];
-    this.actionsFrom = this.fb.group({
-      tableRows: this.fb.array([])
-    });
-    console.log('incoming position data', this.positionData);
+
     this.selectedStore = JSON.parse(localStorage.getItem('selectedStoreData'));
-    this.getHiringManager();
+    if (this.selectedStore.storeHiringManager) {
+      this.getHiringManager();
+    }
     this.getApplicantsByJobId(this.positionId);
+    this.getFranchiseeByApplicant(this.selectedStore.franchiseId);
     this.isSubmitted = false;
-    this.actionsFrom = this.fb.group({
-      actions: ['', [Validators.required]],
-    });
     this.applicantRetrieved = false;
   }
   ngAfterOnInit(){
-    this.control = this.actionsFrom.get('tableRows') as FormArray;
+  }
+  ngOnDestroy(): void {
+    this.franchiseDataSub.unsubscribe();
+    this.applicantsSub.unsubscribe();
   }
 
-
   submitForm(applicant) {
-    if (this.actionsFrom.valid) {
-      const action = this.actionsFrom.controls.actions.value;
-      console.log(applicant, action);
+    if (applicant.actionStatus) {
+      const action = applicant.actionStatus;
       if (action === 'scheduleInterview'){
-          this.getApplicantAndSendCalendarLink(applicant, this.selectedStore, action);
+          this.getApplicantAndSendCalendarLink(applicant, this.selectedStore);
         }
       if(action === 'interviewApplicant'){
         // route to a notes/ applicant details
-        console.log('Interviewing applicant', applicant);
-        this.getApplicantAndBringUpInterviewNotesModal(applicant, action);
+        this.getApplicantAndBringUpInterviewNotesModal(applicant);
         }
       if(action === 'hireApplicant') {
         console.log('Selected store to send on boarding links', this.selectedStore);
@@ -100,16 +102,47 @@ export class ApplicantListComponent implements OnInit {
 
     });
   }
-  getApplicantAndBringUpInterviewNotesModal(applicant, action){
-      console.log('appliacant at interview',applicant);
+  // getApplicantAndBringUpInterviewNotesModal(applicant){
+  //     const email = applicant.applicant.email;
+  //     this.applicantDetails(applicant).then(data =>{
+  //       console.log('display new hire modal');
+  //     });
+  //     this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested} );
+  // }
+  getApplicantAndBringUpInterviewNotesModal(applicant) {
+      const email = applicant.applicant.email;
       this.closeModal();
-     this.router.navigateByUrl(`store/store-interview/${applicant.id}`).catch(err=>{console.log(err);});
-
+      this.router.navigateByUrl(`store/store-interview/${applicant.id}`).catch(err => {
+          console.log(err);
+      });
+      this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewRequested});
   }
 
+  getUserDetail(franchiseId) {
+    this.userService.getFranchiseUserByFranchiseId(franchiseId).subscribe(res => {
+      if (res) {
+        res.docs.forEach(doc => {
+          const userData = doc.data() as any;
+          this.franchiseName = userData.fullName || userData.firstName;
+        });
+      }
+    });
+  }
+
+  getFranchiseeByApplicant(franchiseId) {
+    this.franchiseDataSub = this.franchiseService.getFranchiseById(franchiseId).subscribe((res: any) => {
+       if (res) {
+          this.franchiseName = res.businessLegalName;
+       } else {
+         this.getUserDetail(franchiseId);
+       }
+     });
+  }
   getHiringManager(){
-    console.log('get hiring manager ', this.selectedStore.storeHiringManger);
-    return this.firestore.collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager).where('role', '==', 'hiringManager')).get()
+    console.log('get hiring manager ', this.selectedStore.storeHiringManager);
+    return this.firestore
+    .collection('users', ref => ref.where('email', '==', this.selectedStore.storeHiringManager)
+    .where('role', '==', 'hiringManager')).get()
       .subscribe(ss => {
         if (ss.docs.length === 0) {
           console.log('Document not found! Try again!');
@@ -121,62 +154,56 @@ export class ApplicantListComponent implements OnInit {
         }
       });
   }
-    getApplicantAndSendCalendarLink(applicant, store, action){
+    getApplicantAndSendCalendarLink(applicant, store){
       console.log('applicant data ', applicant, 'store data',store);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
       const hiringManagerName = store.hiringManagersName;
-      console.log('hiringManagerName', hiringManagerName);
       const storeName = store.storeName;
-      console.log('storeName', store.storeName);
       //TODO the franchise sign up flow needs to be added so we can grab the legal business name
-      const franchiseName = 'ACME';
-      const calendarLink = this.hiringMangerData.calendlyLink;
-
+        let calendarLink;
+        if (this.hiringMangerData) {
+            calendarLink = this.hiringMangerData.calendarLink;
+        }
       //    applicantName,
       //       storeName,
       //       franchiseName,
       //       hiringManagerName,
       //       jobTitle,
       //       calendarLink
-      this.smsService.requestInterview(applicantName,storeName, franchiseName, hiringManagerName,this.positionData.jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
+      this.smsService.requestInterview(applicantName,storeName, this.franchiseName, hiringManagerName,this.positionData.jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
             autoClose: false,
             keepAfterRouteChange: false
           };
-          console.log('trigger alert', data.errorType);
+          console.log('trigger alert', data.errorMessage);
           this.applicantService.updateApplicant(email, {status: 'Last Message Failed'} );
-          this.alertService.onAlert('default-alert').subscribe(m =>{
-            console.log('where is my alert?', m, data.errorMessage);
-          });
+          this.alertService.showError(data.errorMessage);
         } else {
-          this.applicantService.updateApplicant(email, {status: action} );
-          this.alertService.showSuccess('Interview Request sent to', applicantName);
+          this.applicantService.updateApplicant(email, {status: ApplicantStatus.interviewScheduled} );
+          this.alertService.showSuccess(`Updated applicant ${applicantName} with status ${ApplicantStatus.interviewScheduled}`);
         }
-      });
-
-    }
+    });
+  }
   // get applicants by job
   getApplicantsByJobId(positionId){
-      this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
-        .subscribe( applicant =>{
-          this.applicants = [];
-          if (applicant.docs.length === 0){
-            console.log('no applicants for that position');
-          } else {
-            applicant.forEach( a =>{
-              const app = a.data();
-              const id = a.id;
-              this.applicants.push({id, applicant: app });
-              this.dataSource = new MatTableDataSource<Applicant>(this.applicants);
-            });
-            console.log(this.applicants);
-          }
-        });
-
+    this.applicantsSub = this.firestore.collection('applicant', ref => ref.where('positionId', '==', `${positionId}`)).get()
+      .subscribe( applicant =>{
+        this.applicants = [];
+        if (applicant.docs.length === 0){
+          console.log('no applicants for that position');
+        } else {
+          applicant.forEach( a =>{
+            const app = a.data() as any;
+            const id = a.id;
+            this.applicants.push({id, applicant: app, actionStatus: this.getActionStatus(app.status)});
+            console.log('this.applicants', this.applicants);
+          });
+        }
+      });
   }
 
   async applicantDetails(applicant){
@@ -218,10 +245,17 @@ export class ApplicantListComponent implements OnInit {
           .dismiss()
           .then();
   }
-  // deleteApplicant(applicantDelete) {
-  //   this.alertService.alertConfirm('store').then((data) => {
 
-  //   });
-  // }
-
+  getActionStatus(status: ApplicantStatus){
+    switch (status) {
+      case ApplicantStatus.interviewScheduled:
+        return 'scheduleInterview';
+        case ApplicantStatus.interviewRequested:
+          return 'interviewApplicant';
+        case ApplicantStatus.pendingOnboarding:
+          return 'hireApplicant';
+      default:
+      return '';
+    }
+  }
 }

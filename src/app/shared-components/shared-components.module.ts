@@ -27,6 +27,10 @@ import {ApplicantTableRowComponent} from "./components/applicant-table-row/appli
 import {AddOnBoardPacketComponent} from "./components/add-on-board-packet/add-on-board-packet.component";
 import { UploadListFormComponent } from './components/upload-list-file/upload-list-form.component';
 import {EditPositionComponent} from "./components/edit-position/edit-position.component";
+import { StoreDetailComponent } from './components/store-detail/store-detail.component';
+import { ApplicantByStoreComponent } from './components/applicant-by-store/applicant-by-store.component';
+import { AddApplicantComponent } from './components/add-applicant/add-applicant.component';
+import { AddJobStepComponent } from './components/add-job-step/add-job-step.component';
 
 @NgModule({
   declarations:
@@ -52,6 +56,10 @@ import {EditPositionComponent} from "./components/edit-position/edit-position.co
       ApplicantTableRowComponent,
       AddOnBoardPacketComponent,
       UploadListFormComponent,
+      StoreDetailComponent,
+      ApplicantByStoreComponent,
+      AddApplicantComponent,
+      AddJobStepComponent,
       EditPositionComponent
     ],
   imports: [
@@ -80,7 +88,8 @@ import {EditPositionComponent} from "./components/edit-position/edit-position.co
         StoresByHiringManagerComponent,
         AddFranchiseComponent,
         ApplicantTableRowComponent,
-        UploadListFormComponent
+        UploadListFormComponent,
+        ApplicantByStoreComponent
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

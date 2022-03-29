@@ -100,7 +100,7 @@ export class RegisterUserComponent implements OnInit {
         this.newUser.franchiseId = this.franchiseId;
         this.newUser.storeIds = this.isRegisteringStoreManager? this.storeId: null;
         this.dbHelper.set(`users/${this.userId}`, this.newUser);
-        this.alertService.showSuccess(toastMess.CREATE_SUCCESS);
+        this.alertService.showSuccess(`Create ${this.newUser.role} ${this.newUser.email} successfully`);
         this.authService.SendVerificationMail();
         this.userAdded = true;
         this.sendUserMessage();

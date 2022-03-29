@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import {OnboardingService} from "../../shared/services/onboarding.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {Applicant} from "../../shared/models/applicant";
-import {AngularFirestore} from '@angular/fire/firestore';
 import {FileUpload} from "../../shared/models/file-upload";
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SmsService} from "../../shared/services/sms.service";
@@ -11,6 +10,8 @@ import {FirestoreHelperService} from "../../shared/firestore-helper.service";
 import { AlertService } from '../../shared/services/alert.service';
 import { CustomForms } from '../../shared/models/onBoardPacket';
 import {ModalController} from '@ionic/angular';
+import { ApplicantStatus } from './../../shared/models/applicant-status';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-add-new-hire',
@@ -31,6 +32,8 @@ export class AddNewHireComponent implements OnInit {
   formNames: any = [];
   customForms: FormGroup;
   fileUpload: FileUpload;
+  applicantStatus = ApplicantStatus;
+  minDate = new Date();
   constructor(
     public dbHelper: FirestoreHelperService,
     public storeService: StoreService,
@@ -61,11 +64,6 @@ export class AddNewHireComponent implements OnInit {
   getListOfOnboardingPackages(){
     const storeId = this.storeId;
    this.onBoardingPackages = this.onBoardingService.getAllOnboardingPackagesByStoreId(storeId);
-   /*
-   this.onBoardingPackages.forEach(data =>{
-     console.log('onbaording packages',data);
-   });*/
-    console.log(this.onBoardingPackages);
   }
 
 
@@ -144,11 +142,11 @@ export class AddNewHireComponent implements OnInit {
     customForms = customForms.map((obj)=> { return Object.assign({}, obj)});
     console.log('customForms', customForms);
     this.firestore.collection('applicant').doc(applicant.id)
-      .set({customForms: customForms}, {merge: true})
+      .set({customForms: customForms, status: this.applicantStatus.pendingOnboarding, startDate}, {merge: true})
       .then(() => {
         this.alertService.showSuccess('Send package success');
         this.closeModal();
-       this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, urlToOnboardingLinks, this.store.storeName, this.store.hiringManagerName,this.hiringManager.phoneNumber, startDate ).subscribe(data =>{
+        this.smsService.sendNewHireForms(applicant.applicant.name, applicant.applicant.phoneNumber, urlToOnboardingLinks, this.store.storeName, this.store.hiringManagerName,this.hiringManager.phoneNumber, startDate ).subscribe(data =>{
           console.log(data);
        });
 

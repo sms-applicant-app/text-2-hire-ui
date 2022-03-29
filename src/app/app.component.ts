@@ -68,7 +68,6 @@ export class AppComponent implements OnInit{
   }
   getUserRole(){
     const role = JSON.parse(localStorage.getItem('appUserData')).role;
-    console.log('user role', role);
     return role;
   }
   getUserRoleName(){

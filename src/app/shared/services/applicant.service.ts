@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {Franchisee} from "../models/franchisee";
 import {Applicant} from "../models/applicant";
 import {OnboardingPackage} from "../models/onboarding-package";
-import {map} from "rxjs/operators";
+import {map, take} from "rxjs/operators";
 import {FirestoreHelperService} from "../firestore-helper.service";
 
 @Injectable({
@@ -55,7 +55,7 @@ export class ApplicantService {
       });
   }
   getApplicantById(docId: string){
-    return this.dbHelper.doc$(`applicant/${docId}`);
+    return this.dbHelper.doc$(`applicant/${docId}`).pipe(take(1));
 
   }
   getApplicantsByFranchise(franchiseId){

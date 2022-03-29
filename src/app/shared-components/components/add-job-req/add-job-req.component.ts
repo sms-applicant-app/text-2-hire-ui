@@ -1,7 +1,9 @@
+import { pipe } from 'rxjs';
+import { StoreService } from './../../../shared/services/store.service';
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatCurrency } from '@angular/common';
 
 import {JobPosting} from '../../../shared/models/job-posting';
 import {AngularFirestore} from '@angular/fire/firestore';
@@ -21,6 +23,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 export class AddJobReqComponent implements OnInit {
   @Input() storeId: string;
   @Input() franchiseId: string;
+  @Input() jobData: any;
   // franchiseId: string;
   newJobListing: JobPosting = new JobPosting();
   addJoblistingFrom: FormGroup;
@@ -30,8 +33,10 @@ export class AddJobReqComponent implements OnInit {
   onboardingPackageId: string;
   hiringManagerId: string;
   onJobAddedSub: Subject<JobPosting>;
+  minDate = new Date();
   private userData: any;
   private userId: string;
+  private storeData: any;
   constructor(
     public fb: FormBuilder,
     public firestore: AngularFirestore,
@@ -42,7 +47,8 @@ export class AddJobReqComponent implements OnInit {
     public onboardingService: OnboardingService,
     public userService: UserService,
     public authService: AuthService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    public storeService: StoreService
     ) { }
 
   ngOnInit() {
@@ -50,6 +56,43 @@ export class AddJobReqComponent implements OnInit {
     this.initJobsDetailsForm();
     this.getOnboardingPackages();
     this.userId = JSON.parse(localStorage.getItem('user')).email;
+    if (this.jobData) {
+      let positionExpiration: any;
+      if(this.jobData.position.positionExpiration && typeof this.jobData.position.positionExpiration != 'string') {
+        positionExpiration = this.jobData.position.positionExpiration.toDate();
+      } else {
+        positionExpiration = this.jobData.position.positionExpiration;
+      }
+      this.addJoblistingFrom.patchValue({
+        recNumber: this.jobData.position.recNumber,
+        jobTitle: this.jobData.position.jobTitle,
+        location: this.jobData.position.addressId,
+        jobType: this.jobData.position.jobType,
+        onboardingPackage: this.jobData.position.onboardingPackageId,
+        numberOfOpenSlots: this.jobData.position.numberOfOpenSlots,
+        positionExpiration,
+        companyWebsite: this.jobData.position.companyWebsite,
+        salary: this.jobData.position.salary,
+        salaryUnit: this.jobData.position.salaryUnit ? this.jobData.position.salaryUnit : '',
+       });
+      this.jobDetailsFrom.patchValue({
+        fullDescription: this.jobData.position.jobDescription,
+        benefits: this.jobData.position.benefits,
+        specialNotes: this.jobData.position.specialNotes,
+        qualifications: this.jobData.position.qualifications,
+      });
+    }
+    if (this.storeId) {
+      this.newJobListing.storeId = this.storeId.toString();
+      this.storeService.getStoreByGeneratedStoreId(this.storeId).subscribe((data: any)=>{
+        if(data && data.length > 0) {
+          this.storeData = data[0];
+        }
+      });
+    } else {
+      this.storeData = localStorage.getItem('selectedStore');
+      this.storeId = this.storeData.storeId;
+    }
   }
   initAddJobForm(){
     this.addJoblistingFrom = this.fb.group({
@@ -59,10 +102,10 @@ export class AddJobReqComponent implements OnInit {
       jobType: [''],
       onboardingPackage: [''],
       numberOfOpenSlots: ['', Validators.required],
-      shortDescription: ['', Validators.required],
       positionExpiration: [{value: '', disabled: true}, Validators.required],
       companyWebsite: [''],
-      salary: ['']
+      salary: [''],
+      salaryUnit: ['']
     });
   }
   initJobsDetailsForm(){
@@ -106,30 +149,32 @@ export class AddJobReqComponent implements OnInit {
     if (this.addJoblistingFrom.valid && this.jobDetailsFrom.valid) {
       this.userService.getUserById(this.userId).subscribe(resp => {
         if (resp) {
-          const storeId = this.storeId;
-          const date = this.datepipe.transform(this.addJoblistingFrom.controls.positionExpiration.value, 'dd-MM-yyyy');
-          if (storeId) {
-            this.newJobListing.storeId = this.storeId.toString();
-          } else {
-            const selectedStore = localStorage.getItem('selectedStore');
-            this.newJobListing.storeId = selectedStore;
-          }
+          this.newJobListing.storeId = this.storeId;
           this.newJobListing.franchiseId = this.franchiseId;
           this.newJobListing.recNumber = this.addJoblistingFrom.controls.recNumber.value;
           this.newJobListing.jobDescription = this.jobDetailsFrom.controls.fullDescription.value;
           this.newJobListing.jobTitle = this.addJoblistingFrom.controls.jobTitle.value;
           this.newJobListing.addressId = this.addJoblistingFrom.controls.location.value;
           this.newJobListing.companyWebsite = this.addJoblistingFrom.controls.companyWebsite.value;
-          this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
+          if (!this.addJoblistingFrom.controls.salary.value) {
+            this.newJobListing.salaryUnit = '';
+          } else {
+            if (this.addJoblistingFrom.controls.salaryUnit.value === '') {
+              this.alertService.showError('Please enter field salary unit');
+              return;
+            } else {
+              this.newJobListing.salary = this.addJoblistingFrom.controls.salary.value;
+              this.newJobListing.salaryUnit = this.addJoblistingFrom.controls.salaryUnit.value;
+            }
+          }
           this.newJobListing.jobType = this.addJoblistingFrom.controls.jobType.value;
           this.newJobListing.positionOpen = true;
-          this.newJobListing.hiringManagerId = JSON.parse(localStorage.getItem('user')).email;
+          this.newJobListing.hiringManagerId = this.storeData.storeHiringManager;
           this.newJobListing.benefits = this.jobDetailsFrom.controls.benefits.value;
           this.newJobListing.specialNotes = this.jobDetailsFrom.controls.specialNotes.value;
           this.newJobListing.qualifications = this.jobDetailsFrom.controls.qualifications.value;
           this.newJobListing.numberOfOpenSlots = this.addJoblistingFrom.controls.numberOfOpenSlots.value;
-          this.newJobListing.shortJobDescription = this.addJoblistingFrom.controls.shortDescription.value;
-          this.newJobListing.positionExpiration = date;
+          this.newJobListing.positionExpiration = this.addJoblistingFrom.controls.positionExpiration.value;
           this.newJobListing.onboardingPackageId = this.addJoblistingFrom.controls.onboardingPackage.value;
           if (this.newJobListing.onboardingPackageId) {
             const packageData = this.onboardingPackagesData.find(c=> c.id === this.newJobListing.onboardingPackageId) as any;
@@ -160,7 +205,7 @@ export class AddJobReqComponent implements OnInit {
     }
   }
   closeModal() {
-    this.modalController.dismiss().then();
+    this.modalController.dismiss(true);
   }
   selectionChange(event){
 

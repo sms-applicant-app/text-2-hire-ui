@@ -54,7 +54,15 @@
   </div>
 
   <div *ngIf="role === 'hiringManager'">
-    <app-jobs-list [franchiseId]="franchiseId"></app-jobs-list>
+    <mat-tab-group>
+      <mat-tab label="Postions">
+        <app-jobs-list [franchiseId]="franchiseId"></app-jobs-list>
+      </mat-tab>
+      <mat-tab label="Hired Applicants">
+        <app-applicant-by-store [applicantsByStore]="applicantsByStore" [isHired]="true"></app-applicant-by-store>
+      </mat-tab>
+    </mat-tab-group>
+   
   </div>
 
 </ion-content>

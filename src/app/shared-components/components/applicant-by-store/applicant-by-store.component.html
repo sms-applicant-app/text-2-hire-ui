@@ -1,0 +1,47 @@
+
+
+<div class="container-fluid">
+  <p *ngIf="applicantData.length <= 0" class="text-center text-warning bold">No Applicants for this store</p>
+  <div></div>
+  <div *ngIf="applicantData.length" class="card-body">
+    <div class="table-responsive" style="height: 490px;">
+      <table class="table align-middle gs-0 gy-4">
+        <thead>
+        <tr class="fw-bolder text-muted bg-light">
+          <th class="ps-4 rounded-start">Name</th>
+          <th class="ps-4 rounded-start">Schedule Status</th>
+          <th class="ps-4 rounded-start">Phone Number</th>
+          <th *ngIf="isHired" class="ps-4 rounded-start">Start Date</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of applicantData" style="position: relative;">
+            <td>
+              <p class="mb-0 job-title" *ngIf="a.groupNumber == 1">Position Title: {{a.jobTitle}}</p>
+              <div class="d-flex align-items-center ml-3 mt-1">
+                <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.name}}</p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center mt-1">
+                <p class="text-dark fw-bolder text-hover-primary fs-6"> {{a.status}}</p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center mt-1">
+                <p class="text-dark fw-bolder text-hover-primary fs-6">{{a.phoneNumber}}</p>
+              </div>
+            </td>
+            <td *ngIf="isHired">
+              <div class="d-flex align-items-center mt-1">
+                <p class="text-dark fw-bolder text-hover-primary fs-6" *ngIf="a.startDate">{{a.startDate | date: 'dd/MM/yyyy' }}</p>
+                <p *ngIf="!a.startDate">Start date null</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

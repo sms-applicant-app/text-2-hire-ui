@@ -11,6 +11,7 @@ export class Applicant {
   status: ApplicantStatus;
   addressId?: string;
   jobId?: string;
+  positionId?: string; // remove when clean db
   jobTitle?: string;
   dob?: string;
   gender?: string;

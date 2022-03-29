@@ -21,7 +21,7 @@
                 phone number required</span>
             </ion-item>
             <div class="d-flex flex-row justify-content-end mt-4">
-              <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
+              <button mat-stroked-button (click)="closeModal()" class="mr-3">Back</button>
               <button mat-raised-button [disabled]="addStoreForm.invalid"  color="primary" matStepperNext>Next</button>
             </div>
           </div>
@@ -29,7 +29,7 @@
       </form>
     </mat-step>
     <mat-step label="Address" style="margin-bottom: 20px;">
-      <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event)" [addressId]="addressId"
+      <app-address-form class="headless" (messageEvent)="receiveAddressMessage($event, stepper)" [addressId]="addressId"
         [addressType]="addressType"></app-address-form>
       <div class="d-flex flex-row justify-content-end mt-4">
         <button mat-stroked-button matStepperPrevious class="mr-3">Back</button>
@@ -69,7 +69,7 @@
         </div>
       </div>
       <div *ngIf="addingNewUser">
-        <app-register-user (addedUserEvent)="receiveUserMessage($event)" [franchiseId]="franchiseId"
+        <app-register-user (addedUserEvent)="receiveUserMessage($event, stepper)" [franchiseId]="franchiseId"
           [storeId]="storeId"></app-register-user>
       </div>
       <div class="d-flex flex-row justify-content-end mt-4">

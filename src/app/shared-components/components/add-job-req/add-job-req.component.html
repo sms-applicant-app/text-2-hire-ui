@@ -41,12 +41,6 @@
                 <option value="partTime">Part-Time</option>
               </select>
             </ion-item>
-            <ion-item lines="full">
-              <ion-textarea formControlName="shortDescription" placeholder="Enter short description..."></ion-textarea>
-              <span class="field-err"
-                *ngIf="addJoblistingFrom.controls.shortDescription.errors?.required && (addJoblistingFrom.controls.shortDescription.dirty || addJoblistingFrom.controls.shortDescription.touched)">Short
-                Description required</span>
-            </ion-item>
           </div>
           <div class="col-lg-6">
             <ion-item lines="full">
@@ -57,17 +51,9 @@
                 of Hires required</span>
 
             </ion-item>
-            <!-- <ion-item lines="full">
-              <ion-label position="stacked" required>Expiration Date *</ion-label>
-              <ion-input clearInput type="text" formControlName="positionExpiration"></ion-input>
-              <span class="field-err"
-                *ngIf="addJoblistingFrom.controls.positionExpiration.errors?.required && (addJoblistingFrom.controls.positionExpiration.dirty || addJoblistingFrom.controls.positionExpiration.touched)">Expiration
-                Date required</span>
-
-            </ion-item> -->
             <ion-item lines="full" class="input-calendar">
-              <ion-label position="stacked" required>Expiration Date *</ion-label>
-              <input matInput [matDatepicker]="picker1" [disabled]="true" formControlName="positionExpiration">
+              <ion-label position="stacked" required>Expiration Date</ion-label>
+              <input [min]="minDate" matInput [matDatepicker]="picker1" [disabled]="true" formControlName="positionExpiration">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1 disabled="false"></mat-datepicker>
               <span class="field-err"
@@ -75,8 +61,20 @@
                 Date required</span>
             </ion-item>
             <ion-item lines="full">
-              <ion-label position="stacked" required>Salary</ion-label>
-              <ion-input clearInput type="text" formControlName="salary"></ion-input>
+              <ion-label position="stacked" required>Rate of pay</ion-label>
+              <div class="d-flex flex-row align-items-center">
+                <div class="pr-2">
+                  <span>$</span>
+                </div>
+                <ion-input clearInput type="number" formControlName="salary" style="width: 200px;"></ion-input>
+                <select class="form-select pl-0" formControlName="salaryUnit" type="select" style="width: 150px;">
+                  <option value="" disabled selected>Select your option</option>
+                  <option value="perHour">Per Hour</option>
+                  <option value="perDay">Per Day</option>
+                  <option value="perYear">Per Year</option>
+                </select>
+              </div>
+              
             </ion-item>
             <ion-item lines="full">
               <ion-label position="stacked" required>Company WebSite</ion-label>
@@ -85,7 +83,7 @@
             <ion-item appearance="fill">
               <ion-label position="stacked">Select Onboarding Package</ion-label>
               <select class="form-select pl-0" formControlName="onboardingPackage" type="select">
-                <option value="" *ngIf="onboardingPackagesData.length === 0">No onboarding package</option>
+                <option value="">No onboarding package</option>
                 <option [value]="package.id" *ngFor="let package of onboardingPackagesData">
                   {{package.name}}
                 </option>
@@ -94,7 +92,7 @@
           </div>
           <div class="col-md-12">
             <div class="d-flex flex-row justify-content-end">
-              <button mat-stroked-button matStepperPrevious class="mr-4">Back</button>
+              <button mat-stroked-button class="mr-4" (click)="closeModal()">Back</button>
               <button mat-raised-button color="primary" [disabled]="addJoblistingFrom.invalid" matStepperNext>Next</button>
             </div>
           </div>

@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { UserService } from '../shared/services/user.service';
-import { matchingPasswords, phoneValidator } from '../shared/utils/app-validators';
+import { matchingPasswords, phoneValidator, validatedURL } from '../shared/utils/app-validators';
 import { FirestoreHelperService } from '../shared/firestore-helper.service';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from '../shared/services/alert.service';
@@ -49,7 +49,7 @@ export class ProfilePage implements OnInit {
     this.formEditUser = this.fb.group({
       fullName: ['', Validators.required],
       phoneNumber: ['', [Validators.required, phoneValidator]],
-      calendlyLink: ['', Validators.required],
+      calendlyLink: ['', [Validators.required, validatedURL]],
     });
   }
   initFormChangePass() {

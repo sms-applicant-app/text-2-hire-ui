@@ -149,30 +149,23 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
         } else {
           ss.docs.forEach(doc => {
             this.hiringMangerData = doc.data();
-            console.log('retrieved hiring manager',this.hiringMangerData);
           });
         }
       });
   }
     getApplicantAndSendCalendarLink(applicant, store){
-      console.log('applicant data ', applicant, 'store data',store);
       const email = applicant.applicant.email;
       const applicantName = applicant.applicant.name;
       const phoneNumber = applicant.applicant.phoneNumber;
       const hiringManagerName = store.hiringManagersName;
       const storeName = store.storeName;
-      //TODO the franchise sign up flow needs to be added so we can grab the legal business name
-        let calendarLink;
-        if (this.hiringMangerData) {
-            calendarLink = this.hiringMangerData.calendarLink;
-        }
-      //    applicantName,
-      //       storeName,
-      //       franchiseName,
-      //       hiringManagerName,
-      //       jobTitle,
-      //       calendarLink
-      this.smsService.requestInterview(applicantName,storeName, this.franchiseName, hiringManagerName,this.positionData.jobTitle, phoneNumber, calendarLink).subscribe((data: any) =>{
+      let calendarLink;
+      if (this.hiringMangerData) {
+        calendarLink = this.hiringMangerData.calendlyLink;
+      }
+      this.smsService
+      .requestInterview(applicantName,storeName, this.franchiseName, hiringManagerName,this.positionData.jobTitle, phoneNumber, calendarLink)
+      .subscribe((data: any) =>{
         console.log('sent request to lambda', data);
         if(data.errorType === 'Error'){
           const options = {
@@ -200,7 +193,6 @@ export class ApplicantListComponent implements OnInit, OnDestroy {
             const app = a.data() as any;
             const id = a.id;
             this.applicants.push({id, applicant: app, actionStatus: this.getActionStatus(app.status)});
-            console.log('this.applicants', this.applicants);
           });
         }
       });

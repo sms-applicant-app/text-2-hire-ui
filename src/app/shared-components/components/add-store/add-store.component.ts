@@ -211,6 +211,10 @@ export class AddStoreComponent implements OnInit {
   addStore(stepper: MatStepper){
     if (this.addStoreForm.valid) {
           this.createDate();
+          if (!this.newStore.storeHiringManager) {
+            this.alertService.showError('Please add Hiring Manager');
+            return;
+          }
           this.newStore.franchiseId = this.franchiseId;
           this.newStore.storeName = this.addStoreForm.controls.storeName.value;
           this.newStore.storePhoneNumber = this.addStoreForm.controls.storePhoneNumber.value;

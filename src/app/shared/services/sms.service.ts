@@ -10,8 +10,8 @@ const httpOptions = {
 })
 
 export class SmsService {
-  requestInterviewEndPoint = 'https://m0dwmc1b67.execute-api.us-east-1.amazonaws.com/dev/api/requestInterview';
-  sendOnboardingLinksEndPoint = 'https://m0dwmc1b67.execute-api.us-east-1.amazonaws.com/dev/api/sendOnboardingForms';
+  requestInterviewEndPoint = 'https://gdfhviky81.execute-api.us-east-1.amazonaws.com/dev/api/requestInterview';
+  sendOnboardingLinksEndPoint = 'https://gdfhviky81.execute-api.us-east-1.amazonaws.com/dev/api/sendOnboardingForms';
   constructor(private http: HttpClient) { }
 
   requestInterview(applicantName,storeName,franchiseName, hiringManagerName, jobTitle, clientPhoneNumber, calendarLink){

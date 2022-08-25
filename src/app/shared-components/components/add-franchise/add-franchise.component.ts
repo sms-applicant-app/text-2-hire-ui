@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Franchisee} from "../../../shared/models/franchisee";
-import {FirestoreHelperService} from "../../../shared/firestore-helper.service";
-import {DatePipe} from "@angular/common";
-import {Router} from "@angular/router";
-import {FranchiseService} from "../../../shared/services/franchise.service";
-import {MatDialog} from "@angular/material/dialog";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Franchisee} from '../../../shared/models/franchisee';
+import {FirestoreHelperService} from '../../../shared/firestore-helper.service';
+import {DatePipe} from '@angular/common';
+import {Router} from '@angular/router';
+import {FranchiseService} from '../../../shared/services/franchise.service';
+import {MatDialog} from '@angular/material/dialog';
 import { v4 as uuidv4 } from 'uuid';
 @Component({
   selector: 'app-add-franchise',
